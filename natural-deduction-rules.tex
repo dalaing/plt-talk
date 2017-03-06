@@ -1,0 +1,34 @@
+
+\section{Natural deduction rules}
+
+\begin{frame}[c]
+  We use natural deduction style rules for most of this.
+\end{frame}
+
+\begin{frame}
+  \infrule[Rule-Name]
+          {Assumption_1 \andalso Assumption_2 \andalso \ldots}
+          {Conclusion}
+\end{frame}
+
+\begin{frame}
+  \infrule[Even-Zero]
+          {}
+          {\text{even}~0}
+  \infrule[Even-Add]
+          {\text{even}~x}
+          {\text{even}~\left(x + 2\right)}
+\end{frame}
+
+\begin{frame}[c]
+  We are dealing with an open world.
+\end{frame}
+
+\begin{frame}[c]
+  The relations are determined by the union of all of the rules.
+\end{frame}
+
+\begin{frame}[c]
+  Rules will often get added to a system without having to go back and alter the
+  other rules.
+\end{frame}

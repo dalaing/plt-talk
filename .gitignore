@@ -1,0 +1,14 @@
+_minted-slides/
+_region_.*
+auto/
+prv_slides.log
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.nav
+*.out
+*.snm
+*.synctex.gz
+*.toc
+*.vrb

@@ -1,0 +1,57 @@
+
+\section{Extensions to STLC - Pairs}
+
+\begin{frame}
+  \begin{mdframed}[frametitle={Terms, values and types}]
+\begin{displaymath}
+    \begin{aligned}
+t \quad:=\quad& \ldots &\\
+  & ~ \left(t, t\right) \quad\quad &pair~introduction\\
+  & ~ fst~t \quad\quad &pair~elimination\\
+  & ~ snd~t \quad\quad &pair~elimination\\
+v \quad:=\quad& \ldots &\\
+  & ~ \left(v, v\right) \quad\quad &pair~value\\
+T \quad:=\quad& \ldots &\\
+  & ~ T \times T \quad\quad &pair~type\\
+    \end{aligned}
+\end{displaymath}
+  \end{mdframed}
+\end{frame}
+
+\begin{frame}
+  \begin{mdframed}[frametitle={Small-step semantics}]
+  \infrule[E-Pair1]
+  {t_1 \longrightarrow {t_1}^{\prime}}
+  {\left(t_1, t_2\right) \longrightarrow \left({t_1}^{\prime}, t_2\right)}
+
+  \infrule[E-Pair2]
+  {t_2 \longrightarrow {t_2}^{\prime}}
+  {\left(v_1,t_2\right) \longrightarrow \left(v_1, {t_2}^{\prime}\right)}
+
+  \infrule[E-FstPair]
+  {}
+  {fst \left(v_1, v_2\right) \longrightarrow v_1}
+
+  \infrule[E-SndPair]
+  {}
+  {snd \left(v_1, v_2\right) \longrightarrow v_2}
+  \end{mdframed}
+\end{frame}
+
+\begin{frame}
+  \begin{mdframed}[frametitle={Typing rules}]
+
+  \infrule[T-Pair]
+  {\vdash t_1 {:} T_1 \andalso \vdash t_2 {:} T_2}
+  {\vdash \left(t_1, t_2\right) {:} T_1 \times T_2}
+
+  \infrule[T-PairFst]
+  {\vdash (t_1, t_2) {:} T_1 \times T_2}
+  {\vdash fst~(t_1, t_2) {:} T_1}
+
+  \infrule[T-PairSnd]
+  {\vdash (t_1, t_2) {:} T_1 \times T_2}
+  {\vdash snd~(t_1, t_2) {:} T_2}
+
+  \end{mdframed}
+\end{frame}

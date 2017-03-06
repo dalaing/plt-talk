@@ -1,0 +1,68 @@
+
+\section{Lambda Calculus}
+
+\begin{frame}
+\begin{displaymath}
+    \begin{aligned}
+t \quad:=\quad& ~ \ldots &\\
+  & ~ x \quad\quad &variable\\
+  & ~ \lambda~x . t \quad\quad &abstraction\\
+  & ~ t ~ t \quad\quad &function~application\\
+    \end{aligned}
+  \end{displaymath}
+\end{frame}
+
+\begin{frame}
+\begin{displaymath}
+    \begin{aligned}
+t \quad:=\quad& ~ \ldots &\\
+  & ~ x \quad\quad &variable\\
+  & ~ \lambda~x . t \quad\quad &abstraction\\
+  & ~ t~@~t \quad\quad &function~application~(high~precedence)\\
+    \end{aligned}
+  \end{displaymath}
+\end{frame}
+
+\begin{frame}
+  \begin{itemize}
+\item \[ x \] 
+\item \[ x + 2 \]
+\item \[ \lambda~x~.~x + 2 \]
+\item \[f(x) = x + 2\]
+\item \[ \lambda~x~.~x + 2~ @ ~1 \]
+\item \[f(1)\]
+\item \[ \lambda~x~.~x + 2~ @ ~1 \longrightarrow 1 + 2 \]
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \begin{itemize}
+\item \[ \lambda~x~.~\lambda~y~.~x \]
+\item \[ \lambda~x~.~\lambda~y~.~x~@~1 \]
+\item \[ \lambda~x~.~\lambda~y~.~x~@~1 \longrightarrow \lambda~y~.~1 \]
+\item \[ \lambda~x~.~\lambda~y~.~x~@~1~@~2 \] 
+\item \[ \lambda~x~.~\lambda~y~.~x~@~1~@~2 \longrightarrow \lambda~y~.~1~@~2 \longrightarrow 1 \]
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+\begin{displaymath}
+    \begin{aligned}
+v \quad:=\quad& ~ \ldots &\\
+  & ~ \lambda~x . t \quad\quad &abstraction\\
+    \end{aligned}
+  \end{displaymath}
+\end{frame}
+
+\begin{frame}
+  \infrule[E-App1]
+         {t_1 \longrightarrow {t_1}^{\prime}}
+         {t_1~t_2 \longrightarrow {t_1}^{\prime}~t_2}
+  \infrule[E-App2]
+         {t_2 \longrightarrow {t_2}^{\prime}}
+         {v_1~t_2 \longrightarrow v_1~{t_2}^{\prime}}
+  \infrule[E-AppAbs]
+          {}
+          {\left(\lambda~x . t_{12}\right)~v_2 \longrightarrow \left[x \mapsto v_2 \right]~t_{12}}
+\end{frame}
+

@@ -1,0 +1,80 @@
+
+\section{Introduction}
+
+\begin{frame}[c]
+  Programming Language Theory (PLT) is handy to know about.
+\end{frame}
+
+\begin{frame}[c]
+  You only need to know about a few things before you can read {\it many} more papers.
+\end{frame}
+
+\begin{frame}[c]
+  PLT is not as scary as it seems.
+\end{frame}
+
+\begin{frame}[c]
+  It can seem quite scary at first.
+\end{frame}
+
+\begin{frame}[shrink=30]
+  \begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+  \begin{mdframed}[frametitle={Terms, values and types}]
+\begin{displaymath}
+    \begin{aligned}
+t \quad:=\quad& &\\
+  & ~ x \quad&variable\\
+  & ~ \lambda~x {:} T . t \quad &abstraction\\
+  & ~ t~t \quad&function~application\\
+v \quad:=\quad& &\\
+  & ~ \lambda~x {:} T . t \quad &abstraction\\
+T \quad:=\quad& ~ &\\
+  & ~ T \rightarrow T \quad &function~arrow\\
+    \end{aligned}
+\end{displaymath}
+  \end{mdframed}
+    \vfill
+    \end{column}
+    \begin{column}{0.5\textwidth}
+  \begin{mdframed}[frametitle={Small-step semantics}]
+  \infrule[E-App1]
+  {t_1 \longrightarrow {t_1}^{\prime}}
+  {t_1~t_2 \longrightarrow {t_1}^{\prime}~t_2}
+  \infrule[E-App2]
+  {t_2 \longrightarrow {t_2}^{\prime}}
+  {v_1~t_2 \longrightarrow v_1~{t_2}^{\prime}}
+  \infrule[E-LamApp]
+  {}
+  {(\lambda~x {:} T . t_1) t_2 \longrightarrow \left[x \mapsto t_2 \right]t_1}
+  \end{mdframed}
+  \begin{mdframed}[frametitle={Typing rules}]
+  \infrule[T-Var]
+  {x {:} T \in \Gamma}
+  {\Gamma \vdash x {:} T}
+
+  \infrule[T-App]
+  {\Gamma \vdash t_1 {:} T_1 \rightarrow T_2 \andalso \Gamma \vdash t_2 {:} T1}
+  {\Gamma \vdash t_1~t_2 {:} T_2}
+
+  \infrule[T-Lam]
+  {\Gamma , x {:} T_1 \vdash T_2}
+  {\Gamma \vdash \left( \lambda~x {:} T_1 . t \right) {:} T_1 \rightarrow T_2}
+  \end{mdframed}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[c]
+  This talk is partly about getting you started with the notation, concepts and terminology.
+\end{frame}
+
+\begin{frame}[c]
+  It will also cover how a lot of common language features are defined.
+\end{frame}
+
+\begin{frame}[c]
+  It won't cover how to prove these various properties, although ``Types and
+  Programming Languages'' and/or ``Software Foundations'' cover that very well
+  if you are interested in that.
+\end{frame}

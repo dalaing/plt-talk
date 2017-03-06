@@ -1,0 +1,77 @@
+\documentclass{beamer}
+
+\title{Programming Language Theory}
+\author{Dave Laing}
+\date{BFPG March 2017}
+
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{color}
+\usepackage{minted}
+\usepackage{mdframed}
+\usepackage{prftree}
+\usepackage{bcprules}
+
+% \highlight[<colour>]{<stuff>}
+\newcommand{\highlight}[2][lightgray]{\mathchoice%
+  {\colorbox{#1}{$\displaystyle#2$}}%
+  {\colorbox{#1}{$\textstyle#2$}}%
+  {\colorbox{#1}{$\scriptstyle#2$}}%
+  {\colorbox{#1}{$\scriptscriptstyle#2$}}}%
+
+\setbeamertemplate{navigation symbols}{}
+
+\AtBeginSection[]%
+{%
+\begin{frame}[plain]%
+  \begin{center}%
+    \usebeamerfont{section title}\usebeamercolor[fg]{section title}\insertsection%
+  \end{center}%
+\end{frame}%
+}
+
+\begin{document}
+
+\begin{frame}
+\maketitle
+\end{frame}
+
+\include{introduction}
+
+\include{natural-deduction-rules}
+
+\include{integers}
+
+\include{booleans}
+
+\include{natural-numbers}
+
+\include{booleans-and-natural-numbers}
+
+\include{lambda-calculus}
+
+\include{simply-typed-lambda-calculus}
+
+\include{stlc-inference}
+
+% \include{ascription}
+\include{pairs}
+\include{tuples}
+% \include{records}
+% \include{variants}
+% \include{let}
+% \include{fix}
+% \include{recursive types}
+
+\include{systemf}
+
+\include{systemf-inference}
+
+\include{systemfw}
+
+%\include{lists}
+%\include{row-polymorphism}
+
+\include{conclusion}
+
+\end{document}

@@ -1,0 +1,74 @@
+
+\section{Universal types: System F}
+
+\begin{frame}
+\begin{displaymath}
+    \begin{aligned}
+t \quad=\quad& ~ \ldots &\\
+  & ~ x \quad\quad &variable\\
+  & ~ \lambda~x {:} T . t \quad\quad &abstraction\\
+  & ~ t~t \quad\quad &function~application\\
+  & ~ \highlight{\lambda~X . t} \quad\quad &type~abstraction\\
+  & ~ \highlight{t~\left[T\right]} \quad\quad &type~application\\
+T \quad=\quad& ~ \ldots &\\
+  & ~ \highlight{X} \quad\quad &type~variable\\
+  & ~ T \rightarrow T \quad\quad &function~arrow\\
+  & ~ \highlight{\forall~X . T} \quad\quad &function~arrow\\
+    \end{aligned}
+\end{displaymath}
+\end{frame}
+
+% TODO examples like function application, const, etc.. and how they are used
+
+\begin{frame}
+  \infrule[E-App1]
+  {t_1 \longrightarrow {t_1}^{\prime}}
+  {t_1~t_2 \longrightarrow {t_1}^{\prime}~t_2}
+
+  \infrule[E-App2]
+  {t_2 \longrightarrow {t_2}^{\prime}}
+  {v_1~t_2 \longrightarrow v_1~{t_2}^{\prime}}
+
+  \infrule[E-AppAbs]
+  {}
+  {(\lambda~x {:} T . t_1) t_2 \longrightarrow \left[x \mapsto t_2 \right]t_1}
+
+  \newruletrue
+
+  \infrule[E-TApp]
+  {t_1 \longrightarrow {t_1}^{\prime}}
+  {t_1~\left[T_2\right] \longrightarrow {t_1}^{\prime}~\left[T_2\right]}
+  
+  \infrule[E-TAppTAbs]
+  {}
+  {(\lambda~X . t_{12}) \left[T_2\right] \longrightarrow \left[X \mapsto T_2 \right]t_{12}}
+
+  \newrulefalse
+
+\end{frame}
+
+\begin{frame}
+  \infrule[T-Var]
+  {x {:} T \in \Gamma}
+  {\Gamma \vdash x {:} T}
+
+  \infrule[T-App]
+  {\Gamma \vdash t_1 {:} T_1 \rightarrow T_2 \andalso \Gamma \vdash t_2 {:} T1}
+  {\Gamma \vdash t_1~t_2 {:} T_2}
+
+  \infrule[T-Abs]
+  {\Gamma , x {:} T_1 \vdash t {:} T_2}
+  {\Gamma \vdash \left( \lambda~x {:} T_1 . t \right) {:} T_1 \rightarrow T_2}
+
+  \newruletrue
+
+  \infrule[T-TAbs]
+  {\Gamma , X \vdash t_2 {:} T_2}
+  {\Gamma \vdash \left( \lambda~X . t_2 \right) {:} \forall~X . T_2 }
+
+  \infrule[T-TApp]
+  {\Gamma \vdash t_1 {:} \forall~X . T_{12}}
+  {\Gamma \vdash t_1 \left[T_2\right] {:} \left[X \mapsto T_2 \right] T_{12} }
+
+  \newrulefalse
+\end{frame}
