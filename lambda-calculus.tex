@@ -2,67 +2,201 @@
 \section{Lambda Calculus}
 
 \begin{frame}
+  This is where we step things up a notch
+\end{frame}
+
+\begin{frame}
+  \begin{mdframed}[frametitle={Terms and values}]
 \begin{displaymath}
     \begin{aligned}
 t \quad:=\quad& ~ \ldots &\\
   & ~ x \quad\quad &variable\\
   & ~ \lambda~x . t \quad\quad &abstraction\\
   & ~ t ~ t \quad\quad &function~application\\
-    \end{aligned}
-  \end{displaymath}
-\end{frame}
-
-\begin{frame}
-\begin{displaymath}
-    \begin{aligned}
-t \quad:=\quad& ~ \ldots &\\
-  & ~ x \quad\quad &variable\\
-  & ~ \lambda~x . t \quad\quad &abstraction\\
-  & ~ t~@~t \quad\quad &function~application~(high~precedence)\\
-    \end{aligned}
-  \end{displaymath}
-\end{frame}
-
-\begin{frame}
-  \begin{itemize}
-\item \[ x \] 
-\item \[ x + 2 \]
-\item \[ \lambda~x~.~x + 2 \]
-\item \[f(x) = x + 2\]
-\item \[ \lambda~x~.~x + 2~ @ ~1 \]
-\item \[f(1)\]
-\item \[ \lambda~x~.~x + 2~ @ ~1 \longrightarrow 1 + 2 \]
-  \end{itemize}
-\end{frame}
-
-\begin{frame}
-  \begin{itemize}
-\item \[ \lambda~x~.~\lambda~y~.~x \]
-\item \[ \lambda~x~.~\lambda~y~.~x~@~1 \]
-\item \[ \lambda~x~.~\lambda~y~.~x~@~1 \longrightarrow \lambda~y~.~1 \]
-\item \[ \lambda~x~.~\lambda~y~.~x~@~1~@~2 \] 
-\item \[ \lambda~x~.~\lambda~y~.~x~@~1~@~2 \longrightarrow \lambda~y~.~1~@~2 \longrightarrow 1 \]
-  \end{itemize}
-\end{frame}
-
-\begin{frame}
-\begin{displaymath}
-    \begin{aligned}
 v \quad:=\quad& ~ \ldots &\\
   & ~ \lambda~x . t \quad\quad &abstraction\\
     \end{aligned}
   \end{displaymath}
+  \end{mdframed}
 \end{frame}
 
 \begin{frame}
+  Let us look at some terms
+\end{frame}
+
+\begin{frame}
+  The term
+  \[x\]
+  is meaningless
+\end{frame}
+
+\begin{frame}
+  The term
+  \[x + 2\]
+  is also meaningless
+\end{frame}
+
+\begin{frame}
+  The nameless equivalent to
+  \[f(x) = x + 2\]
+  is
+  \[\lambda~x . x + 2\]
+  \medskip
+  \begin{overprint}
+    \onslide<2>
+    The $x$ to the left of the $.$ is called a variable binding.
+    \onslide<3>
+    The $x$ to the right of the $.$ is a variable.
+  \end{overprint}
+\end{frame}
+
+\begin{frame}
+  The equivalent to
+  \[f(x) = x + 2\]
+  with
+  \[f(1)\]
+   in scope  is
+  \[(\lambda~x . x + 2)~1 \]
+\end{frame}
+
+\begin{frame}
+  To process
+  \[f(1)\]
+  we take
+  \[f(x) = x + 2\]
+  and replace $x$ with $1$.
+\end{frame}
+
+\begin{frame}
+  The notation for that kind of replacement is
+  \[\left[ x \mapsto 1 \right] f \]
+\end{frame}
+
+\begin{frame}
+  We would like to see something similar happening in our evaluation rules:
+  \[(\lambda~x . x + 2) 1 \longrightarrow 1 + 2\]
+\end{frame}
+
+\begin{frame}
+  \begin{mdframed}[frametitle={Small-step semantics}]
   \infrule[E-App1]
          {t_1 \longrightarrow {t_1}^{\prime}}
          {t_1~t_2 \longrightarrow {t_1}^{\prime}~t_2}
   \infrule[E-App2]
          {t_2 \longrightarrow {t_2}^{\prime}}
          {v_1~t_2 \longrightarrow v_1~{t_2}^{\prime}}
-  \infrule[E-AppAbs]
+  \infrule[E-AppLam]
           {}
           {\left(\lambda~x . t_{12}\right)~v_2 \longrightarrow \left[x \mapsto v_2 \right]~t_{12}}
+  \end{mdframed}
 \end{frame}
+
+\begin{frame}
+  Need to be careful with substitution.
+\end{frame}
+
+\begin{frame}
+  When we evaluate
+  \[\left(\lambda~x . \left( \lambda~x . x + 1 \right)~\left(x + 1\right)\right)~3 \]
+  we have
+  \[\left[ x \mapsto 3 \right]
+      \left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right)
+  \] 
+\end{frame}
+
+\begin{frame}
+  We want
+  \[\left[ x \mapsto 3 \right]
+      \left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right)
+  \] 
+  to become
+  \[\left( \lambda~x . x + 1 \right)~(3 + 1)\]
+  instead of
+  \[\left( \lambda~x . 3 + 1 \right)~(3 + 1)\]
+\end{frame}
+
+\begin{frame}
+  \begin{align*}
+     FV(x) &= \left\{ x \right\} \\
+     FV(\lambda~x.t_1) &= FV(t_1) \setminus \left\{x\right\} \\
+     FV(t_1~t_2) &= FV(t_1) \cup FV(t_2)
+  \end{align*}
+
+  TODO animate finding of free variables
+    \begin{displaymath}
+  FV(\left( \lambda~x . x + 1 \right)~\left(x + 1\right))
+    \end{displaymath}
+\end{frame}
+
+\begin{frame}
+  \begin{flalign*}
+    \left[ x \mapsto s \right]x &= s & \\
+    \left[ x \mapsto s \right]y &= y \quad & \text{if}~y \neq x \\
+    \left[ x \mapsto s \right]\left( \lambda~y . t_1 \right) &= \lambda~y . \left( \left[ x \mapsto s \right]~t_1 \right) \quad & \text{if}~y \neq x ~\text{and}~ y \notin FV(s) \\
+    \left[ x \mapsto s \right]\left(t_1~t_2\right) &= \left(\left[x \mapsto s  \right]~t_1  \right) \left(\left[x \mapsto s  \right]~t_2 \right) & 
+  \end{flalign*}
+
+  TODO mention renaming if y = x or y in FV(s)
+
+  TODO animate substitution
+    \begin{displaymath}
+    \left[ x \mapsto 3 \right] \left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right)
+    \end{displaymath}
+\end{frame}
+
+\begin{frame}
+  Let us do some things with lambda calculus
+\end{frame}
+
+\begin{frame}
+  We can do Booleans:
+  \begin{align*}
+   tru &= \lambda~t.~\lambda~f.~t \\
+   fls &= \lambda~t.~\lambda~f.~f \\
+   and &= \lambda~b.~\lambda~c.~b~c~fls
+  \end{align*}
+\end{frame}
+
+\begin{frame}
+  We can do natural numbers:
+  \begin{align*}
+  z &= \lambda~s.~\lambda~z.~z \\
+  scc &= \lambda~n.~\lambda~s.~\lambda~z.~s~\left(n~s~z\right) \\
+  plus~m~n &= \lambda~s.~\lambda~z.~m~s~\left(n~s~z\right)
+  \end{align*}
+\end{frame}
+
+\begin{frame}
+  We can do pairs:
+  \begin{align*}
+    pair &= \lambda~f.~\lambda~s.~\lambda~b.~b~f~s \\
+    fst &= \lambda~p.~p~tru \\
+    snd &= \lambda~p.~p~fls \\
+  \end{align*}
+  \[fst~\left(pair~v~w\right) \Rightarrow v\]
+\end{frame}
+
+\begin{frame}
+  We even have enough to do recursion:
+  
+  \[fix = \lambda~f.~\left(\lambda~x.~f~\left(\lambda~y.~x~x~y\right)\right)~\left(\lambda~x.~f~\left(\lambda~y.~x~x~y\right)\right)\]
+
+  \[g = \lambda~fct.~\lambda~n.~if~eq~n~0~then~1~else~times~n~\left(fct~prd~n\right)\]
+
+  \[factorial = fix~g\]
+\end{frame}
+
+\begin{frame}
+  Sometimes those kind of hijinx lead us into trouble:
+  
+  \[omega = \left(\lambda~x.~x~x\right) \left(\lambda~x.~x~x\right)\]
+
+  \[omega \Rightarrow omega\]
+\end{frame}
+
+\begin{frame}
+  One other big problem - there are plenty of stuck terms:
+  \[1~2\]
+\end{frame}
+
 

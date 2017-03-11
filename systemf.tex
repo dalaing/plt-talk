@@ -2,6 +2,7 @@
 \section{Universal types: System F}
 
 \begin{frame}
+  \begin{mdframed}[frametitle={Terms, values and types}]
 \begin{displaymath}
     \begin{aligned}
 t \quad=\quad& ~ \ldots &\\
@@ -10,17 +11,22 @@ t \quad=\quad& ~ \ldots &\\
   & ~ t~t \quad\quad &function~application\\
   & ~ \highlight{\lambda~X . t} \quad\quad &type~abstraction\\
   & ~ \highlight{t~\left[T\right]} \quad\quad &type~application\\
+v \quad=\quad& ~ \ldots &\\
+  & ~ \lambda~x {:} T . t \quad\quad &abstraction\\
+  & ~ \highlight{\lambda~X . t} \quad\quad &type~abstraction\\
 T \quad=\quad& ~ \ldots &\\
   & ~ \highlight{X} \quad\quad &type~variable\\
   & ~ T \rightarrow T \quad\quad &function~arrow\\
-  & ~ \highlight{\forall~X . T} \quad\quad &function~arrow\\
+  & ~ \highlight{\forall~X . T} \quad\quad &univeral type\\
     \end{aligned}
 \end{displaymath}
+  \end{mdframed}
 \end{frame}
 
 % TODO examples like function application, const, etc.. and how they are used
 
 \begin{frame}
+  \begin{mdframed}[frametitle={Small-step semantics}]
   \infrule[E-App1]
   {t_1 \longrightarrow {t_1}^{\prime}}
   {t_1~t_2 \longrightarrow {t_1}^{\prime}~t_2}
@@ -44,10 +50,12 @@ T \quad=\quad& ~ \ldots &\\
   {(\lambda~X . t_{12}) \left[T_2\right] \longrightarrow \left[X \mapsto T_2 \right]t_{12}}
 
   \newrulefalse
+  \end{mdframed}
 
 \end{frame}
 
 \begin{frame}
+  \begin{mdframed}[frametitle={Typing rules}]
   \infrule[T-Var]
   {x {:} T \in \Gamma}
   {\Gamma \vdash x {:} T}
@@ -71,4 +79,5 @@ T \quad=\quad& ~ \ldots &\\
   {\Gamma \vdash t_1 \left[T_2\right] {:} \left[X \mapsto T_2 \right] T_{12} }
 
   \newrulefalse
+  \end{mdframed}
 \end{frame}

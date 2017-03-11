@@ -296,10 +296,11 @@ v \quad:=\quad& ~ \qquad\qquad &\\
 \begin{frame}[c]
   Progress and preservation give us type-safety: well-typed terms do not get stuck.
   \begin{itemize}
-  \item<1-> Progress means that well-typed terms are either values or can take a step.
-  \item<2-> Values are not stuck, so if we are at a value we are done.
-  \item<3-> Preservation means that well-typed terms that can take a step do not change type.
-  \item<4-> After the step we have a well-typed term, so it is either a value or can
+  \pause
+  \item<+-> Progress means that well-typed terms are either values or can take a step.
+  \item<+-> Values are not stuck, so if we are at a value we are done.
+  \item<+-> Preservation means that well-typed terms that can take a step do not change type.
+  \item<+-> After the step we have a well-typed term, so it is either a value or can
     take a step...
   \end{itemize}
 \end{frame}

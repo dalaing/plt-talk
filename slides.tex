@@ -1,4 +1,4 @@
-\documentclass{beamer}
+\documentclass[center]{beamer}
 
 \title{Programming Language Theory}
 \author{Dave Laing}
@@ -11,6 +11,7 @@
 \usepackage{mdframed}
 \usepackage{prftree}
 \usepackage{bcprules}
+
 
 % \highlight[<colour>]{<stuff>}
 \newcommand{\highlight}[2][lightgray]{\mathchoice%
@@ -54,20 +55,36 @@
 
 \include{stlc-inference}
 
-% \include{ascription}
-\include{pairs}
-\include{tuples}
-% \include{records}
-% \include{variants}
-% \include{let}
-% \include{fix}
-% \include{recursive types}
-
 \include{systemf}
 
 \include{systemf-inference}
 
 \include{systemfw}
+
+% \include{systemf-inference}
+
+\begin{frame}[c]
+  TODO: examples of extensions to STLC
+  \begin{itemize}
+  \item ascription
+  \item records
+  \item variants
+  \item let
+  \item fix
+  \item record types
+  \end{itemize}
+\end{frame}
+
+%\include{pairs}
+%\include{tuples}
+
+\begin{frame}[c]
+  TODO: with time permitting, extended examples of
+  \begin{itemize}
+    \item evolution of lists
+    \item adding row polymorphism
+  \end{itemize}
+\end{frame}
 
 %\include{lists}
 %\include{row-polymorphism}
