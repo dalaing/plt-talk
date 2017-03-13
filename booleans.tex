@@ -60,15 +60,23 @@ v \quad:=\quad& ~ &\\
   \medskip
 
   \begin{overprint}
-  \onslide<1>
-  \onslide<2>
+  \onslide<+>
+  \onslide<+>
   In the languages we've seen so far, at most one rule applies to each term.
-  \onslide<3>
+  \onslide<+>
   If the rules for the steps overlap for a particular term, but the result of the step is the same for all of the overlapping rules, then all is well.
-  \onslide<4>
+  \onslide<+>
   This means that we don't have to worry about the order in which the rules are applied.
-  \onslide<5>
+  \onslide<+>
   In other cases where rules overlap, they can be harder to deal with.
+  \onslide<+>
+  If we had the short-circuiting rules and the non-short circuiting rules in use
+  at the same time, we would have some troubles.
+  \onslide<+>
+  If we non-deterministically choose a rule to apply we will end up stepping to
+  different terms, but evaluation will end up at the same value.
+  \onslide<+>
+  Things could be worse.
   \end{overprint}
 \end{frame}
 
@@ -91,19 +99,19 @@ v \quad:=\quad& ~ &\\
   \medskip
 
   \begin{overprint}
-  \onslide<1>
-  Some rules have multiple valid choices for some terms that lead down different paths.
-  \onslide<2>
+  \onslide<+>
+  Some rules have multiple valid choices for some terms that can create loops.
+  \onslide<+>
   These are hard to implement, since you could get stuck applying
 
   \infrule[Eq-Sym]{t_2 = t_1}{t_1 = t_2}
 
   over and over.
-  \onslide<3>
+  \onslide<+>
   Normally the non-deterministic rules are there to make propositions or proofs easier to work with.
-  \onslide<4>
+  \onslide<+>
   Most of the time there will also be a corresponding set of deterministic rules - often referred to as {\it algorithmic} - which will aid the implementors.
-  \onslide<5>
+  \onslide<+>
   This is usually follow by a proof of equivalence between the non-deterministic and algorithmic rule sets.
   \end{overprint}
 \end{frame}

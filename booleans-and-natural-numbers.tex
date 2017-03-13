@@ -162,15 +162,15 @@ v \quad:=\quad& ~ \qquad\qquad &\\
   \medskip
   
   \begin{overprint}
-    \onslide<1>
+    \onslide<+>
   We have a binary relation $\vdash t {:} T$.
-    \onslide<2>
+    \onslide<+>
   This indicates that the term $t$ is {\it well-typed} and has type $T$.
-    \onslide<3>
+    \onslide<+>
   Any term which doesn't match any of these rules is {\it ill-typed}.
-    \onslide<4>
+    \onslide<+>
   Anything on the left of the $\vdash$ is additional context that the typing rules need.
-    \onslide<5>
+    \onslide<+>
   For now we don't need any more context.
   \end{overprint}
   
@@ -209,8 +209,8 @@ v \quad:=\quad& ~ \qquad\qquad &\\
   \medskip
   
   \begin{overprint}
-    \onslide<1>
-    \onslide<2>
+    \onslide<+>
+    \onslide<+>
   These rule out the stuck terms we saw previously:
 
   \begin{displaymath}
@@ -220,15 +220,15 @@ v \quad:=\quad& ~ \qquad\qquad &\\
   \begin{displaymath}
   \text{if}~\text{O}~\text{then}~\text{false}~\text{else}~\text{true}
   \end{displaymath}
-    \onslide<3>
+    \onslide<+>
     They also rule out terms that are not stuck:
   \begin{displaymath}
   \text{if}~\text{true}~\text{then}~\text{O}~\text{else}~\text{true}
   \end{displaymath}
     as the rule $\text{T-If}$ states that both branches of the $\text{if}$ have to have the same type.
-    \onslide<4>
+    \onslide<+>
     This kind of thing is normally not a big deal.
-    \onslide<5>
+    \onslide<+>
     When a type system rules out some terms that were not stuck, it is called a {\it conservative} type system.
   \end{overprint}
 
@@ -255,18 +255,143 @@ v \quad:=\quad& ~ \qquad\qquad &\\
   \bigskip
 
   \begin{overprint}
-    \onslide<1-2>
-  $\forall t \left(\exists T \left(\vdash t {:} T\right) \implies value~t \vee \exists t^{\prime}\left(t \longrightarrow t^{\prime}\right)\right)$
-%
+    \onslide<1>
+    $
+    \highlight[white]{\forall}
+    \highlight[white]{\vdash t {:} T}
+    \left (
+    \highlight[white]{\text{value}~t}
+    \highlight[white]{\vee}
+    \highlight[white]{\exists t^{\prime} \left( t \longrightarrow t^{\prime} \right)}
+    \right)
+    $
+    \onslide<2>
+    $
+    \highlight{\forall}
+    \highlight[white]{\vdash t {:} T}
+    \left (
+    \highlight[white]{\text{value}~t}
+    \highlight[white]{\vee}
+    \highlight[white]{\exists t^{\prime} \left( t \longrightarrow t^{\prime} \right)}
+    \right)
+    $
     \onslide<3>
-  $\forall \vdash t {:} T \left( value~t \vee \exists t^{\prime}\left(t \longrightarrow t^{\prime}\right)\right)$
+    $
+    \highlight[white]{\forall}
+    \highlight{\vdash t {:} T}
+    \left (
+    \highlight[white]{\text{value}~t}
+    \highlight[white]{\vee}
+    \highlight[white]{\exists t^{\prime} \left( t \longrightarrow t^{\prime} \right)}
+    \right)
+    $
+    \onslide<4>
+    $
+    \highlight[white]{\forall}
+    \highlight[white]{\vdash t {:} T}
+    \left (
+    \highlight[white]{\text{value}~t}
+    \highlight{\vee}
+    \highlight[white]{\exists t^{\prime} \left( t \longrightarrow t^{\prime} \right)}
+    \right)
+    $
+    \onslide<5>
+    $
+    \highlight[white]{\forall}
+    \highlight[white]{\vdash t {:} T}
+    \left (
+    \highlight{\text{value}~t}
+    \highlight[white]{\vee}
+    \highlight[white]{\exists t^{\prime} \left( t \longrightarrow t^{\prime} \right)}
+    \right)
+    $
+    \onslide<6>
+    $
+    \highlight[white]{\forall}
+    \highlight[white]{\vdash t {:} T}
+    \left (
+    \highlight[white]{\text{value}~t}
+    \highlight[white]{\vee}
+    \highlight{\exists t^{\prime} \left( t \longrightarrow t^{\prime} \right)}
+    \right)
+    $
   \end{overprint}
 
   \bigskip
 
   \begin{overprint}
-    \onslide<2->
-  For all well-typed terms, the term is either a value or can take a step.
+    \onslide<+>
+    $
+    \highlight[white]{\text{For all}}
+    \highlight[white]{\text{well-typed terms,}} \\
+    \highlight[white]{\text{the term is}}
+    \highlight[white]{\text{either}}
+    \text{a}
+    \highlight[white]{\text{value}}
+    \text{or} \\
+    \highlight[white]{\text{is able to step}}
+    \text{.}
+    $
+    \onslide<+>
+    $
+    \highlight{\text{For all}}
+    \highlight[white]{\text{well-typed terms,}} \\
+    \highlight[white]{\text{the term is}}
+    \highlight[white]{\text{either}}
+    \text{a}
+    \highlight[white]{\text{value}}
+    \text{or} \\
+    \highlight[white]{\text{is able to step}}
+    \text{.}
+    $
+    \onslide<+>
+    $
+    \highlight[white]{\text{For all}}
+    \highlight{\text{well-typed terms,}} \\
+    \highlight[white]{\text{the term is}}
+    \highlight[white]{\text{either}}
+    \text{a}
+    \highlight[white]{\text{value}}
+    \text{or} \\
+    \highlight[white]{\text{is able to step}}
+    \text{.}
+    $
+    \onslide<+>
+    $
+    \highlight[white]{\text{For all}}
+    \highlight[white]{\text{well-typed terms,}} \\
+    \highlight[white]{\text{the term is}}
+    \highlight{\text{either}}
+    \text{a}
+    \highlight[white]{\text{value}}
+    \text{or} \\
+    \highlight[white]{\text{is able to step}}
+    \text{.}
+    $
+    \onslide<+>
+    $
+    \highlight[white]{\text{For all}}
+    \highlight[white]{\text{well-typed terms,}} \\
+    \highlight[white]{\text{the term is}}
+    \highlight[white]{\text{either}}
+    \text{a}
+    \highlight{\text{value}}
+    \text{or} \\
+    \highlight[white]{\text{is able to step}}
+    \text{.}
+    $
+    \onslide<+>
+    $
+    \highlight[white]{\text{For all}}
+    \highlight[white]{\text{well-typed terms,}} \\
+    \highlight[white]{\text{the term is}}
+    \highlight[white]{\text{either}}
+    \text{a}
+    \highlight[white]{\text{value}}
+    \text{or} \\
+    \highlight{\text{is able to step}}
+    \text{.}
+    $
   \end{overprint}
 \end{frame}
 
@@ -277,19 +402,131 @@ v \quad:=\quad& ~ \qquad\qquad &\\
   \bigskip
 
   \begin{overprint}
-    \onslide<1-2>
-  $\forall t \left( \exists T \left( \vdash t {:} T\right) \wedge \exists t^{\prime} \left(t \longrightarrow t^{\prime}\right) \implies t^{\prime} {:} T \right)$
-%
+    \onslide<1>
+    $
+    \highlight[white]{\forall}
+    \highlight[white]{\vdash t {:} T}
+    \left(
+      \highlight[white]{\exists t^{\prime} \left(t \longrightarrow t^{\prime}\right)}
+      \highlight[white]{\implies}
+      \highlight[white]{\vdash t^{\prime} {:} T}
+    \right)
+    $
+    \onslide<2>
+    $
+    \highlight{\forall}
+    \highlight[white]{\vdash t {:} T}
+    \left(
+      \highlight[white]{\exists t^{\prime} \left(t \longrightarrow t^{\prime}\right)}
+      \highlight[white]{\implies}
+      \highlight[white]{\vdash t^{\prime} {:} T}
+    \right)
+    $
     \onslide<3>
-  $\forall \vdash t {:} T \left(\exists t^{\prime} \left(t \longrightarrow t^{\prime}\right) \implies t^{\prime} {:} T \right)$
+    $
+    \highlight[white]{\forall}
+    \highlight{\vdash t {:} T}
+    \left(
+      \highlight[white]{\exists t^{\prime} \left(t \longrightarrow t^{\prime}\right)}
+      \highlight[white]{\implies}
+      \highlight[white]{\vdash t^{\prime} {:} T}
+    \right)
+    $
+    \onslide<4>
+    $
+    \highlight[white]{\forall}
+    \highlight[white]{\vdash t {:} T}
+    \left(
+      \highlight[white]{\exists t^{\prime} \left(t \longrightarrow t^{\prime}\right)}
+      \highlight{\implies}
+      \highlight[white]{\vdash t^{\prime} {:} T}
+    \right)
+    $
+    \onslide<5>
+    $
+    \highlight[white]{\forall}
+    \highlight[white]{\vdash t {:} T}
+    \left(
+      \highlight{\exists t^{\prime} \left(t \longrightarrow t^{\prime}\right)}
+      \highlight[white]{\implies}
+      \highlight[white]{\vdash t^{\prime} {:} T}
+    \right)
+    $
+    \onslide<6>
+    $
+    \highlight[white]{\forall}
+    \highlight{\vdash t {:} T}
+    \left(
+      \highlight[white]{\exists t^{\prime} \left(t \longrightarrow t^{\prime}\right)}
+      \highlight[white]{\implies}
+      \highlight{\vdash t^{\prime} {:} T}
+    \right)
+    $
   \end{overprint}
 
   \bigskip
 
   \begin{overprint}
-    \onslide<2->
-    For all well-typed terms that can take a step, the type is the same before
-    and after the step.
+    \onslide<+>
+    $
+    \highlight[white]{\text{For all}}
+    \highlight[white]{\text{well-typed terms}}
+    \text{,} \\
+    \highlight[white]{\text{if}}
+    \highlight[white]{\text{the term can take a step}} \\
+    \highlight[white]{\text{the type is unchanged}}
+    \text{.}
+    $
+    \onslide<+>
+    $
+    \highlight{\text{For all}}
+    \highlight[white]{\text{well-typed terms}}
+    \text{,} \\
+    \highlight[white]{\text{if}}
+    \highlight[white]{\text{the term can take a step}} \\
+    \highlight[white]{\text{the type is unchanged}}
+    \text{.}
+    $
+    \onslide<+>
+    $
+    \highlight[white]{\text{For all}}
+    \highlight{\text{well-typed terms}}
+    \text{,} \\
+    \highlight[white]{\text{if}}
+    \highlight[white]{\text{the term can take a step}} \\
+    \highlight[white]{\text{the type is unchanged}}
+    \text{.}
+    $
+    \onslide<+>
+    $
+    \highlight[white]{\text{For all}}
+    \highlight[white]{\text{well-typed terms}}
+    \text{,} \\
+    \highlight{\text{if}}
+    \highlight[white]{\text{the term can take a step}} \\
+    \highlight[white]{\text{the type is unchanged}}
+    \text{.}
+    $
+    \onslide<+>
+    $
+    \highlight[white]{\text{For all}}
+    \highlight[white]{\text{well-typed terms}}
+    \text{,} \\
+    \highlight[white]{\text{if}}
+    \highlight{\text{the term can take a step}} \\
+    \highlight[white]{\text{the type is unchanged}}
+    \text{.}
+    $
+    \onslide<+>
+    $
+    \highlight[white]{\text{For all}}
+    \highlight[white]{\text{well-typed terms}}
+    \text{,} \\
+    \highlight[white]{\text{if}}
+    \highlight[white]{\text{the term can take a step}} \\
+    \highlight{\text{the type is unchanged}}
+    \text{.}
+    $
   \end{overprint}
 \end{frame}
 
