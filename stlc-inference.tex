@@ -1,6 +1,536 @@
 
 \section{Type inference for lambda calculus}
 
-\begin{frame}[c]
-  TODO
+\begin{frame}
+  We don't use types during evaluation.
+\end{frame}
+
+\begin{frame}
+  So we can check that a type is well-typed and then {\it erase} the type
+  annotations, and the term should still evaluate.
+\end{frame}
+
+\begin{frame}
+  The reverse idea - starting with an unannotated term and recovering the type
+  information - is called {\it type inference} or {\it type reconstruction}.
+\end{frame}
+
+\begin{frame}
+  The Hindly-Milner-Damas algorithm is used to do this for STLC.
+\end{frame}
+
+\begin{frame}
+  There are some pathological cases with respect to running time, but it's
+  normally fine.
+\end{frame}
+
+\begin{frame}
+  General idea:
+  \begin{itemize}
+  \pause
+  \item <+-> Generate type variables all over the place
+  \item <+-> Record constraints on the type variables when we run into something concrete
+  \item <+-> Unify these constraints to find a map from type variables to types
+  \item <+-> Use that map to replace all the type variables with types.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  Let us look at our old friend:
+  \[\left( \lambda~x~.~x \right)~\text{true} \]
+\end{frame}
+
+\begin{frame}
+  \begin{overprint}
+    \onslide<+>
+  For
+  \[\lambda~x~.~t\]
+    \onslide<+>
+  For
+  \[\lambda~x~.~t\]
+  we expect that given
+  \[\Gamma , x~{:}~C \vdash t~{:}~\highlight[white]{D}\]
+    \onslide<+>
+  For
+  \[\lambda~x~.~t\]
+  we expect that given
+  \[\Gamma , x~{:}~C \vdash t~{:}~\highlight[white]{D}\]
+  that the overall type will be
+  \[\lambda~x~.~t~{:}~C \rightarrow \highlight[white]{D}\]
+    \onslide<+>
+  For
+  \[\lambda~x~.~t\]
+  we expect that given
+  \[\Gamma , x~{:}~C \vdash t~{:}~\highlight[white]{D}\]
+  that the overall type will be
+  \[\lambda~x~.~t~{:}~C \rightarrow \highlight[white]{D}\]
+  with constraints
+  \[ \emptyset \]
+    \onslide<+>
+  For
+  \[\lambda~x~.~x\]
+  we expect that given
+  \[\Gamma , x~{:}~C \vdash t~{:}~\highlight[white]{D}\]
+  that the overall type will be
+  \[\lambda~x~.~t~{:}~C \rightarrow \highlight[white]{D}\]
+  with constraints
+  \[ \emptyset \]
+    \onslide<+>
+  For
+  \[\lambda~x~.~x\]
+  we expect that given
+  \[\Gamma , x~{:}~C \vdash x~{:}~\highlight[white]{D}\]
+  that the overall type will be
+  \[\lambda~x~.~t~{:}~C \rightarrow \highlight[white]{D}\]
+  with constraints
+  \[ \emptyset \]
+    \onslide<+>
+  For
+  \[\lambda~x~.~x\]
+  we expect that given
+  \[\Gamma , x~{:}~C \vdash x~{:}~\highlight[white]{D}\]
+  that the overall type will be
+  \[\lambda~x~.~t~{:}~C \rightarrow \highlight[white]{D}\]
+  with constraints
+  \[ \left\{ \highlight[white]{C \sim D} \right\} \]
+    \onslide<+>
+  For
+  \[\lambda~x~.~x\]
+  we expect that given
+  \[\Gamma , x~{:}~C \vdash x~{:}~\highlight[white]{D}\]
+  that the overall type will be
+  \[\lambda~x~.~x~{:}~C \rightarrow \highlight[white]{D}\]
+  with constraints
+  \[ \left\{ \highlight[white]{C \sim D} \right\} \]
+    \onslide<+>
+  For
+  \[\lambda~x~.~x\]
+  we expect that given
+  \[\Gamma , x~{:}~C \vdash x~{:}~\highlight[white]{D}\]
+  that the overall type will be
+  \[\lambda~x~.~x~{:}~C \rightarrow \highlight[white]{D}\]
+  with constraints
+  \[ \left\{ \highlight{C \sim D} \right\} \]
+    \onslide<+>
+  For
+  \[\lambda~x~.~x\]
+  we expect that given
+  \[\Gamma , x~{:}~C \vdash x~{:}~\highlight{D}\]
+  that the overall type will be
+  \[\lambda~x~.~x~{:}~C \rightarrow \highlight{D}\]
+  with constraints
+  \[ \left\{ \highlight{C \sim D} \right\} \]
+    \onslide<+>
+  For
+  \[\lambda~x~.~x\]
+  we expect that given
+  \[\Gamma , x~{:}~C \vdash x~{:}~\highlight{C}\]
+  that the overall type will be
+  \[\lambda~x~.~x~{:}~C \rightarrow \highlight{C}\]
+  with constraints
+  \[ \left\{ \highlight{C \sim D} \right\} \]
+    \onslide<+>
+  For
+  \[\lambda~x~.~x\]
+  we expect that given
+  \[\Gamma , x~{:}~C \vdash x~{:}~\highlight[white]{C}\]
+  that the overall type will be
+  \[\lambda~x~.~x~{:}~C \rightarrow \highlight[white]{C}\]
+  with constraints
+  \[ \emptyset \]
+  \end{overprint}
+\end{frame}
+
+\begin{frame}
+  We know that
+  \[ \vdash \text{true}~{:}~\text{Bool} \]
+\end{frame}
+
+\begin{frame}
+  \begin{overprint}
+    \onslide<+>
+  For
+  \[f~x \]
+    \onslide<+>
+  For
+  \[f~x \]
+  we expect that given
+  \[ \vdash f~{:}~\highlight[white]{A} \rightarrow \highlight[white]{B}\]
+  and
+  \[ \vdash x~{:}~\highlight[white]{A} \]
+    \onslide<+>
+  For
+  \[f~x \]
+  we expect that given
+  \[ \vdash f~{:}~\highlight[white]{A} \rightarrow \highlight[white]{B}\]
+  and
+  \[ \vdash x~{:}~\highlight[white]{A} \]
+  that the overall type will be
+  \[ \vdash f~x~{:}~\highlight[white]{B}\]
+    \onslide<+>
+  For
+  \[f~x \]
+  we expect that given
+  \[ \vdash f~{:}~\highlight[white]{A} \rightarrow \highlight[white]{B}\]
+  and
+  \[ \vdash x~{:}~\highlight[white]{A} \]
+  that the overall type will be
+  \[ \vdash f~x~{:}~\highlight[white]{B}\]
+  with constraints
+  \[ \emptyset \]
+    \onslide<+>
+  For
+  \[\left( \lambda~x~.~x \right)~x \]
+  we expect that given
+  \[ \vdash f~{:}~\highlight[white]{A} \rightarrow \highlight[white]{B}\]
+  and
+  \[ \vdash x~{:}~\highlight[white]{A} \]
+  that the overall type will be
+  \[ \vdash f~x~{:}~\highlight[white]{B}\]
+  with constraints
+  \[ \emptyset \]
+    \onslide<+>
+  For
+  \[\left( \lambda~x~.~x \right)~x \]
+  we expect that given
+  \[ \vdash \left( \lambda~x~.~x \right)~{:}~\highlight[white]{A} \rightarrow \highlight[white]{B}\]
+  and
+  \[ \vdash x~{:}~\highlight[white]{A} \]
+  that the overall type will be
+  \[ \vdash f~x~{:}~\highlight[white]{B}\]
+  with constraints
+  \[ \emptyset \]
+    \onslide<+>
+  For
+  \[\left( \lambda~x~.~x \right)~x \]
+  we expect that given
+  \[ \vdash \left( \lambda~x~.~x \right)~{:}~\highlight[white]{A} \rightarrow \highlight[white]{B}\]
+  and
+  \[ \vdash x~{:}~\highlight[white]{A} \]
+  that the overall type will be
+  \[ \vdash f~x~{:}~\highlight[white]{B}\]
+  with constraints
+  \[ \left\{ \left( \highlight[white]{A} \rightarrow \highlight[white]{B} \right) \sim \left( \highlight[white]{C} \rightarrow \highlight[white]{C} \right) \right\} \]
+    \onslide<+>
+  For
+  \[\left( \lambda~x~.~x \right)~x \]
+  we expect that given
+  \[ \vdash \left( \lambda~x~.~x \right)~{:}~\highlight[white]{A} \rightarrow \highlight[white]{B}\]
+  and
+  \[ \vdash x~{:}~\highlight[white]{A} \]
+  that the overall type will be
+  \[ \vdash f~x~{:}~\highlight[white]{B}\]
+  with constraints
+  \[ \left\{ \highlight[white]{A} \sim \highlight[white]{C} , \highlight[white]{B} \sim \highlight[white]{C} \right\} \]
+    \onslide<+>
+  For
+  \[\left( \lambda~x~.~x \right)~x \]
+  we expect that given
+  \[ \vdash \left( \lambda~x~.~x \right)~{:}~\highlight[white]{A} \rightarrow \highlight[white]{B}\]
+  and
+  \[ \vdash x~{:}~\highlight[white]{A} \]
+  that the overall type will be
+  \[ \vdash \left( \lambda~x~.~x \right)~x~{:}~\highlight[white]{B}\]
+  with constraints
+  \[ \left\{ \highlight[white]{A} \sim \highlight[white]{C} , \highlight[white]{B} \sim \highlight[white]{C} \right\} \]
+    \onslide<+>
+  For
+  \[\left( \lambda~x~.~x \right)~\text{true} \]
+  we expect that given
+  \[ \vdash \left( \lambda~x~.~x \right)~{:}~\highlight[white]{A} \rightarrow \highlight[white]{B}\]
+  and
+  \[ \vdash x~{:}~\highlight[white]{A} \]
+  that the overall type will be
+  \[ \vdash \left( \lambda~x~.~x \right)~x~{:}~\highlight[white]{B}\]
+  with constraints
+  \[ \left\{ \highlight[white]{A} \sim \highlight[white]{C} , \highlight[white]{B} \sim \highlight[white]{C} \right\} \]
+    \onslide<+>
+  For
+  \[\left( \lambda~x~.~x \right)~\text{true} \]
+  we expect that given
+  \[ \vdash \left( \lambda~x~.~x \right)~{:}~\highlight[white]{A} \rightarrow \highlight[white]{B}\]
+  and
+  \[ \vdash \text{true}~{:}~\highlight[white]{A} \]
+  that the overall type will be
+  \[ \vdash \left( \lambda~x~.~x \right)~x~{:}~\highlight[white]{B}\]
+  with constraints
+  \[ \left\{ \highlight[white]{A} \sim \highlight[white]{C} , \highlight[white]{B} \sim \highlight[white]{C} \right\} \]
+    \onslide<+>
+  For
+  \[\left( \lambda~x~.~x \right)~\text{true} \]
+  we expect that given
+  \[ \vdash \left( \lambda~x~.~x \right)~{:}~\highlight[white]{A} \rightarrow \highlight[white]{B}\]
+  and
+  \[ \vdash \text{true}~{:}~\highlight[white]{A} \]
+  that the overall type will be
+  \[ \vdash \left( \lambda~x~.~x \right)~x~{:}~\highlight[white]{B}\]
+  with constraints
+  \[ \left\{ \highlight[white]{A} \sim \text{Bool}, \highlight[white]{A} \sim \highlight[white]{C} , \highlight[white]{B} \sim \highlight[white]{C} \right\} \]
+    \onslide<+>
+  For
+  \[\left( \lambda~x~.~x \right)~\text{true} \]
+  we expect that given
+  \[ \vdash \left( \lambda~x~.~x \right)~{:}~\highlight[white]{A} \rightarrow \highlight[white]{B}\]
+  and
+  \[ \vdash \text{true}~{:}~\highlight[white]{A} \]
+  that the overall type will be
+  \[ \vdash \left( \lambda~x~.~x \right)~\text{true}~{:}~\highlight[white]{B}\]
+  with constraints
+  \[ \left\{ \highlight[white]{A} \sim \text{Bool}, \highlight[white]{A} \sim \highlight[white]{C} , \highlight[white]{B} \sim \highlight[white]{C} \right\} \]
+    \onslide<+>
+  For
+  \[\left( \lambda~x~.~x \right)~\text{true} \]
+  we expect that given
+  \[ \vdash \left( \lambda~x~.~x \right)~{:}~\highlight[white]{A} \rightarrow \highlight[white]{B}\]
+  and
+  \[ \vdash \text{true}~{:}~\highlight[white]{A} \]
+  that the overall type will be
+  \[ \vdash \left( \lambda~x~.~x \right)~\text{true}~{:}~\highlight[white]{B}\]
+  with constraints
+  \[ \left\{ \highlight{A} \sim \text{Bool}, \highlight{A} \sim \highlight[white]{C} , \highlight[white]{B} \sim \highlight[white]{C} \right\} \]
+    \onslide<+>
+  For
+  \[\left( \lambda~x~.~x \right)~\text{true} \]
+  we expect that given
+  \[ \vdash \left( \lambda~x~.~x \right)~{:}~\highlight[white]{A} \rightarrow \highlight[white]{B}\]
+  and
+  \[ \vdash \text{true}~{:}~\highlight[white]{A} \]
+  that the overall type will be
+  \[ \vdash \left( \lambda~x~.~x \right)~\text{true}~{:}~\highlight[white]{B}\]
+  with constraints
+  \[ \left\{ \highlight{A} \sim \highlight[white]{C} \sim \text{Bool} , \highlight[white]{B} \sim \highlight[white]{C} \right\} \]
+    \onslide<+>
+  For
+  \[\left( \lambda~x~.~x \right)~\text{true} \]
+  we expect that given
+  \[ \vdash \left( \lambda~x~.~x \right)~{:}~\highlight[white]{A} \rightarrow \highlight[white]{B}\]
+  and
+  \[ \vdash \text{true}~{:}~\highlight[white]{A} \]
+  that the overall type will be
+  \[ \vdash \left( \lambda~x~.~x \right)~\text{true}~{:}~\highlight[white]{B}\]
+  with constraints
+  \[ \left\{ \highlight[white]{A} \sim \highlight[white]{C} \sim \text{Bool} , \highlight[white]{B} \sim \highlight[white]{C} \right\} \]
+    \onslide<+>
+  For
+  \[\left( \lambda~x~.~x \right)~\text{true} \]
+  we expect that given
+  \[ \vdash \left( \lambda~x~.~x \right)~{:}~\highlight[white]{A} \rightarrow \highlight[white]{B}\]
+  and
+  \[ \vdash \text{true}~{:}~\highlight[white]{A} \]
+  that the overall type will be
+  \[ \vdash \left( \lambda~x~.~x \right)~\text{true}~{:}~\highlight[white]{B}\]
+  with constraints
+  \[ \left\{ \highlight[white]{A} \sim \highlight{C} \sim \text{Bool} , \highlight[white]{B} \sim \highlight{C} \right\} \]
+    \onslide<+>
+  For
+  \[\left( \lambda~x~.~x \right)~\text{true} \]
+  we expect that given
+  \[ \vdash \left( \lambda~x~.~x \right)~{:}~\highlight[white]{A} \rightarrow \highlight[white]{B}\]
+  and
+  \[ \vdash \text{true}~{:}~\highlight[white]{A} \]
+  that the overall type will be
+  \[ \vdash \left( \lambda~x~.~x \right)~\text{true}~{:}~\highlight[white]{B}\]
+  with constraints
+  \[ \left\{ \highlight[white]{A} \sim \highlight[white]{B} \sim \highlight{C} \sim \text{Bool} \right\} \]
+    \onslide<+>
+  For
+  \[\left( \lambda~x~.~x \right)~\text{true} \]
+  we expect that given
+  \[ \vdash \left( \lambda~x~.~x \right)~{:}~\highlight[white]{A} \rightarrow \highlight[white]{B}\]
+  and
+  \[ \vdash \text{true}~{:}~\highlight[white]{A} \]
+  that the overall type will be
+  \[ \vdash \left( \lambda~x~.~x \right)~\text{true}~{:}~\highlight[white]{B}\]
+  with constraints
+  \[ \left\{ \highlight[white]{A} \sim \highlight[white]{B} \sim \highlight[white]{C} \sim \text{Bool} \right\} \]
+    \onslide<+>
+  For
+  \[\left( \lambda~x~.~x \right)~\text{true} \]
+  we expect that given
+  \[ \vdash \left( \lambda~x~.~x \right)~{:}~\highlight[white]{A} \rightarrow \highlight[white]{B}\]
+  and
+  \[ \vdash \text{true}~{:}~\highlight[white]{A} \]
+  that the overall type will be
+  \[ \vdash \left( \lambda~x~.~x \right)~\text{true}~{:}~\highlight[white]{B}\]
+  with constraints
+  \[ \left\{ \highlight{A} \sim \highlight{B} \sim \highlight[white]{C} \sim \highlight{\text{Bool}} \right\} \]
+    \onslide<+>
+  For
+  \[\left( \lambda~x~.~x \right)~\text{true} \]
+  we expect that given
+  \[ \vdash \left( \lambda~x~.~x \right)~{:}~\highlight{A} \rightarrow \highlight[white]{B}\]
+  and
+  \[ \vdash \text{true}~{:}~\highlight[white]{A} \]
+  that the overall type will be
+  \[ \vdash \left( \lambda~x~.~x \right)~\text{true}~{:}~\highlight[white]{B}\]
+  with constraints
+  \[ \left\{ \highlight{A} \sim \highlight{B} \sim \highlight[white]{C} \sim \highlight{\text{Bool}} \right\} \]
+    \onslide<+>
+  For
+  \[\left( \lambda~x~.~x \right)~\text{true} \]
+  we expect that given
+  \[ \vdash \left( \lambda~x~.~x \right)~{:}~\highlight{\text{Bool}} \rightarrow \highlight[white]{B}\]
+  and
+  \[ \vdash \text{true}~{:}~\highlight[white]{A} \]
+  that the overall type will be
+  \[ \vdash \left( \lambda~x~.~x \right)~\text{true}~{:}~\highlight[white]{B}\]
+  with constraints
+  \[ \left\{ \highlight{A} \sim \highlight{B} \sim \highlight[white]{C} \sim \highlight{\text{Bool}} \right\} \]
+    \onslide<+>
+  For
+  \[\left( \lambda~x~.~x \right)~\text{true} \]
+  we expect that given
+  \[ \vdash \left( \lambda~x~.~x \right)~{:}~\highlight[white]{\text{Bool}} \rightarrow \highlight[white]{B}\]
+  and
+  \[ \vdash \text{true}~{:}~\highlight[white]{A} \]
+  that the overall type will be
+  \[ \vdash \left( \lambda~x~.~x \right)~\text{true}~{:}~\highlight[white]{B}\]
+  with constraints
+  \[ \left\{ \highlight{A} \sim \highlight{B} \sim \highlight[white]{C} \sim \highlight{\text{Bool}} \right\} \]
+    \onslide<+>
+  For
+  \[\left( \lambda~x~.~x \right)~\text{true} \]
+  we expect that given
+  \[ \vdash \left( \lambda~x~.~x \right)~{:}~\highlight[white]{\text{Bool}} \rightarrow \highlight{B}\]
+  and
+  \[ \vdash \text{true}~{:}~\highlight[white]{A} \]
+  that the overall type will be
+  \[ \vdash \left( \lambda~x~.~x \right)~\text{true}~{:}~\highlight[white]{B}\]
+  with constraints
+  \[ \left\{ \highlight{A} \sim \highlight{B} \sim \highlight[white]{C} \sim \highlight{\text{Bool}} \right\} \]
+    \onslide<+>
+  For
+  \[\left( \lambda~x~.~x \right)~\text{true} \]
+  we expect that given
+  \[ \vdash \left( \lambda~x~.~x \right)~{:}~\highlight[white]{\text{Bool}} \rightarrow \highlight{\text{Bool}}\]
+  and
+  \[ \vdash \text{true}~{:}~\highlight[white]{A} \]
+  that the overall type will be
+  \[ \vdash \left( \lambda~x~.~x \right)~\text{true}~{:}~\highlight[white]{B}\]
+  with constraints
+  \[ \left\{ \highlight{A} \sim \highlight{B} \sim \highlight[white]{C} \sim \highlight{\text{Bool}} \right\} \]
+    \onslide<+>
+  For
+  \[\left( \lambda~x~.~x \right)~\text{true} \]
+  we expect that given
+  \[ \vdash \left( \lambda~x~.~x \right)~{:}~\highlight[white]{\text{Bool}} \rightarrow \highlight[white]{\text{Bool}}\]
+  and
+  \[ \vdash \text{true}~{:}~\highlight[white]{A} \]
+  that the overall type will be
+  \[ \vdash \left( \lambda~x~.~x \right)~\text{true}~{:}~\highlight[white]{B}\]
+  with constraints
+  \[ \left\{ \highlight{A} \sim \highlight{B} \sim \highlight[white]{C} \sim \highlight{\text{Bool}} \right\} \]
+    \onslide<+>
+  For
+  \[\left( \lambda~x~.~x \right)~\text{true} \]
+  we expect that given
+  \[ \vdash \left( \lambda~x~.~x \right)~{:}~\highlight[white]{\text{Bool}} \rightarrow \highlight[white]{\text{Bool}}\]
+  and
+  \[ \vdash \text{true}~{:}~\highlight{A} \]
+  that the overall type will be
+  \[ \vdash \left( \lambda~x~.~x \right)~\text{true}~{:}~\highlight[white]{B}\]
+  with constraints
+  \[ \left\{ \highlight{A} \sim \highlight{B} \sim \highlight[white]{C} \sim \highlight{\text{Bool}} \right\} \]
+    \onslide<+>
+  For
+  \[\left( \lambda~x~.~x \right)~\text{true} \]
+  we expect that given
+  \[ \vdash \left( \lambda~x~.~x \right)~{:}~\highlight[white]{\text{Bool}} \rightarrow \highlight[white]{\text{Bool}}\]
+  and
+  \[ \vdash \text{true}~{:}~\highlight{\text{Bool}} \]
+  that the overall type will be
+  \[ \vdash \left( \lambda~x~.~x \right)~\text{true}~{:}~\highlight[white]{B}\]
+  with constraints
+  \[ \left\{ \highlight{A} \sim \highlight{B} \sim \highlight[white]{C} \sim \highlight{\text{Bool}} \right\} \]
+    \onslide<+>
+  For
+  \[\left( \lambda~x~.~x \right)~\text{true} \]
+  we expect that given
+  \[ \vdash \left( \lambda~x~.~x \right)~{:}~\highlight[white]{\text{Bool}} \rightarrow \highlight[white]{\text{Bool}}\]
+  and
+  \[ \vdash \text{true}~{:}~\highlight[white]{\text{Bool}} \]
+  that the overall type will be
+  \[ \vdash \left( \lambda~x~.~x \right)~\text{true}~{:}~\highlight[white]{B}\]
+  with constraints
+  \[ \left\{ \highlight{A} \sim \highlight{B} \sim \highlight[white]{C} \sim \highlight{\text{Bool}} \right\} \]
+    \onslide<+>
+  For
+  \[\left( \lambda~x~.~x \right)~\text{true} \]
+  we expect that given
+  \[ \vdash \left( \lambda~x~.~x \right)~{:}~\highlight[white]{\text{Bool}} \rightarrow \highlight[white]{\text{Bool}}\]
+  and
+  \[ \vdash \text{true}~{:}~\highlight[white]{\text{Bool}} \]
+  that the overall type will be
+  \[ \vdash \left( \lambda~x~.~x \right)~\text{true}~{:}~\highlight{B}\]
+  with constraints
+  \[ \left\{ \highlight{A} \sim \highlight{B} \sim \highlight[white]{C} \sim \highlight{\text{Bool}} \right\} \]
+    \onslide<+>
+  For
+  \[\left( \lambda~x~.~x \right)~\text{true} \]
+  we expect that given
+  \[ \vdash \left( \lambda~x~.~x \right)~{:}~\highlight[white]{\text{Bool}} \rightarrow \highlight[white]{\text{Bool}}\]
+  and
+  \[ \vdash \text{true}~{:}~\highlight[white]{\text{Bool}} \]
+  that the overall type will be
+  \[ \vdash \left( \lambda~x~.~x \right)~\text{true}~{:}~\highlight{\text{Bool}}\]
+  with constraints
+  \[ \left\{ \highlight{A} \sim \highlight{B} \sim \highlight[white]{C} \sim \highlight{\text{Bool}} \right\} \]
+    \onslide<+>
+  For
+  \[\left( \lambda~x~.~x \right)~\text{true} \]
+  we expect that given
+  \[ \vdash \left( \lambda~x~.~x \right)~{:}~\highlight[white]{\text{Bool}} \rightarrow \highlight[white]{\text{Bool}}\]
+  and
+  \[ \vdash \text{true}~{:}~\highlight[white]{\text{Bool}} \]
+  that the overall type will be
+  \[ \vdash \left( \lambda~x~.~x \right)~\text{true}~{:}~\highlight[white]{\text{Bool}}\]
+  with constraints
+  \[ \emptyset \]
+  \end{overprint}
+\end{frame}
+
+\begin{frame}
+  Let us revisit some terms that gave us trouble before.
+\end{frame}
+
+\begin{frame}
+  \[
+    \lambda~x~.~x~{:}~\forall~A~.~A \rightarrow A
+  \]
+\end{frame}
+
+\begin{frame}
+  What is going on with the $\forall~A$?
+\end{frame}
+
+\begin{frame}
+  That is a {\it universal type}.
+\end{frame}
+
+\begin{frame}
+  This is what we get when we our type still has unconstrained type variables in
+  it at the end of type-checking.
+\end{frame}
+
+\begin{frame}
+  It was handy for ${\text{id}}$ - let us see how it fares with $\text{const}$
+  and $\text{compose}$
+\end{frame}
+
+\begin{frame}
+  \[
+    \lambda~x~.~\lambda~y~.~x~{:}~\forall~A~.~\forall~B~.~A \rightarrow B \rightarrow A
+  \]
+\end{frame}
+
+\begin{frame}
+  \[
+    \lambda~f~.~\lambda~g~.~\lambda~x~.~f~\left( g~x \right)~{:}~\forall~A~.~\forall~B~.~\forall~C~.~\left( B
+      \rightarrow C \right) \rightarrow \left( A \rightarrow B \right)
+    \rightarrow \left( A \rightarrow C \right)
+  \]
+\end{frame}
+
+\begin{frame}
+  These things look really handy...
 \end{frame}
