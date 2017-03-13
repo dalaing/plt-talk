@@ -133,50 +133,246 @@ v \quad:=\quad& ~ &\\
   Let us evaluate $(1 + 2) + (3 + 4)$.
 \end{frame}
 
-\begin{frame}
+\begin{frame}[c]
   \begin{mdframed}[frametitle={Previously...}]
+  \begin{overprint}
+  \onslide<1>
   \infrule[E-Add1]
-         {\highlight[white]{\strut t_1} \longrightarrow \highlight[white]{\strut {t_1}^{\prime}}}
-         {\highlight[white]{\strut t_1} + \highlight[white]{\strut t_2} \longrightarrow \highlight[white]{\strut {t_1}^{\prime}} +
-           \highlight[white]{\strut t_2}}
-  \infrule[E-AddInt]
-          {}
-          {\highlight[white]{\strut \left<\text{int}_1\right>} + \highlight[white]{\strut
-              \left<\text{int}_2\right>} \longrightarrow \highlight[white]{\strut \left< \text{int}_1 + \text{int}_2 \right>}}
-  \end{mdframed}
-  \vfill
-  \begin{displaymath}
-    \prftree[r]{E-Add1}
-    {\prftree[r]{E-AddInt}
-      {}
-      {\highlight[white]{\strut 1} + \highlight[white]{\strut 2} \longrightarrow \highlight[white]{\strut 3}}
-    }
-    {\highlight[white]{\strut (1 + 2)} + \highlight[white]{\strut (3 + 4)}
-      \longrightarrow \highlight[white]{\strut 3} + \highlight[white]{\strut (3 + 4)}}
-  \end{displaymath}
-\end{frame}
+  { \highlight[white]{\strut t_1} \longrightarrow
+    \highlight[white]{\strut {t_1}^{\prime}}
+  }
+  { \highlight[white]{\strut t_1} +
+    \highlight[white]{\strut t_2} \longrightarrow
+    \highlight[white]{\strut {t_1}^{\prime}} +
+    \highlight[white]{\strut t_2}
+  }
 
-\begin{frame}
-  \begin{mdframed}[frametitle={Previously...}]
-  \infrule[E-Add1]
-         {\highlight[white]{\strut t_1} \longrightarrow \highlight[white]{\strut {t_1}^{\prime}}}
-         {\highlight[white]{\strut t_1} + \highlight[white]{\strut t_2} \longrightarrow \highlight[white]{\strut {t_1}^{\prime}} +
-           \highlight[white]{\strut t_2}}
   \infrule[E-AddInt]
-          {}
-          {\highlight[white]{\strut \left<\text{int}_1\right>} + \highlight[white]{\strut
-              \left<\text{int}_2\right>} \longrightarrow \highlight[white]{\strut \left< \text{int}_1 + \text{int}_2 \right>}}
+  {}
+  { \highlight[white]{\strut \left<\text{int}_1\right>} +
+    \highlight[white]{\strut \left<\text{int}_2\right>} \longrightarrow
+    \highlight[white]{\strut \left< \text{int}_1 + \text{int}_2 \right>}
+  }
+
+  \onslide<2>
+  \infrule[E-Add1]
+  { \highlight[white]{\strut t_1} \longrightarrow
+    \highlight[white]{\strut {t_1}^{\prime}}
+  }
+  { \highlight[white]{\strut t_1} +
+    \highlight[white]{\strut t_2} \longrightarrow
+    \highlight[white]{\strut {t_1}^{\prime}} +
+    \highlight[white]{\strut t_2}
+  }
+
+  \infrule[E-AddInt]
+  {}
+  { \highlight[white]{\strut \left<\text{int}_1\right>} +
+    \highlight[white]{\strut \left<\text{int}_2\right>} \longrightarrow
+    \highlight[white]{\strut \left< \text{int}_1 + \text{int}_2 \right>}
+  }
+
+  \onslide<3>
+  \infrule[E-Add1]
+  { \highlight[white]{\strut t_1} \longrightarrow
+    \highlight[white]{\strut {t_1}^{\prime}}
+  }
+  { \highlight[violet]{\strut t_1} +
+    \highlight[blue]{\strut t_2} \longrightarrow
+    \highlight[purple]{\strut {t_1}^{\prime}} +
+    \highlight[blue]{\strut t_2}
+  }
+
+  \infrule[E-AddInt]
+  {}
+  { \highlight[white]{\strut \left<\text{int}_1\right>} +
+    \highlight[white]{\strut \left<\text{int}_2\right>} \longrightarrow
+    \highlight[white]{\strut \left< \text{int}_1 + \text{int}_2 \right>}
+  }
+
+  \onslide<4>
+  \infrule[E-Add1]
+  { \highlight[violet]{\strut t_1} \longrightarrow
+    \highlight[purple]{\strut {t_1}^{\prime}}
+  }
+  { \highlight[violet]{\strut t_1} +
+    \highlight[blue]{\strut t_2} \longrightarrow
+    \highlight[purple]{\strut {t_1}^{\prime}} +
+    \highlight[blue]{\strut t_2}
+  }
+
+  \infrule[E-AddInt]
+  {}
+  { \highlight[white]{\strut \left<\text{int}_1\right>} +
+    \highlight[white]{\strut \left<\text{int}_2\right>} \longrightarrow
+    \highlight[white]{\strut \left< \text{int}_1 + \text{int}_2 \right>}
+  }
+
+  \onslide<5>
+  \infrule[E-Add1]
+  { \highlight[violet]{\strut t_1} \longrightarrow
+    \highlight[purple]{\strut {t_1}^{\prime}}
+  }
+  { \highlight[violet]{\strut t_1} +
+    \highlight[blue]{\strut t_2} \longrightarrow
+    \highlight[purple]{\strut {t_1}^{\prime}} +
+    \highlight[blue]{\strut t_2}
+  }
+
+  \infrule[E-AddInt]
+  {}
+  { \highlight[white]{\strut \left<\text{int}_1\right>} +
+    \highlight[white]{\strut \left<\text{int}_2\right>} \longrightarrow
+    \highlight[white]{\strut \left< \text{int}_1 + \text{int}_2 \right>}
+  }
+
+  \onslide<6,7>
+  \infrule[E-Add1]
+  { \highlight[white]{\strut t_1} \longrightarrow
+    \highlight[white]{\strut {t_1}^{\prime}}
+  }
+  { \highlight[white]{\strut t_1} +
+    \highlight[white]{\strut t_2} \longrightarrow
+    \highlight[white]{\strut {t_1}^{\prime}} +
+    \highlight[white]{\strut t_2}
+  }
+
+  \infrule[E-AddInt]
+  {}
+  { \highlight[white]{\strut \left<\text{int}_1\right>} +
+    \highlight[white]{\strut \left<\text{int}_2\right>} \longrightarrow
+    \highlight[white]{\strut \left< \text{int}_1 + \text{int}_2 \right>}
+  }
+
+  \onslide<8>
+  \infrule[E-Add1]
+  { \highlight[white]{\strut t_1} \longrightarrow
+    \highlight[white]{\strut {t_1}^{\prime}}
+  }
+  { \highlight[white]{\strut t_1} +
+    \highlight[white]{\strut t_2} \longrightarrow
+    \highlight[white]{\strut {t_1}^{\prime}} +
+    \highlight[white]{\strut t_2}
+  }
+
+  \infrule[E-AddInt]
+  {}
+  { \highlight[red]{\strut \left<\text{int}_1\right>} +
+    \highlight[blue]{\strut \left<\text{int}_2\right>} \longrightarrow
+    \highlight[purple]{\strut \left< \text{int}_1 + \text{int}_2 \right>}
+  }
+
+  \end{overprint}
   \end{mdframed}
   \vfill
-  \begin{displaymath}
-    \prftree[r]{E-Add1}
+  \begin{overprint}
+    \onslide<1>
+    \[ \prftree[r]{E-Add1}
     {\prftree[r]{E-AddInt}
       {}
-      {\highlight[white]{\strut 1} + \highlight[white]{\strut 2} \longrightarrow \highlight[white]{\strut 3}}
+      { \highlight[white]{\strut 1} +
+        \highlight[white]{\strut 2} \longrightarrow
+        \highlight[white]{\strut 3}
+      }
     }
-    {\highlight[violet]{\strut (1 + 2)} + \highlight[blue]{\strut (3 + 4)}
-      \longrightarrow \highlight[purple]{\strut 3} + \highlight[blue]{\strut (3 + 4)}}
-  \end{displaymath}
+    { \left(\highlight[white]{\strut 1 + 2}\right) +
+      \left(\highlight[white]{\strut 3 + 4}\right)
+      \longrightarrow
+      \highlight[white]{\strut 3} +
+      \left(\highlight[white]{\strut 3 + 4}\right)
+    }\]
+    \onslide<2>
+    \[ \prftree[r]{E-Add1}
+    {\prftree[r]{E-AddInt}
+      {}
+      { \highlight[white]{\strut 1} +
+        \highlight[white]{\strut 2} \longrightarrow
+        \highlight[white]{\strut 3}
+      }
+    }
+    { \left(\highlight[violet]{\strut 1 + 2}\right) +
+      \left(\highlight[blue]{\strut 3 + 4}\right)
+      \longrightarrow
+      \highlight[purple]{\strut 3} +
+      \left(\highlight[blue]{\strut 3 + 4}\right)
+    }\]
+    \onslide<3>
+    \[ \prftree[r]{E-Add1}
+    {\prftree[r]{E-AddInt}
+      {}
+      { \highlight[white]{\strut 1} +
+        \highlight[white]{\strut 2} \longrightarrow
+        \highlight[white]{\strut 3}
+      }
+    }
+    { \left(\highlight[violet]{\strut 1 + 2}\right) +
+      \left(\highlight[blue]{\strut 3 + 4}\right)
+      \longrightarrow
+      \highlight[purple]{\strut 3} +
+      \left(\highlight[blue]{\strut 3 + 4}\right)
+    }\]
+    \onslide<4>
+    \[ \prftree[r]{E-Add1}
+    {\prftree[r]{E-AddInt}
+      {}
+      { \highlight[white]{\strut 1} +
+        \highlight[white]{\strut 2} \longrightarrow
+        \highlight[white]{\strut 3}
+      }
+    }
+    { \left(\highlight[violet]{\strut 1 + 2}\right) +
+      \left(\highlight[blue]{\strut 3 + 4}\right)
+      \longrightarrow
+      \highlight[purple]{\strut 3} +
+      \left(\highlight[blue]{\strut 3 + 4}\right)
+    }\]
+    \onslide<5>
+    \[ \prftree[r]{E-Add1}
+    {\prftree[r]{E-AddInt}
+      {}
+      { \highlight[violet]{\strut 1 + \strut 2}
+        \longrightarrow
+        \highlight[purple]{\strut 3}
+      }
+    }
+    { \left(\highlight[violet]{\strut 1 + 2}\right) +
+      \left(\highlight[blue]{\strut 3 + 4}\right)
+      \longrightarrow
+      \highlight[purple]{\strut 3} +
+      \left(\highlight[blue]{\strut 3 + 4}\right)
+    }\]
+    \onslide<6>
+    \[ \prftree[r]{E-Add1}
+    {\prftree[r]{E-AddInt}
+      {}
+      { \highlight[violet]{\strut 1 + \strut 2}
+        \longrightarrow
+        \highlight[purple]{\strut 3}
+      }
+    }
+    { \left(\highlight[white]{\strut 1 + 2}\right) +
+      \left(\highlight[white]{\strut 3 + 4}\right)
+      \longrightarrow
+      \highlight[white]{\strut 3} +
+      \left(\highlight[white]{\strut 3 + 4}\right)
+    }\]
+    \onslide<7,8>
+    \[ \prftree[r]{E-Add1}
+    {\prftree[r]{E-AddInt}
+      {}
+      { \highlight[red]{\strut 1} +
+        \highlight[blue]{\strut 2}
+        \longrightarrow
+        \highlight[purple]{\strut 3}
+      }
+    }
+    { \left(\highlight[white]{\strut 1 + 2}\right) +
+      \left(\highlight[white]{\strut 3 + 4}\right)
+      \longrightarrow
+      \highlight[white]{\strut 3} +
+      \left(\highlight[white]{\strut 3 + 4}\right)
+    }\]
+  \end{overprint}
 \end{frame}
 
 \begin{frame}

@@ -129,16 +129,47 @@ Unsurprisingly, the small-step semantics don't change.
   \begin{mdframed}[frametitle={Typing rules}]
 
   \infrule[T-Var]
-  {\highlight[white]{x {:} T} \in \highlight[white]{\Gamma}}
-  {\highlight[white]{\Gamma} \vdash x {:} T}
+  { \highlight[white]{x} {:}
+    \highlight[white]{T} \in
+    \highlight[white]{\Gamma}
+  }
+  { \highlight[white]{\Gamma} \vdash
+    \highlight[white]{x} {:}
+    \highlight[white]{T}
+  }
 
   \infrule[T-App]
-  {\highlight[white]{\Gamma} \vdash t_1 {:} T_1 \rightarrow T_2 \andalso \highlight[white]{\Gamma} \vdash t_2 {:} T1}
-  {\highlight[white]{\Gamma} \vdash t_1~t_2 {:} T_2}
+  { \highlight[white]{\Gamma} \vdash
+    \highlight[white]{t_1} {:}
+    \highlight[white]{T_1} \rightarrow
+    \highlight[white]{T_2} \andalso
+    \highlight[white]{\Gamma} \vdash
+    \highlight[white]{t_2} {:}
+    \highlight[white]{T_1}
+  }
+  { \highlight[white]{\Gamma} \vdash
+    \highlight[white]{t_1} ~
+    \highlight[white]{t_2} {:}
+    \highlight[white]{T_2}
+  }
 
   \infrule[T-Lam]
-  {\highlight[white]{\Gamma , x {:} T_1} \vdash t {:} T_2}
-  {\highlight[white]{\Gamma} \vdash \left( \lambda~x {:} T_1 . t \right) {:} T_1 \rightarrow T_2}
+  { \highlight[white]{\Gamma} ,
+    \highlight[white]{x} {:}
+    \highlight[white]{T_1} \vdash
+    \highlight[white]{t} {:}
+    \highlight[white]{T_2}
+  }
+  { \highlight[white]{\Gamma} \vdash
+    \left(
+      \lambda~
+      \highlight[white]{x} {:}
+      \highlight[white]{T_1} .
+      \highlight[white]{t}
+    \right) {:}
+    \highlight[white]{T_1} \rightarrow
+    \highlight[white]{T_2}
+  }
   \end{mdframed}
 
   \begin{displaymath}

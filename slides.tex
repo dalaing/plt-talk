@@ -6,12 +6,15 @@
 
 \usepackage[normalem]{ulem}
 \usepackage{amsmath}
+\usepackage{array}
 \usepackage{color}
 \usepackage{minted}
 \usepackage{mdframed}
 \usepackage{prftree}
 \usepackage{bcprules}
 
+\newcolumntype{L}{>{$}l<{$}}
+\newcolumntype{R}{>{$}r<{$}}
 
 % \highlight[<colour>]{<stuff>}
 \newcommand{\highlight}[2][lightgray]{\mathchoice%
@@ -21,6 +24,7 @@
   {\colorbox{#1}{$\scriptscriptstyle#2$}}}%
 
 \setbeamertemplate{navigation symbols}{}
+\setbeamersize{text margin left = 10pt, text margin right = 10pt}
 
 \AtBeginSection[]%
 {%
