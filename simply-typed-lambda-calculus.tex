@@ -1037,5 +1037,63 @@ Unsurprisingly, the small-step semantics don't change.
 \end{frame}
 
 \begin{frame}
-  
+  The typing relation rules out problematic terms like $\text{omega}$.
+\end{frame}
+
+\begin{frame}
+  It also rules out $\text{fix}$ - although we can add it back in later.
+\end{frame}
+
+\begin{frame}
+  It rules out enough problematic terms that $\text{STLC}$ is actually strongly normalizing.
+\end{frame}
+
+\begin{frame}
+  Finite terms will evaluate in a finite number of steps.
+\end{frame}
+
+\begin{frame}
+  If we're happy to give that up, we can add fix back in.
+\end{frame}
+
+\input{fix}
+
+\begin{frame}
+ We can add all kinds of other things to STLC. 
+\end{frame}
+
+\begin{frame}
+For example: pairs are straightforward to add.
+\end{frame}
+
+\input{pairs}
+
+\begin{frame}
+  Tuples, records, variants and lists are similar.
+\end{frame}
+
+\begin{frame}
+  There are still some things that are clunky.
+\end{frame}
+
+\begin{frame}
+  We have to write a lot of different versions of $\text{id}$
+  \[ \lambda~x~{:}~\text{Bool}~.~x \]
+  \[ \lambda~x~{:}~\text{Int}~.~x \]
+\end{frame}
+
+\begin{frame}
+  Things are worse for $\text{const}$
+  \[ \lambda~x~{:}~\text{Bool}~.~\lambda~y~{:}~\text{Bool}~.~x \]
+  \[ \lambda~x~{:}~\text{Bool}~.~\lambda~y~{:}~\text{Int}~.~x \]
+  \[ \lambda~x~{:}~\text{Int}~.~\lambda~y~{:}~\text{Bool}~.~x \]
+  \[ \lambda~x~{:}~\text{Int}~.~\lambda~y~{:}~\text{Int}~.~x \]
+\end{frame}
+
+\begin{frame}
+  Don't even get me started on $\text{compose}$
+\end{frame}
+
+\begin{frame}
+  We will address this soon.
 \end{frame}
