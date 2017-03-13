@@ -37,10 +37,23 @@ v \quad:=\quad& ~ \ldots &\\
 \end{frame}
 
 \begin{frame}
-  The nameless equivalent to
+  The term
+  \[\lambda~x~.~x + 2\]
+  is an anonymous equivalent to
   \[f(x) = x + 2\]
-  is
-  \[\lambda~x . x + 2\]
+\end{frame}
+
+\begin{frame}
+  \begin{mdframed}[frametitle={Lambda anatomy}]
+    \begin{overprint}
+      \onslide<1>
+  \[\lambda~x~.~x + 2\]
+      \onslide<2>
+  \[\lambda~\highlight{x}~.~x + 2\]
+      \onslide<3>
+  \[\lambda~x~.~\highlight{x} + 2\]
+    \end{overprint}
+  \end{mdframed}
   \medskip
   \begin{overprint}
     \onslide<2>
@@ -51,20 +64,20 @@ v \quad:=\quad& ~ \ldots &\\
 \end{frame}
 
 \begin{frame}
-  The equivalent to
-  \[f(x) = x + 2\]
-  with
-  \[f(1)\]
-   in scope  is
+  The term
   \[(\lambda~x . x + 2)~1 \]
+  is equivalent to
+  \[f(1)\]
+  when $f$ is defined as before
 \end{frame}
 
 \begin{frame}
-  To process
+  In ordinary maths, we process
   \[f(1)\]
-  we take
+  by taking
   \[f(x) = x + 2\]
-  and replace $x$ with $1$.
+  and replacing the occurrences of $x$ with $1$ to get
+  \[f(1) = 1 + 2\]
 \end{frame}
 
 \begin{frame}
@@ -118,8 +131,34 @@ v \quad:=\quad& ~ \ldots &\\
 \begin{frame}
   In order to do that, we need to know the {\it free variables} of
   \[
-      \left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right)
+      \left( \left( \lambda~x~.~x + 1 \right)~\left(x + 1\right) \right)
   \] 
+\end{frame}
+
+\begin{frame}
+  A variable is {\it bound} in a term if it appears inside a lambda abstraction with a
+  matching variable binding.
+  \[\lambda~x~.~\highlight{x} + 1\]
+\end{frame}
+
+\begin{frame}
+  If there is no such lambda abstraction, then the variable is free in the term
+  it appears in.
+  \[\highlight{x} + 1\]
+\end{frame}
+
+\begin{frame}
+  \begin{overprint}
+    \onslide<1>
+    A variable can appear as both $\highlight[white]{\text{\it free}}$ and $\highlight[white]{\text{\it bound}}$ in the same term.
+  \[\left( \left( \lambda~x~.~\highlight[white]{x} + 1 \right)~\left(\highlight[white]{x} + 1\right) \right) \] 
+    \onslide<2>
+    A variable can appear as both $\highlight{\text{\it free}}$ and $\highlight[white]{\text{\it bound}}$ in the same term.
+  \[\left( \left( \lambda~x~.~\highlight[white]{x} + 1 \right)~\left(\highlight{x} + 1\right) \right) \] 
+    \onslide<3>
+    A variable can appear as both $\highlight[white]{\text{\it free}}$ and $\highlight{\text{\it bound}}$ in the same term.
+  \[\left( \left( \lambda~x~.~\highlight{x} + 1 \right)~\left(\highlight[white]{x} + 1\right) \right) \] 
+  \end{overprint}
 \end{frame}
 
 \begin{frame}
@@ -423,7 +462,7 @@ v \quad:=\quad& ~ \ldots &\\
 \end{frame}
 
 \begin{frame}
-  Let us do some things with lambda calculus
+  What can we do with lambda calculus?
 \end{frame}
 
 \begin{frame}

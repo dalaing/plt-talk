@@ -56,7 +56,7 @@ Unsurprisingly, the small-step semantics don't change.
   {\highlight[white]{\Gamma} \vdash t_1 {:} T_1 \rightarrow T_2 \andalso \highlight[white]{\Gamma} \vdash t_2 {:} T1}
   {\highlight[white]{\Gamma} \vdash t_1~t_2 {:} T_2}
 
-  \infrule[T-Lam]
+  \infrule[T-Abs]
   {\highlight[white]{\Gamma , x {:} T_1} \vdash t {:} T_2}
   {\highlight[white]{\Gamma} \vdash \left( \lambda~x {:} T_1 . t \right) {:} T_1 \rightarrow T_2}
 
@@ -70,7 +70,7 @@ Unsurprisingly, the small-step semantics don't change.
   {\highlight{\Gamma} \vdash t_1 {:} T_1 \rightarrow T_2 \andalso \highlight{\Gamma} \vdash t_2 {:} T1}
   {\highlight{\Gamma} \vdash t_1~t_2 {:} T_2}
 
-  \infrule[T-Lam]
+  \infrule[T-Abs]
   {\highlight{\Gamma , x {:} T_1} \vdash t {:} T_2}
   {\highlight{\Gamma} \vdash \left( \lambda~x {:} T_1 . t \right) {:} T_1 \rightarrow T_2}
 
@@ -84,7 +84,7 @@ Unsurprisingly, the small-step semantics don't change.
   {\highlight[white]{\Gamma} \vdash t_1 {:} T_1 \rightarrow T_2 \andalso \highlight[white]{\Gamma} \vdash t_2 {:} T1}
   {\highlight[white]{\Gamma} \vdash t_1~t_2 {:} T_2}
 
-  \infrule[T-Lam]
+  \infrule[T-Abs]
   {\highlight[white]{\Gamma , x {:} T_1} \vdash t {:} T_2}
   {\highlight[white]{\Gamma} \vdash \left( \lambda~x {:} T_1 . t \right) {:} T_1 \rightarrow T_2}
 
@@ -98,7 +98,7 @@ Unsurprisingly, the small-step semantics don't change.
   {\highlight[white]{\Gamma} \vdash t_1 {:} T_1 \rightarrow T_2 \andalso \highlight[white]{\Gamma} \vdash t_2 {:} T1}
   {\highlight[white]{\Gamma} \vdash t_1~t_2 {:} T_2}
 
-  \infrule[T-Lam]
+  \infrule[T-Abs]
   {\highlight{\Gamma , x {:} T_1} \vdash t {:} T_2}
   {\highlight[white]{\Gamma} \vdash \left( \lambda~x {:} T_1 . t \right) {:} T_1 \rightarrow T_2}
 
@@ -117,7 +117,7 @@ Unsurprisingly, the small-step semantics don't change.
  \onslide<5> 
  $\text{T-App}$ has no new techniques in it.
  \onslide<6> 
- In $\text{T-Lam}$ we temporarily add $x {:} T_1$ to the context, just for long enough to find the type of $t$.
+ In $\text{T-Abs}$ we temporarily add $x {:} T_1$ to the context, just for long enough to find the type of $t$.
  \onslide<7> 
  If we didn't modify the context then we would risk a type error occurring if the variable $x$ appeared within the term $t$.
  \onslide<8>
@@ -155,7 +155,7 @@ Unsurprisingly, the small-step semantics don't change.
     \highlight[white]{T_2}
   }
 
-  \infrule[T-Lam]
+  \infrule[T-Abs]
   { \highlight[white]{\Gamma} ,
     \highlight[white]{x} {:}
     \highlight[white]{T_1} \vdash
@@ -198,7 +198,7 @@ Unsurprisingly, the small-step semantics don't change.
     \highlight[purple]{T_2}
   }
 
-  \infrule[T-Lam]
+  \infrule[T-Abs]
   { \highlight[white]{\Gamma} ,
     \highlight[white]{x} {:}
     \highlight[white]{T_1} \vdash
@@ -241,7 +241,7 @@ Unsurprisingly, the small-step semantics don't change.
     \highlight[purple]{T_2}
   }
 
-  \infrule[T-Lam]
+  \infrule[T-Abs]
   { \highlight[white]{\Gamma} ,
     \highlight[white]{x} {:}
     \highlight[white]{T_1} \vdash
@@ -284,7 +284,7 @@ Unsurprisingly, the small-step semantics don't change.
     \highlight[purple]{T_2}
   }
 
-  \infrule[T-Lam]
+  \infrule[T-Abs]
   { \highlight[white]{\Gamma} ,
     \highlight[white]{x} {:}
     \highlight[white]{T_1} \vdash
@@ -327,7 +327,7 @@ Unsurprisingly, the small-step semantics don't change.
     \highlight[purple]{T_2}
   }
 
-  \infrule[T-Lam]
+  \infrule[T-Abs]
   { \highlight[white]{\Gamma} ,
     \highlight[white]{x} {:}
     \highlight[white]{T_1} \vdash
@@ -370,7 +370,7 @@ Unsurprisingly, the small-step semantics don't change.
     \highlight[white]{T_2}
   }
 
-  \infrule[T-Lam]
+  \infrule[T-Abs]
   { \highlight[white]{\Gamma} ,
     \highlight[white]{x} {:}
     \highlight[white]{T_1} \vdash
@@ -413,7 +413,7 @@ Unsurprisingly, the small-step semantics don't change.
     \highlight[white]{T_2}
   }
 
-  \infrule[T-Lam]
+  \infrule[T-Abs]
   { \highlight[white]{\Gamma} ,
     \highlight[white]{x} {:}
     \highlight[white]{T_1} \vdash
@@ -456,7 +456,7 @@ Unsurprisingly, the small-step semantics don't change.
     \highlight[white]{T_2}
   }
 
-  \infrule[T-Lam]
+  \infrule[T-Abs]
   { \highlight[white]{\Gamma} ,
     \highlight[violet]{x} {:}
     \highlight[red]{T_1} \vdash
@@ -499,7 +499,7 @@ Unsurprisingly, the small-step semantics don't change.
     \highlight[white]{T_2}
   }
 
-  \infrule[T-Lam]
+  \infrule[T-Abs]
   { \highlight[white]{\Gamma} ,
     \highlight[white]{x} {:}
     \highlight[white]{T_1} \vdash
@@ -542,7 +542,7 @@ Unsurprisingly, the small-step semantics don't change.
     \highlight[white]{T_2}
   }
 
-  \infrule[T-Lam]
+  \infrule[T-Abs]
   { \highlight[white]{\Gamma} ,
     \highlight[white]{x} {:}
     \highlight[white]{T_1} \vdash
@@ -585,7 +585,7 @@ Unsurprisingly, the small-step semantics don't change.
     \highlight[white]{T_2}
   }
 
-  \infrule[T-Lam]
+  \infrule[T-Abs]
   { \highlight[white]{\Gamma} ,
     \highlight[white]{x} {:}
     \highlight[white]{T_1} \vdash
@@ -611,7 +611,7 @@ Unsurprisingly, the small-step semantics don't change.
       \onslide<1>
      \[
     \prftree[r]{T-App}
-    {\prftree[r]{T-Lam}
+    {\prftree[r]{T-Abs}
       {\prftree[r]{T-Var}
         {
           \highlight[white]{x} {:}
@@ -653,7 +653,7 @@ Unsurprisingly, the small-step semantics don't change.
       \onslide<2-4>
      \[
     \prftree[r]{T-App}
-    {\prftree[r]{T-Lam}
+    {\prftree[r]{T-Abs}
       {\prftree[r]{T-Var}
         {
           \highlight[white]{x} {:}
@@ -693,7 +693,7 @@ Unsurprisingly, the small-step semantics don't change.
       \onslide<5>
      \[
     \prftree[r]{T-App}
-    {\prftree[r]{T-Lam}
+    {\prftree[r]{T-Abs}
       {\prftree[r]{T-Var}
         {
           \highlight[white]{x} {:}
@@ -730,7 +730,7 @@ Unsurprisingly, the small-step semantics don't change.
       \onslide<6-8>
      \[
     \prftree[r]{T-App}
-    {\prftree[r]{T-Lam}
+    {\prftree[r]{T-Abs}
       {\prftree[r]{T-Var}
         {
           \highlight[white]{x} {:}
@@ -767,7 +767,7 @@ Unsurprisingly, the small-step semantics don't change.
       \onslide<9>
      \[
     \prftree[r]{T-App}
-    {\prftree[r]{T-Lam}
+    {\prftree[r]{T-Abs}
       {\prftree[r]{T-Var}
         {
           \highlight[white]{x} {:}
@@ -804,7 +804,7 @@ Unsurprisingly, the small-step semantics don't change.
       \onslide<10>
      \[
     \prftree[r]{T-App}
-    {\prftree[r]{T-Lam}
+    {\prftree[r]{T-Abs}
       {\prftree[r]{T-Var}
         {
           \highlight[white]{x} {:}
@@ -841,7 +841,7 @@ Unsurprisingly, the small-step semantics don't change.
       \onslide<11-13>
      \[
     \prftree[r]{T-App}
-    {\prftree[r]{T-Lam}
+    {\prftree[r]{T-Abs}
       {\prftree[r]{T-Var}
         {
           \highlight[white]{x} {:}
@@ -881,7 +881,7 @@ Unsurprisingly, the small-step semantics don't change.
       \onslide<14>
      \[
     \prftree[r]{T-App}
-    {\prftree[r]{T-Lam}
+    {\prftree[r]{T-Abs}
       {\prftree[r]{T-Var}
         {
           \highlight[white]{x} {:}
@@ -921,12 +921,12 @@ Unsurprisingly, the small-step semantics don't change.
       \onslide<15>
      \[
     \prftree[r]{T-App}
-    {\prftree[r]{T-Lam}
+    {\prftree[r]{T-Abs}
       {\prftree[r]{T-Var}
         {
           \highlight[white]{x} {:}
           \highlight[white]{\text{Bool}} \in
-          \highlight[white]{x {:} \text{Bool}}
+          \highlight[white]{x~{:}~\text{Bool}}
         }
         {
           \highlight[violet]{x} {:}
@@ -960,12 +960,12 @@ Unsurprisingly, the small-step semantics don't change.
       \onslide<16-18>
      \[
     \prftree[r]{T-App}
-    {\prftree[r]{T-Lam}
+    {\prftree[r]{T-Abs}
       {\prftree[r]{T-Var}
         {
           \highlight[white]{x} {:}
           \highlight[white]{\text{Bool}} \in
-          \highlight[white]{x {:} \text{Bool}}
+          \highlight[white]{x~{:}~\text{Bool}}
         }
         {
           \highlight[red]{x {:} \text{Bool}} \vdash
@@ -998,12 +998,12 @@ Unsurprisingly, the small-step semantics don't change.
       \onslide<19>
      \[
     \prftree[r]{T-App}
-    {\prftree[r]{T-Lam}
+    {\prftree[r]{T-Abs}
       {\prftree[r]{T-Var}
         {
           \highlight[blue]{x} {:}
           \highlight[purple]{\text{Bool}} \in
-          \highlight[red]{x {:} \text{Bool}}
+          \highlight[red]{x~{:}~\text{Bool}}
         }
         {
           \highlight[red]{x {:} \text{Bool}} \vdash
@@ -1034,4 +1034,8 @@ Unsurprisingly, the small-step semantics don't change.
     }
     \]
     \end{overprint}
+\end{frame}
+
+\begin{frame}
+  
 \end{frame}

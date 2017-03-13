@@ -44,7 +44,7 @@ T \quad:=\quad& ~ &\\
   \infrule[E-App2]
   {t_2 \longrightarrow {t_2}^{\prime}}
   {v_1~t_2 \longrightarrow v_1~{t_2}^{\prime}}
-  \infrule[E-LamApp]
+  \infrule[E-AppAbs]
   {}
   {(\lambda~x {:} T . t_1) t_2 \longrightarrow \left[x \mapsto t_2 \right]t_1}
   \end{mdframed}
@@ -57,7 +57,7 @@ T \quad:=\quad& ~ &\\
   {\Gamma \vdash t_1 {:} T_1 \rightarrow T_2 \andalso \Gamma \vdash t_2 {:} T1}
   {\Gamma \vdash t_1~t_2 {:} T_2}
 
-  \infrule[T-Lam]
+  \infrule[T-Abs]
   {\Gamma , x {:} T_1 \vdash T_2}
   {\Gamma \vdash \left( \lambda~x {:} T_1 . t \right) {:} T_1 \rightarrow T_2}
   \end{mdframed}
