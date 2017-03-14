@@ -53,7 +53,7 @@ Unsurprisingly, the small-step semantics don't change.
   {\highlight[white]{\Gamma} \vdash x {:} T}
 
   \infrule[T-App]
-  {\highlight[white]{\Gamma} \vdash t_1 {:} T_1 \rightarrow T_2 \andalso \highlight[white]{\Gamma} \vdash t_2 {:} T1}
+  {\highlight[white]{\Gamma} \vdash t_1 {:} T_1 \rightarrow T_2 \andalso \highlight[white]{\Gamma} \vdash t_2 {:} T_1}
   {\highlight[white]{\Gamma} \vdash t_1~t_2 {:} T_2}
 
   \infrule[T-Abs]
@@ -67,7 +67,7 @@ Unsurprisingly, the small-step semantics don't change.
   {\highlight{\Gamma} \vdash x {:} T}
 
   \infrule[T-App]
-  {\highlight{\Gamma} \vdash t_1 {:} T_1 \rightarrow T_2 \andalso \highlight{\Gamma} \vdash t_2 {:} T1}
+  {\highlight{\Gamma} \vdash t_1 {:} T_1 \rightarrow T_2 \andalso \highlight{\Gamma} \vdash t_2 {:} T_1}
   {\highlight{\Gamma} \vdash t_1~t_2 {:} T_2}
 
   \infrule[T-Abs]
@@ -81,7 +81,7 @@ Unsurprisingly, the small-step semantics don't change.
   {\highlight[white]{\Gamma} \vdash x {:} T}
 
   \infrule[T-App]
-  {\highlight[white]{\Gamma} \vdash t_1 {:} T_1 \rightarrow T_2 \andalso \highlight[white]{\Gamma} \vdash t_2 {:} T1}
+  {\highlight[white]{\Gamma} \vdash t_1 {:} T_1 \rightarrow T_2 \andalso \highlight[white]{\Gamma} \vdash t_2 {:} T_1}
   {\highlight[white]{\Gamma} \vdash t_1~t_2 {:} T_2}
 
   \infrule[T-Abs]
@@ -95,7 +95,7 @@ Unsurprisingly, the small-step semantics don't change.
   {\highlight[white]{\Gamma} \vdash x {:} T}
 
   \infrule[T-App]
-  {\highlight[white]{\Gamma} \vdash t_1 {:} T_1 \rightarrow T_2 \andalso \highlight[white]{\Gamma} \vdash t_2 {:} T1}
+  {\highlight[white]{\Gamma} \vdash t_1 {:} T_1 \rightarrow T_2 \andalso \highlight[white]{\Gamma} \vdash t_2 {:} T_1}
   {\highlight[white]{\Gamma} \vdash t_1~t_2 {:} T_2}
 
   \infrule[T-Abs]

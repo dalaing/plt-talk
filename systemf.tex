@@ -111,7 +111,7 @@ v \quad=\quad& ~ \ldots &\\
   {\Gamma \vdash x {:} T}
 
   \infrule[T-App]
-  {\Gamma \vdash t_1 {:} T_1 \rightarrow T_2 \andalso \Gamma \vdash t_2 {:} T1}
+  {\Gamma \vdash t_1 {:} T_1 \rightarrow T_2 \andalso \Gamma \vdash t_2 {:} T_1}
   {\Gamma \vdash t_1~t_2 {:} T_2}
 
   \infrule[T-Abs]
@@ -150,22 +150,22 @@ v \quad=\quad& ~ \ldots &\\
   \begin{overprint}
   \onslide<1-5>
   \infrule[T-TApp]
-  {\Gamma \vdash \highlight[white]{t_1~{:}~\forall~.~T_{12}}}
+  {\Gamma \vdash \highlight[white]{t_1~{:}~\forall~X~.~T_{12}}}
   {\Gamma \vdash \highlight[white]{t_1 [{T_2}]} {:} \highlight[white]{[X \mapsto T_2 ] T_{12}} }
 
   \onslide<6>
   \infrule[T-TApp]
-  {\Gamma \vdash \highlight{t_1~{:}~\forall~.~T_{12}}}
+  {\Gamma \vdash \highlight{t_1~{:}~\forall~X~.~T_{12}}}
   {\Gamma \vdash \highlight[white]{t_1 [{T_2}]} {:} \highlight[white]{[X \mapsto T_2 ] T_{12}} }
 
   \onslide<7>
   \infrule[T-TApp]
-  {\Gamma \vdash \highlight[white]{t_1~{:}~\forall~.~T_{12}}}
+  {\Gamma \vdash \highlight[white]{t_1~{:}~\forall~X~.~T_{12}}}
   {\Gamma \vdash \highlight{t_1 [{T_2}]} {:} \highlight[white]{[X \mapsto T_2 ] T_{12}} }
 
   \onslide<8>
   \infrule[T-TApp]
-  {\Gamma \vdash \highlight[white]{t_1~{:}~\forall~.~T_{12}}}
+  {\Gamma \vdash \highlight[white]{t_1~{:}~\forall~X~.~T_{12}}}
   {\Gamma \vdash \highlight[white]{t_1 [{T_2}]} {:} \highlight{[X \mapsto T_2 ] T_{12}} }
 
   \end{overprint}
@@ -176,7 +176,7 @@ v \quad=\quad& ~ \ldots &\\
 
   \begin{overprint}
     \onslide<1>
-    $\text{T-TABS}$ gives type abstractions a universal type.
+    $\text{T-TAbs}$ gives type abstractions a universal type.
     \onslide<2>
     The type variable binding in the term becomes the binding in the universal type.
     \onslide<3>
@@ -185,7 +185,7 @@ v \quad=\quad& ~ \ldots &\\
     The type variable is mentioned in the context, but we're not doing much with
     it (for now).
     \onslide<5> 
-    $\text{T-TAPP}$ consumes the universal types.
+    $\text{T-TApp}$ consumes the universal types.
     \onslide<6> 
     We start with a term with a universal type.
     \onslide<7> 

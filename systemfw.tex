@@ -1,2 +1,258 @@
 
 \section{Universal types and type operators: System $F_{\omega}$}
+\begin{frame}
+  We would like to be able to create a type $\text{Pair}~\text{Int}~\text{Bool}$ without
+  having to write support for pair types as part of our system.
+\end{frame}
+
+\begin{frame}
+  This looks a little like a function taking two types and return a type.
+\end{frame}
+
+\begin{frame}
+  These kind of things are referred to as {\it type operators}.
+\end{frame}
+
+\begin{frame}
+  \begin{mdframed}[frametitle={Types and kinds}]
+\begin{displaymath}
+    \begin{aligned}
+T \quad:=\quad& ~ \ldots &\\
+  & ~ X \quad\quad &type~variable\\
+  & ~ T \rightarrow T \quad\quad &function~arrow\\
+  & ~ \forall~X \highlight{{::} K}. T \quad\quad &univeral type\\
+  & ~ \highlight{\lambda~X {::} K . T} \quad\quad &operator~abstraction\\
+  & ~ \highlight{T ~ T} \quad\quad &operator~application\\
+\highlight{K} \quad:=\quad& ~ &\\
+   & ~ * \quad\quad &kind~of~proper~types\\
+   & ~ K \Rightarrow K \quad\quad &kind~of~type~operators
+    \end{aligned}
+\end{displaymath}
+\end{mdframed}
+\medskip
+
+\begin{overprint}
+\onslide<1>
+We add operator abstraction to our set of types.
+\onslide<2>
+That presents a need for operator application in order to use it.
+\onslide<3>
+We add in a {\it kind} system in order to check that our types make sense.
+\onslide<4>
+$\text{Pair}~\text{Int}~\text{Bool}$ makes sense.
+\onslide<5>
+It has kind $* \Rightarrow * \Rightarrow *$
+\onslide<6>
+$\text{Int}~\text{Bool}$ makes no sense at all.
+\onslide<7>
+It should be ill-kinded and hence ruled out.
+\end{overprint}
+
+\end{frame}
+
+\begin{frame}
+  \begin{mdframed}[frametitle={Terms and values}]
+\begin{displaymath}
+    \begin{aligned}
+t \quad:=\quad& ~ \ldots &\\
+  & ~ x \quad\quad &variable\\
+  & ~ \lambda~x {:} T . t \quad\quad &abstraction\\
+  & ~ t ~ t \quad\quad &function~application\\
+  & ~ \lambda~X \highlight{{::} K}. t \quad\quad &type~abstraction\\
+  & ~ t~\left[T\right] \quad\quad &type~application\\
+v \quad:=\quad& ~ \ldots &\\
+  & ~ \lambda~x {:} T . t \quad\quad &abstraction\\
+  & ~ \lambda~X \highlight{{::} K}. t \quad\quad &type~abstraction\\
+    \end{aligned}
+\end{displaymath}
+\end{mdframed}
+
+\medskip
+
+\begin{overprint}
+\onslide<1>
+The terms and values have not changed except for the extra kind annotation.
+\onslide<2>
+The same is true of the evaluation rules.
+\end{overprint}
+
+\end{frame}
+
+\begin{frame}
+  \begin{mdframed}[frametitle={Typing rules (changes from STLC)}]
+  \infrule[T-Var]
+  {\highlight[white]{x {:} T} \in \highlight[white]{\Gamma}}
+  {\highlight[white]{\Gamma} \vdash x {:} T}
+
+  \infrule[T-App]
+  {\highlight[white]{\Gamma} \vdash t_1 {:} T_1 \rightarrow T_2 \andalso \highlight[white]{\Gamma} \vdash t_2 {:} T1}
+  {\highlight[white]{\Gamma} \vdash t_1~t_2 {:} T_2}
+
+  \infrule[T-Abs]
+  {\highlight{\Gamma \vdash T_1 {::} *} \andalso \highlight[white]{\Gamma , x {:} T_1} \vdash t {:} T_2}
+  {\highlight[white]{\Gamma} \vdash \left( \lambda~x {:} T_1 . t \right) {:} T_1 \rightarrow T_2}
+  \end{mdframed}
+  \medskip
+
+  We need to make sure that our type annotations in lambda are types, rather
+  than type operators.
+\end{frame}
+
+\begin{frame}
+  \begin{mdframed}[frametitle={Typing rules (changes from System F)}]
+  \infrule[T-TAbs]
+  {\Gamma , X \highlight{{::} K_1} \vdash \highlight[white]{t_2} {:} \highlight[white]{T_2}}
+  {\Gamma \vdash ( \lambda~X \higlight{{::} K_1} .
+    \highlight[white]{t_2} ) {:} \forall~X \highlight{{::} K_1} . \highlight[white]{T_2} }
+
+  \infrule[T-TApp]
+  {\Gamma \vdash \highlight[white]{t_1~{:}~\forall~X~\highlight{{::}
+        K_{11}}.~T_{12}} \andalso \highlight{\Gamma \vdash T_2 {::} K_{11}}}
+  {\Gamma \vdash \highlight[white]{t_1 [{T_2}]} {:} \highlight[white]{[X \mapsto T_2 ] T_{12}} }
+  \end{mdframed}
+  \medskip
+
+  We need to make sure that the kinds all match up properly with our universal types.
+\end{frame}
+
+\begin{frame}
+  \begin{mdframed}[frametitle={Typing rules (the new one)}]
+    \infrule[T-EQ]
+    {\Gamma \vdash t {:} S \andalso S \equiv T \andalso \Gamma \vdash T {::} *}
+    {\Gamma \vdash t {:} T}
+  \end{mdframed}
+
+  \medskip
+
+  \begin{overprint}
+    \onslide<1>
+    If we allow type operators, we can write a type level ${id}$
+    \[\text{Id} = \lambda~X~{::}~*~.~X\]
+    \onslide<2>
+    Given that, these all mean the same thing:
+    \[\text{Nat} \rightarrow \text{Bool}\]
+    \[\text{Id}~\text{Nat} \rightarrow \text{Bool}\]
+    \[\text{Id}~\text{Nat} \rightarrow \text{Id}~\text{Bool}\]
+    \[\text{Id}~(\text{Nat} \rightarrow \text{Bool})\]
+    \onslide<3>
+    We need a notion of type equivalence to deal with this.
+    \onslide<4>
+    $S \equiv T$ is our type equivalence relationship.
+  \end{overprint}
+\end{frame}
+
+\begin{frame}
+  \begin{mdframed}[frametitle={Typing equivalence rules (partial)}]
+    \infrule[Q-REFL]
+    {}
+    {T \equiv T}
+    \infrule[Q-SYM]
+    {T \equiv S}
+    {S \equiv T}
+    \infrule[Q-TRANS]
+    {S \equiv T \andalso T \equiv U}
+    {S \equiv U}
+    \infrule[Q-ARROW]
+    {S_1 \equiv T_1 \andalso S_2 \equiv T_2}
+    {S_1 \rightarrow S_2 \equiv T_1 \rightarrow T_2}
+    \ldots 
+  \end{mdframed}
+  \medskip
+
+  \begin{overprint}
+    \onslide<1>
+    Grah! It's a non-deterministic set of rules!
+    \onslide<2>
+    We should look at the kind system and see if it helps us out.
+  \end{overprint}
+\end{frame}
+
+\begin{frame}
+  \begin{mdframed}[frametitle={Kinding rules}]
+    \begin{columns}
+    \begin{column}{0.5\textwidth}
+
+\begin{displaymath}
+    \begin{aligned}
+T \quad:=\quad& ~ \ldots \\
+  & ~ X \quad\quad \\
+  & ~ \lambda~X {::} K . T \\
+  & ~ T ~ T \\
+K \quad:=\quad& ~ &\\
+   & ~ K \Rightarrow K 
+    \end{aligned}
+\end{displaymath}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+  \infrule[K-TVar]
+  {X {::} K \in \Gamma}
+  {\Gamma \vdash X {::} K}
+
+  \infrule[K-App]
+  {\Gamma \vdash T_1 {::} K_1 \rightarrow K_2 \andalso \Gamma \vdash T_2 {::} K_1}
+  {\Gamma \vdash T_1~T_2 {::} K_2}
+
+  \infrule[K-Abs]
+  {\Gamma , X {::} K_1 \vdash T_2 {:} K_2}
+  {\Gamma \vdash \left( \lambda~X {::} K_1 . T_2 \right) {::} K_1 \rightarrow K_2}
+    \end{column}
+    \end{columns}
+  \end{mdframed}
+  \medskip
+
+  \begin{overprint}
+    \onslide<1>
+    This looks familiar...
+    \onslide<2>
+    It's simply typed lambda calculus, raised up one level!
+    \onslide<3>
+    That gives us high confidence in using our kind system to keep the types in check.
+    \onslide<4>
+    It also means we can drop the kind annotations and use our existing type
+    inference algorithms to infer them!
+    \onslide<5>
+    On top of all that, it provides a hint about how to deal with the type equivalence problem.
+    \onslide<6>
+    STLC is strongly normalizing...
+    \onslide<7>
+    ... so we can use STLC evaluation rules to normalize our types before we
+    compare them, giving us algorithmic type equivalence.
+  \end{overprint}
+\end{frame}
+
+\begin{frame}
+  \begin{mdframed}[frametitle={Kinding rules}]
+
+    \infrule[K-Arrow]
+    {\Gamma \vdash T_1 {::} * \andalso \Gamma \vdash T_2 {::} *}
+    {\Gamma \vdash T_1 \rightarrow T_2 {::} *}
+    
+    \infrule[K-All]
+    {\Gamma , X {::} K_1 \vdash T_2 {::} *}
+    {\Gamma \vdash \forall X {::} K_1 . T_2 :: *}
+    
+  \end{mdframed}
+  \medskip
+
+  \begin{overprint}
+    \onslide<1>
+  We need a few more kinding rules to sanity check the other features in our
+  type system.
+    \onslide<2>
+    Neither of these mess with the strong normalization property
+    \onslide<3>
+    Hurrah!
+  \end{overprint}
+\end{frame}
+
+\begin{frame}
+What does $\text{Pair}$ look like now?
+\end{frame}
+
+\begin{frame}
+(Let us assume that we have set up a basic record system)
+\end{frame}
+
+\begin{frame}
+  \[\lambda~A {::} * . \lambda~B {::} * . \{ \text{fst} : A, \text{snd} : B\} \]
+\end{frame}
