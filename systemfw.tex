@@ -20,7 +20,7 @@
 T \quad:=\quad& ~ \ldots &\\
   & ~ X \quad\quad &type~variable\\
   & ~ T \rightarrow T \quad\quad &function~arrow\\
-  & ~ \forall~X \highlight{{::} K}. T \quad\quad &univeral type\\
+  & ~ \forall~X \highlight{{::} K}. T \quad\quad &univeral~type\\
   & ~ \highlight{\lambda~X {::} K . T} \quad\quad &operator~abstraction\\
   & ~ \highlight{T ~ T} \quad\quad &operator~application\\
 \highlight{K} \quad:=\quad& ~ &\\
@@ -102,7 +102,7 @@ The same is true of the evaluation rules.
   \begin{mdframed}[frametitle={Typing rules (changes from System F)}]
   \infrule[T-TAbs]
   {\Gamma , X \highlight{{::} K_1} \vdash \highlight[white]{t_2} {:} \highlight[white]{T_2}}
-  {\Gamma \vdash ( \lambda~X \higlight{{::} K_1} .
+  {\Gamma \vdash ( \lambda~X \highlight{{::} K_1} .
     \highlight[white]{t_2} ) {:} \forall~X \highlight{{::} K_1} . \highlight[white]{T_2} }
 
   \infrule[T-TApp]
