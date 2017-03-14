@@ -63,11 +63,12 @@ v \quad:=\quad& ~ &\\
   \infrule[E-PredZero]
           {}
           {\text{pred}~\text{O} \longrightarrow \text{O}}
-  \infrule[E-PredSucc]
+  \infrule[$\text{E-PredSucc}^{\text{**}}$]
           {}
           {\text{pred} ~ \left( \text{succ}~v \right) \longrightarrow v}
 
   * Only for eager evaluation
+  ** Uses $v$ for eager evaluation and $t$ for lazy evaluation
   \end{mdframed}
 \end{frame}
 

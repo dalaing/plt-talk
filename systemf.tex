@@ -36,7 +36,8 @@ v \quad=\quad& ~ \ldots &\\
   
   \begin{overprint}
     \onslide<1>
-    We need the ability to abstract over a type, and to later supply a type.
+    We need the ability to abstract over a type, and to later supply a type to
+    that abstraction.
     \onslide<2>
     We abstract over types to do things like $\text{id}$:
     \[\lambda~X~.~\lambda~x~{:}~X~.~x~{:}~\forall~A~.~A \rightarrow A\]
@@ -196,6 +197,20 @@ v \quad=\quad& ~ \ldots &\\
 \end{frame}
 
 \begin{frame}
+  We are now in a place where we have principal types rather than unique types.
+\end{frame}
+
+\begin{frame}
+  We can treat the type of the $\text{id}$ function in $(\lambda X . \lambda x
+  {:} X . x) true$ as either $\forall A . A \rightarrow A$ or $\text{Bool}
+  \rightarrow \text{Bool} $
+\end{frame}
+
+\begin{frame}
+  The polymorphic version is more general, and so is the principal type.
+\end{frame}
+
+\begin{frame}
   We should check on how $\text{const}$ and $\text{compose}$ are doing.
 \end{frame}
 
@@ -211,6 +226,15 @@ v \quad=\quad& ~ \ldots &\\
     \[\lambda~f~{:}~Y \rightarrow Z~.~\lambda~g~{:}~X \rightarrow Y~.~\lambda~x~{:}~X~.\]
     \[f~\left( g~x \right)\]
     \[{:}~\forall~A~.~\forall~B~.~\forall~C~.~\left( B \rightarrow C \right) \rightarrow \left( A \rightarrow B \right) \rightarrow \left( A \rightarrow C \right)\]
+\end{frame}
+
+\begin{frame}
+  We can type them inside of our language, which is nice, but they are quite
+  verbose.
+\end{frame}
+
+\begin{frame}
+  To the type inference!
 \end{frame}
 
 \begin{frame}
