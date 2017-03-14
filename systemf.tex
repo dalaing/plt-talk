@@ -2,7 +2,21 @@
 \section{Universal types: System F}
 
 \begin{frame}
-  \begin{mdframed}[frametitle={Terms, values and types}]
+  \begin{mdframed}[frametitle={Types}]
+\begin{displaymath}
+    \begin{aligned}
+T \quad=\quad& ~ \ldots &\\
+  & ~ \highlight{X} \quad\quad &type~variable\\
+  & ~ T \rightarrow T \quad\quad &function~arrow\\
+  & ~ \highlight{\forall~X . T} \quad\quad &univeral type\\
+    \end{aligned}
+\end{displaymath}
+  \end{mdframed}
+  We start by adding universal types into the mix
+\end{frame}
+
+\begin{frame}
+  \begin{mdframed}[frametitle={Terms and values}]
 \begin{displaymath}
     \begin{aligned}
 t \quad=\quad& ~ \ldots &\\
@@ -14,19 +28,30 @@ t \quad=\quad& ~ \ldots &\\
 v \quad=\quad& ~ \ldots &\\
   & ~ \lambda~x {:} T . t \quad\quad &abstraction\\
   & ~ \highlight{\lambda~X . t} \quad\quad &type~abstraction\\
-T \quad=\quad& ~ \ldots &\\
-  & ~ \highlight{X} \quad\quad &type~variable\\
-  & ~ T \rightarrow T \quad\quad &function~arrow\\
-  & ~ \highlight{\forall~X . T} \quad\quad &univeral type\\
     \end{aligned}
 \end{displaymath}
   \end{mdframed}
+
+  \medskip
+  
+  \begin{overprint}
+    \onslide<1>
+    We need the ability to abstract over a type, and to later supply a type.
+    \onslide<2>
+    We abstract over types to do things like $\text{id}$:
+    \[\lambda~X~.~\lambda~x~{:}~X~.~x~{:}~\forall~A~.~A \rightarrow A\]
+    \onslide<3>
+    We supply concrete types later on to be able to use these terms:
+    \[\left(\lambda~X~.~\lambda~x~{:}~X~.~x\right)~\left[ \text{Int} \right]~{:}~\text{Int} \rightarrow \text{Int}\]
+    \onslide<4>
+    If we didn't have these things to guide the way, we'd lose syntax-directed
+    type checking / inference.
+  \end{overprint}
+  
 \end{frame}
 
-% TODO examples like function application, const, etc.. and how they are used
-
 \begin{frame}
-  \begin{mdframed}[frametitle={Small-step semantics}]
+  \begin{mdframed}[frametitle={Small-step semantics (old)}]
   \infrule[E-App1]
   {t_1 \longrightarrow {t_1}^{\prime}}
   {t_1~t_2 \longrightarrow {t_1}^{\prime}~t_2}
@@ -38,8 +63,11 @@ T \quad=\quad& ~ \ldots &\\
   \infrule[E-AppAbs]
   {}
   {(\lambda~x {:} T . t_1) t_2 \longrightarrow \left[x \mapsto t_2 \right]t_1}
+  \end{mdframed}
+\end{frame}
 
-  \newruletrue
+\begin{frame}
+  \begin{mdframed}[frametitle={Small-step semantics (new)}]
 
   \infrule[E-TApp]
   {t_1 \longrightarrow {t_1}^{\prime}}
@@ -49,13 +77,35 @@ T \quad=\quad& ~ \ldots &\\
   {}
   {(\lambda~X . t_{12}) \left[T_2\right] \longrightarrow \left[X \mapsto T_2 \right]t_{12}}
 
-  \newrulefalse
   \end{mdframed}
 
+  \medskip
+  
+  \begin{overprint}
+  \onslide<1>
+  The new rules are straightforward.
+  \onslide<2>
+  $\text{E-TApp}$ says we evaluate the terms inside type applications.
+  \onslide<3>
+  $\text{E-TAppTAbs}$ says that when we find a type application is applied to a
+  type abstraction, we carry out the a substitution wherever that type appears
+  in the term $t_{i2}$.
+  \onslide<4>
+  In this case that will be in the substitutions will be in the type annotations on
+  the lambda abstractions.
+  \onslide<5>
+  For example:
+  \[
+    \left(\lambda~X~.~\lambda~x~{:}~X~.~x\right)~\left[ \text{Int} \right]
+    \longrightarrow
+    \lambda~x~{:}~Int~.~x
+  \]
+  \end{overprint}
+  
 \end{frame}
 
 \begin{frame}
-  \begin{mdframed}[frametitle={Typing rules}]
+  \begin{mdframed}[frametitle={Typing rules (old)}]
   \infrule[T-Var]
   {x {:} T \in \Gamma}
   {\Gamma \vdash x {:} T}
@@ -67,17 +117,135 @@ T \quad=\quad& ~ \ldots &\\
   \infrule[T-Abs]
   {\Gamma , x {:} T_1 \vdash t {:} T_2}
   {\Gamma \vdash \left( \lambda~x {:} T_1 . t \right) {:} T_1 \rightarrow T_2}
-
-  \newruletrue
-
-  \infrule[T-TAbs]
-  {\Gamma , X \vdash t_2 {:} T_2}
-  {\Gamma \vdash \left( \lambda~X . t_2 \right) {:} \forall~X . T_2 }
-
-  \infrule[T-TApp]
-  {\Gamma \vdash t_1 {:} \forall~X . T_{12}}
-  {\Gamma \vdash t_1 \left[T_2\right] {:} \left[X \mapsto T_2 \right] T_{12} }
-
-  \newrulefalse
   \end{mdframed}
+\end{frame}
+
+\begin{frame}
+  \begin{mdframed}[frametitle={Typing rules (new)}]
+
+  \begin{overprint}
+
+  \onslide<1>
+  \infrule[T-TAbs]
+  {\Gamma , \highlight[white]{X} \vdash \highlight[white]{t_2} {:} \highlight[white]{T_2}}
+  {\Gamma \vdash ( \lambda~\highlight[white]{X} . \highlight[white]{t_2} ) {:} \forall~\highlight[white]{X} . \highlight[white]{T_2} }
+  \onslide<2>
+  \infrule[T-TAbs]
+  {\Gamma , \highlight[white]{X} \vdash \highlight[white]{t_2} {:} \highlight[white]{T_2}}
+  {\Gamma \vdash ( \lambda~\highlight{X} . \highlight[white]{t_2} ) {:} \forall~\highlight{X} . \highlight[white]{T_2} }
+  \onslide<3>
+  \infrule[T-TAbs]
+  {\Gamma , \highlight[white]{X} \vdash \highlight{t_2} {:} \highlight{T_2}}
+  {\Gamma \vdash ( \lambda~\highlight[white]{X} . \highlight{t_2} ) {:} \forall~\highlight[white]{X} . \highlight{T_2} }
+  \onslide<4>
+  \infrule[T-TAbs]
+  {\Gamma , \highlight{X} \vdash \highlight[white]{t_2} {:} \highlight[white]{T_2}}
+  {\Gamma \vdash ( \lambda~\highlight[white]{X} . \highlight[white]{t_2} ) {:} \forall~\highlight[white]{X} . \highlight[white]{T_2} }
+  \onslide<5->
+  \infrule[T-TAbs]
+  {\Gamma , \highlight[white]{X} \vdash \highlight[white]{t_2} {:} \highlight[white]{T_2}}
+  {\Gamma \vdash ( \lambda~\highlight[white]{X} . \highlight[white]{t_2} ) {:} \forall~\highlight[white]{X} . \highlight[white]{T_2} }
+  \end{overprint}
+
+  \begin{overprint}
+  \onslide<1-5>
+  \infrule[T-TApp]
+  {\Gamma \vdash \highlight[white]{t_1~{:}~\forall~.~T_{12}}}
+  {\Gamma \vdash \highlight[white]{t_1 [{T_2}]} {:} \highlight[white]{[X \mapsto T_2 ] T_{12}} }
+
+  \onslide<6>
+  \infrule[T-TApp]
+  {\Gamma \vdash \highlight{t_1~{:}~\forall~.~T_{12}}}
+  {\Gamma \vdash \highlight[white]{t_1 [{T_2}]} {:} \highlight[white]{[X \mapsto T_2 ] T_{12}} }
+
+  \onslide<7>
+  \infrule[T-TApp]
+  {\Gamma \vdash \highlight[white]{t_1~{:}~\forall~.~T_{12}}}
+  {\Gamma \vdash \highlight{t_1 [{T_2}]} {:} \highlight[white]{[X \mapsto T_2 ] T_{12}} }
+
+  \onslide<8>
+  \infrule[T-TApp]
+  {\Gamma \vdash \highlight[white]{t_1~{:}~\forall~.~T_{12}}}
+  {\Gamma \vdash \highlight[white]{t_1 [{T_2}]} {:} \highlight{[X \mapsto T_2 ] T_{12}} }
+
+  \end{overprint}
+
+  \end{mdframed}
+
+  \medskip
+
+  \begin{overprint}
+    \onslide<1>
+    $\text{T-TABS}$ gives type abstractions a universal type.
+    \onslide<2>
+    The type variable binding in the term becomes the binding in the universal type.
+    \onslide<3>
+    Other than that, the type doesn't change.
+    \onslide<4> 
+    The type variable is mentioned in the context, but we're not doing much with
+    it (for now).
+    \onslide<5> 
+    $\text{T-TAPP}$ consumes the universal types.
+    \onslide<6> 
+    We start with a term with a universal type.
+    \onslide<7> 
+    We apply a type to that term.
+    \onslide<8> 
+    And we get the type substitution that we were after.
+  \end{overprint}
+\end{frame}
+
+\begin{frame}
+  We should check on how $\text{const}$ and $\text{compose}$ are doing.
+\end{frame}
+
+\begin{frame}
+  \[\lambda~X~.~\lambda~Y~.\]
+  \[\lambda~x~{:}~X~.~\lambda~y~{:}~Y~.\]
+  \[x\]
+  \[{:}~\forall~A~.~\forall~B~.~A \rightarrow B \rightarrow A\]
+\end{frame}
+
+\begin{frame}
+    \[\lambda~X~.~\lambda~Y~.~\lambda~Z~.\]
+    \[\lambda~f~{:}~Y \rightarrow Z~.~\lambda~g~{:}~X \rightarrow Y~.~\lambda~x~{:}~X~.\]
+    \[f~\left( g~x \right)\]
+    \[{:}~\forall~A~.~\forall~B~.~\forall~C~.~\left( B \rightarrow C \right) \rightarrow \left( A \rightarrow B \right) \rightarrow \left( A \rightarrow C \right)\]
+\end{frame}
+
+\begin{frame}
+  Type inference for System F is undecidable in general.
+\end{frame}
+
+\begin{frame}
+  There is a whole new set of rabbit holes to dive into here.
+\end{frame}
+
+\begin{frame}
+  The various options differ in whether they deal with higher rank types and
+  impredicativity, and also in where you need to put annotations and how
+  predictable the need for annotations is.
+\end{frame}
+
+\begin{frame}
+  There seems to be two main general approaches.
+\end{frame}
+
+\begin{frame}
+  1. Use fancier type schemes - see $\text{ML}^{\text{F}}$, $\text{HMF}$, $\text{HML}$.
+\end{frame}
+
+\begin{frame}
+  2. Use bidirectional type checking / local type inference - make checking and
+  inference mutually recursive so that you can propagate information from
+  annotations to places where it might be needed.
+\end{frame}
+
+\begin{frame}
+  System F is still pretty nice.
+\end{frame}
+
+\begin{frame}
+  It would be nice if we didn't have to roll our own pairs and things as type
+  system extensions...
 \end{frame}

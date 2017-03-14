@@ -12,7 +12,7 @@
 
 \begin{frame}
   The reverse idea - starting with an unannotated term and recovering the type
-  information - is called {\it type inference} or {\it type reconstruction}.
+  information - {\it type reconstruction}.
 \end{frame}
 
 \begin{frame}
@@ -25,13 +25,28 @@
 \end{frame}
 
 \begin{frame}
-  General idea:
+  We no longer have enough information to do syntax-directed type inference -
+  walking the syntax tree and applying rules as we go.
+\end{frame}
+
+\begin{frame}
+  The general idea is:
   \begin{itemize}
   \pause
   \item <+-> Generate type variables all over the place
   \item <+-> Record constraints on the type variables when we run into something concrete
-  \item <+-> Unify these constraints to find a map from type variables to types
+  \item <+-> {\it Unify} these constraints to find a map from type variables to types
   \item <+-> Use that map to replace all the type variables with types.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  Unification is a way of solving a symbolic computation.
+  \begin{itemize}
+    \pause
+  \item<+-> When is $\left[1, a, \left[2,3\right], b\right] \sim \left[c, \left[3, 4\right], d, e\right]$?
+  \item<+-> When we have $\left\{ 1 \sim c , a \sim \left[ 3, 4 \right], \left[
+        2, 3 \right] \sim d, b \sim e \right\}$
   \end{itemize}
 \end{frame}
 
@@ -513,7 +528,18 @@
 \end{frame}
 
 \begin{frame}
-  It was handy for ${\text{id}}$ - let us see how it fares with $\text{const}$
+  You'll see references to types that occur in the inference for a language but
+  not in the language itself as a {\it type scheme}.
+\end{frame}
+
+\begin{frame}
+  You'll also see types with no variables in them being referred to as {\it
+    monotypes} and types with variables in them being referred to as {\it
+    polytypes}.
+\end{frame}
+
+\begin{frame}
+  There universal types were handy for ${\text{id}}$ - let us see how it fares with $\text{const}$
   and $\text{compose}$
 \end{frame}
 
@@ -533,4 +559,8 @@
 
 \begin{frame}
   These things look really handy...
+\end{frame}
+
+\begin{frame}
+  It would be nice to have access to them from within our language...
 \end{frame}
