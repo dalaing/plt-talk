@@ -1,0 +1,1107 @@
+
+\section{Simply Typed Lambda Calculus}
+
+\begin{frame}
+  \begin{mdframed}[frametitle={Terms, values and types}]
+\begin{displaymath}
+    \begin{aligned}
+t \quad:=\quad& ~ \ldots &\\
+  & ~ x \quad\quad &variable\\
+  & ~ \lambda~x \highlight{{:} T} . t \quad\quad &abstraction\\
+  & ~ t ~ t \quad\quad &function~application\\
+v \quad:=\quad& ~ \ldots &\\
+  & ~ \lambda~x \highlight{{:} T} . t \quad\quad &abstraction\\
+T \quad:=\quad& ~ \ldots &\\
+  & ~ \highlight{T \rightarrow T} \quad\quad &function~arrow\\
+    \end{aligned}
+\end{displaymath}
+\end{mdframed}
+\medskip
+\begin{overprint}
+  \onslide<1>
+  We need some extra information to make the typing rules work.
+  \onslide<2>
+  We add {\it type annotations} to the variable bindings in our lambda terms.
+  \onslide<3>
+  We also add an arrow type, that describes the type of functions.
+\end{overprint}
+\end{frame}
+
+\begin{frame}
+  \begin{mdframed}[frametitle={Small-step semantics}]
+  \infrule[E-App1]
+  {t_1 \longrightarrow {t_1}^{\prime}}
+  {t_1~t_2 \longrightarrow {t_1}^{\prime}~t_2}
+  \infrule[E-App2]
+  {t_2 \longrightarrow {t_2}^{\prime}}
+  {v_1~t_2 \longrightarrow v_1~{t_2}^{\prime}}
+  \infrule[E-AppLam]
+  {}
+  {(\lambda~x \highlight{{:} T} . t_1) t_2 \longrightarrow \left[x \mapsto t_2 \right]t_1}
+\end{mdframed}
+\medskip
+Unsurprisingly, the small-step semantics don't change.
+\end{frame}
+
+\begin{frame}
+  \begin{mdframed}[frametitle={Typing rules}]
+\begin{overprint}
+  \onslide<1,4,5,7,8>
+
+  \infrule[T-Var]
+  {\highlight[white]{x {:} T} \in \highlight[white]{\Gamma}}
+  {\highlight[white]{\Gamma} \vdash x {:} T}
+
+  \infrule[T-App]
+  {\highlight[white]{\Gamma} \vdash t_1 {:} T_1 \rightarrow T_2 \andalso \highlight[white]{\Gamma} \vdash t_2 {:} T_1}
+  {\highlight[white]{\Gamma} \vdash t_1~t_2 {:} T_2}
+
+  \infrule[T-Abs]
+  {\highlight[white]{\Gamma , x {:} T_1} \vdash t {:} T_2}
+  {\highlight[white]{\Gamma} \vdash \left( \lambda~x {:} T_1 . t \right) {:} T_1 \rightarrow T_2}
+
+  \onslide<2>
+
+  \infrule[T-Var]
+  {\highlight[white]{x {:} T} \in \highlight{\Gamma}}
+  {\highlight{\Gamma} \vdash x {:} T}
+
+  \infrule[T-App]
+  {\highlight{\Gamma} \vdash t_1 {:} T_1 \rightarrow T_2 \andalso \highlight{\Gamma} \vdash t_2 {:} T_1}
+  {\highlight{\Gamma} \vdash t_1~t_2 {:} T_2}
+
+  \infrule[T-Abs]
+  {\highlight{\Gamma , x {:} T_1} \vdash t {:} T_2}
+  {\highlight{\Gamma} \vdash \left( \lambda~x {:} T_1 . t \right) {:} T_1 \rightarrow T_2}
+
+  \onslide<3>
+
+  \infrule[T-Var]
+  {\highlight{x {:} T} \in \highlight[white]{\Gamma}}
+  {\highlight[white]{\Gamma} \vdash x {:} T}
+
+  \infrule[T-App]
+  {\highlight[white]{\Gamma} \vdash t_1 {:} T_1 \rightarrow T_2 \andalso \highlight[white]{\Gamma} \vdash t_2 {:} T_1}
+  {\highlight[white]{\Gamma} \vdash t_1~t_2 {:} T_2}
+
+  \infrule[T-Abs]
+  {\highlight[white]{\Gamma , x {:} T_1} \vdash t {:} T_2}
+  {\highlight[white]{\Gamma} \vdash \left( \lambda~x {:} T_1 . t \right) {:} T_1 \rightarrow T_2}
+
+  \onslide<6>
+
+  \infrule[T-Var]
+  {\highlight[white]{x {:} T} \in \highlight[white]{\Gamma}}
+  {\highlight[white]{\Gamma} \vdash x {:} T}
+
+  \infrule[T-App]
+  {\highlight[white]{\Gamma} \vdash t_1 {:} T_1 \rightarrow T_2 \andalso \highlight[white]{\Gamma} \vdash t_2 {:} T_1}
+  {\highlight[white]{\Gamma} \vdash t_1~t_2 {:} T_2}
+
+  \infrule[T-Abs]
+  {\highlight{\Gamma , x {:} T_1} \vdash t {:} T_2}
+  {\highlight[white]{\Gamma} \vdash \left( \lambda~x {:} T_1 . t \right) {:} T_1 \rightarrow T_2}
+
+\end{overprint}
+\end{mdframed}
+\medskip
+\begin{overprint}
+ \onslide<1> 
+ Now we need a context for our typing rules.
+ \onslide<2> 
+ We use $\Gamma$ as the context, which is a map from variables to types.
+ \onslide<3> 
+ $\text{T-Var}$ just grabs the type from the context.
+ \onslide<4> 
+ A type error occurs if the variable isn't found in the context.
+ \onslide<5> 
+ $\text{T-App}$ has no new techniques in it.
+ \onslide<6> 
+ In $\text{T-Abs}$ we temporarily add $x {:} T_1$ to the context, just for long enough to find the type of $t$.
+ \onslide<7> 
+ If we didn't modify the context then we would risk a type error occurring if the variable $x$ appeared within the term $t$.
+ \onslide<8>
+ With that done we know the type of the argument and of the result, so we are done.
+\end{overprint}
+\end{frame}
+
+\begin{frame}[c]
+  \begin{mdframed}[frametitle={Typing rules}]
+
+    \begin{overprint}
+      \onslide<1-2>
+  \infrule[T-Var]
+  { \highlight[white]{x} {:}
+    \highlight[white]{T} \in
+    \highlight[white]{\Gamma}
+  }
+  { \highlight[white]{\Gamma} \vdash
+    \highlight[white]{x} {:}
+    \highlight[white]{T}
+  }
+
+  \infrule[T-App]
+  { \highlight[white]{\Gamma} \vdash
+    \highlight[white]{t_1} {:}
+    \highlight[white]{T_1} \rightarrow
+    \highlight[white]{T_2} \andalso
+    \highlight[white]{\Gamma} \vdash
+    \highlight[white]{t_2} {:}
+    \highlight[white]{T_1}
+  }
+  { \highlight[white]{\Gamma} \vdash
+    \highlight[white]{t_1} ~
+    \highlight[white]{t_2} {:}
+    \highlight[white]{T_2}
+  }
+
+  \infrule[T-Abs]
+  { \highlight[white]{\Gamma} ,
+    \highlight[white]{x} {:}
+    \highlight[white]{T_1} \vdash
+    \highlight[white]{t} {:}
+    \highlight[white]{T_2}
+  }
+  { \highlight[white]{\Gamma} \vdash
+    (
+      \lambda~
+      \highlight[white]{x} {:}
+      \highlight[white]{T_1} .
+      \highlight[white]{t}
+    ) {:}
+    \highlight[white]{T_1} \rightarrow
+    \highlight[white]{T_2}
+  }
+      \onslide<3>
+  \infrule[T-Var]
+  { \highlight[white]{x} {:}
+    \highlight[white]{T} \in
+    \highlight[white]{\Gamma}
+  }
+  { \highlight[white]{\Gamma} \vdash
+    \highlight[white]{x} {:}
+    \highlight[white]{T}
+  }
+
+  \infrule[T-App]
+  { \highlight[white]{\Gamma} \vdash
+    \highlight[white]{t_1} {:}
+    \highlight[white]{T_1} \rightarrow
+    \highlight[white]{T_2} \andalso
+    \highlight[white]{\Gamma} \vdash
+    \highlight[white]{t_2} {:}
+    \highlight[white]{T_1}
+  }
+  { \highlight[white]{\Gamma} \vdash
+    \highlight[violet]{t_1} ~
+    \highlight[blue]{t_2} {:}
+    \highlight[purple]{T_2}
+  }
+
+  \infrule[T-Abs]
+  { \highlight[white]{\Gamma} ,
+    \highlight[white]{x} {:}
+    \highlight[white]{T_1} \vdash
+    \highlight[white]{t} {:}
+    \highlight[white]{T_2}
+  }
+  { \highlight[white]{\Gamma} \vdash
+    (
+      \lambda~
+      \highlight[white]{x} {:}
+      \highlight[white]{T_1} .
+      \highlight[white]{t}
+    ) {:}
+    \highlight[white]{T_1} \rightarrow
+    \highlight[white]{T_2}
+  }
+      \onslide<4-6>
+  \infrule[T-Var]
+  { \highlight[white]{x} {:}
+    \highlight[white]{T} \in
+    \highlight[white]{\Gamma}
+  }
+  { \highlight[white]{\Gamma} \vdash
+    \highlight[white]{x} {:}
+    \highlight[white]{T}
+  }
+
+  \infrule[T-App]
+  { \highlight[white]{\Gamma} \vdash
+    \highlight[violet]{t_1} {:}
+    \highlight[white]{T_1} \rightarrow
+    \highlight[purple]{T_2} \andalso
+    \highlight[white]{\Gamma} \vdash
+    \highlight[blue]{t_2} {:}
+    \highlight[white]{T_1}
+  }
+  { \highlight[white]{\Gamma} \vdash
+    \highlight[violet]{t_1} ~
+    \highlight[blue]{t_2} {:}
+    \highlight[purple]{T_2}
+  }
+
+  \infrule[T-Abs]
+  { \highlight[white]{\Gamma} ,
+    \highlight[white]{x} {:}
+    \highlight[white]{T_1} \vdash
+    \highlight[white]{t} {:}
+    \highlight[white]{T_2}
+  }
+  { \highlight[white]{\Gamma} \vdash
+    (
+      \lambda~
+      \highlight[white]{x} {:}
+      \highlight[white]{T_1} .
+      \highlight[white]{t}
+    ) {:}
+    \highlight[white]{T_1} \rightarrow
+    \highlight[white]{T_2}
+  }
+      \onslide<7>
+  \infrule[T-Var]
+  { \highlight[white]{x} {:}
+    \highlight[white]{T} \in
+    \highlight[white]{\Gamma}
+  }
+  { \highlight[white]{\Gamma} \vdash
+    \highlight[white]{x} {:}
+    \highlight[white]{T}
+  }
+
+  \infrule[T-App]
+  { \highlight[white]{\Gamma} \vdash
+    \highlight[violet]{t_1} {:}
+    \highlight[white]{T_1} \rightarrow
+    \highlight[purple]{T_2} \andalso
+    \highlight[white]{\Gamma} \vdash
+    \highlight[blue]{t_2} {:}
+    \highlight[red]{T_1}
+  }
+  { \highlight[white]{\Gamma} \vdash
+    \highlight[violet]{t_1} ~
+    \highlight[blue]{t_2} {:}
+    \highlight[purple]{T_2}
+  }
+
+  \infrule[T-Abs]
+  { \highlight[white]{\Gamma} ,
+    \highlight[white]{x} {:}
+    \highlight[white]{T_1} \vdash
+    \highlight[white]{t} {:}
+    \highlight[white]{T_2}
+  }
+  { \highlight[white]{\Gamma} \vdash
+    (
+      \lambda~
+      \highlight[white]{x} {:}
+      \highlight[white]{T_1} .
+      \highlight[white]{t}
+    ) {:}
+    \highlight[white]{T_1} \rightarrow
+    \highlight[white]{T_2}
+  }
+      \onslide<8-9>
+  \infrule[T-Var]
+  { \highlight[white]{x} {:}
+    \highlight[white]{T} \in
+    \highlight[white]{\Gamma}
+  }
+  { \highlight[white]{\Gamma} \vdash
+    \highlight[white]{x} {:}
+    \highlight[white]{T}
+  }
+
+  \infrule[T-App]
+  { \highlight[white]{\Gamma} \vdash
+    \highlight[violet]{t_1} {:}
+    \highlight[red]{T_1} \rightarrow
+    \highlight[purple]{T_2} \andalso
+    \highlight[white]{\Gamma} \vdash
+    \highlight[blue]{t_2} {:}
+    \highlight[red]{T_1}
+  }
+  { \highlight[white]{\Gamma} \vdash
+    \highlight[violet]{t_1} ~
+    \highlight[blue]{t_2} {:}
+    \highlight[purple]{T_2}
+  }
+
+  \infrule[T-Abs]
+  { \highlight[white]{\Gamma} ,
+    \highlight[white]{x} {:}
+    \highlight[white]{T_1} \vdash
+    \highlight[white]{t} {:}
+    \highlight[white]{T_2}
+  }
+  { \highlight[white]{\Gamma} \vdash
+    (
+      \lambda~
+      \highlight[white]{x} {:}
+      \highlight[white]{T_1} .
+      \highlight[white]{t}
+    ) {:}
+    \highlight[white]{T_1} \rightarrow
+    \highlight[white]{T_2}
+  }
+      \onslide<10-11>
+  \infrule[T-Var]
+  { \highlight[white]{x} {:}
+    \highlight[white]{T} \in
+    \highlight[white]{\Gamma}
+  }
+  { \highlight[white]{\Gamma} \vdash
+    \highlight[white]{x} {:}
+    \highlight[white]{T}
+  }
+
+  \infrule[T-App]
+  { \highlight[white]{\Gamma} \vdash
+    \highlight[white]{t_1} {:}
+    \highlight[white]{T_1} \rightarrow
+    \highlight[white]{T_2} \andalso
+    \highlight[white]{\Gamma} \vdash
+    \highlight[white]{t_2} {:}
+    \highlight[white]{T_1}
+  }
+  { \highlight[white]{\Gamma} \vdash
+    \highlight[white]{t_1} ~
+    \highlight[white]{t_2} {:}
+    \highlight[white]{T_2}
+  }
+
+  \infrule[T-Abs]
+  { \highlight[white]{\Gamma} ,
+    \highlight[white]{x} {:}
+    \highlight[white]{T_1} \vdash
+    \highlight[white]{t} {:}
+    \highlight[white]{T_2}
+  }
+  { \highlight[white]{\Gamma} \vdash
+    (
+      \lambda~
+      \highlight[white]{x} {:}
+      \highlight[white]{T_1} .
+      \highlight[white]{t}
+    ) {:}
+    \highlight[white]{T_1} \rightarrow
+    \highlight[white]{T_2}
+  }
+      \onslide<12>
+  \infrule[T-Var]
+  { \highlight[white]{x} {:}
+    \highlight[white]{T} \in
+    \highlight[white]{\Gamma}
+  }
+  { \highlight[white]{\Gamma} \vdash
+    \highlight[white]{x} {:}
+    \highlight[white]{T}
+  }
+
+  \infrule[T-App]
+  { \highlight[white]{\Gamma} \vdash
+    \highlight[white]{t_1} {:}
+    \highlight[white]{T_1} \rightarrow
+    \highlight[white]{T_2} \andalso
+    \highlight[white]{\Gamma} \vdash
+    \highlight[white]{t_2} {:}
+    \highlight[white]{T_1}
+  }
+  { \highlight[white]{\Gamma} \vdash
+    \highlight[white]{t_1} ~
+    \highlight[white]{t_2} {:}
+    \highlight[white]{T_2}
+  }
+
+  \infrule[T-Abs]
+  { \highlight[white]{\Gamma} ,
+    \highlight[white]{x} {:}
+    \highlight[white]{T_1} \vdash
+    \highlight[white]{t} {:}
+    \highlight[white]{T_2}
+  }
+  { \highlight[white]{\Gamma} \vdash
+    (
+      \lambda~
+      \highlight[violet]{x} {:}
+      \highlight[red]{T_1} .
+      \highlight[blue]{t}
+    ) {:}
+    \highlight[red]{T_1} \rightarrow
+    \highlight[purple]{T_2}
+  }
+      \onslide<13-14>
+  \infrule[T-Var]
+  { \highlight[white]{x} {:}
+    \highlight[white]{T} \in
+    \highlight[white]{\Gamma}
+  }
+  { \highlight[white]{\Gamma} \vdash
+    \highlight[white]{x} {:}
+    \highlight[white]{T}
+  }
+
+  \infrule[T-App]
+  { \highlight[white]{\Gamma} \vdash
+    \highlight[white]{t_1} {:}
+    \highlight[white]{T_1} \rightarrow
+    \highlight[white]{T_2} \andalso
+    \highlight[white]{\Gamma} \vdash
+    \highlight[white]{t_2} {:}
+    \highlight[white]{T_1}
+  }
+  { \highlight[white]{\Gamma} \vdash
+    \highlight[white]{t_1} ~
+    \highlight[white]{t_2} {:}
+    \highlight[white]{T_2}
+  }
+
+  \infrule[T-Abs]
+  { \highlight[white]{\Gamma} ,
+    \highlight[violet]{x} {:}
+    \highlight[red]{T_1} \vdash
+    \highlight[blue]{t} {:}
+    \highlight[purple]{T_2}
+  }
+  { \highlight[white]{\Gamma} \vdash
+    (
+      \lambda~
+      \highlight[violet]{x} {:}
+      \highlight[red]{T_1} .
+      \highlight[blue]{t}
+    ) {:}
+    \highlight[red]{T_1} \rightarrow
+    \highlight[purple]{T_2}
+  }
+      \onslide<15-16>
+  \infrule[T-Var]
+  { \highlight[white]{x} {:}
+    \highlight[white]{T} \in
+    \highlight[white]{\Gamma}
+  }
+  { \highlight[white]{\Gamma} \vdash
+    \highlight[white]{x} {:}
+    \highlight[white]{T}
+  }
+
+  \infrule[T-App]
+  { \highlight[white]{\Gamma} \vdash
+    \highlight[white]{t_1} {:}
+    \highlight[white]{T_1} \rightarrow
+    \highlight[white]{T_2} \andalso
+    \highlight[white]{\Gamma} \vdash
+    \highlight[white]{t_2} {:}
+    \highlight[white]{T_1}
+  }
+  { \highlight[white]{\Gamma} \vdash
+    \highlight[white]{t_1} ~
+    \highlight[white]{t_2} {:}
+    \highlight[white]{T_2}
+  }
+
+  \infrule[T-Abs]
+  { \highlight[white]{\Gamma} ,
+    \highlight[white]{x} {:}
+    \highlight[white]{T_1} \vdash
+    \highlight[white]{t} {:}
+    \highlight[white]{T_2}
+  }
+  { \highlight[white]{\Gamma} \vdash
+    (
+      \lambda~
+      \highlight[white]{x} {:}
+      \highlight[white]{T_1} .
+      \highlight[white]{t}
+    ) {:}
+    \highlight[white]{T_1} \rightarrow
+    \highlight[white]{T_2}
+  }
+      \onslide<17>
+  \infrule[T-Var]
+  { \highlight[white]{x} {:}
+    \highlight[white]{T} \in
+    \highlight[white]{\Gamma}
+  }
+  { \highlight[red]{\Gamma} \vdash
+    \highlight[blue]{x} {:}
+    \highlight[purple]{T}
+  }
+
+  \infrule[T-App]
+  { \highlight[white]{\Gamma} \vdash
+    \highlight[white]{t_1} {:}
+    \highlight[white]{T_1} \rightarrow
+    \highlight[white]{T_2} \andalso
+    \highlight[white]{\Gamma} \vdash
+    \highlight[white]{t_2} {:}
+    \highlight[white]{T_1}
+  }
+  { \highlight[white]{\Gamma} \vdash
+    \highlight[white]{t_1} ~
+    \highlight[white]{t_2} {:}
+    \highlight[white]{T_2}
+  }
+
+  \infrule[T-Abs]
+  { \highlight[white]{\Gamma} ,
+    \highlight[white]{x} {:}
+    \highlight[white]{T_1} \vdash
+    \highlight[white]{t} {:}
+    \highlight[white]{T_2}
+  }
+  { \highlight[white]{\Gamma} \vdash
+    (
+      \lambda~
+      \highlight[white]{x} {:}
+      \highlight[white]{T_1} .
+      \highlight[white]{t}
+    ) {:}
+    \highlight[white]{T_1} \rightarrow
+    \highlight[white]{T_2}
+  }
+      \onslide<18-19>
+  \infrule[T-Var]
+  { \highlight[blue]{x} {:}
+    \highlight[purple]{T} \in
+    \highlight[red]{\Gamma}
+  }
+  { \highlight[red]{\Gamma} \vdash
+    \highlight[blue]{x} {:}
+    \highlight[purple]{T}
+  }
+
+  \infrule[T-App]
+  { \highlight[white]{\Gamma} \vdash
+    \highlight[white]{t_1} {:}
+    \highlight[white]{T_1} \rightarrow
+    \highlight[white]{T_2} \andalso
+    \highlight[white]{\Gamma} \vdash
+    \highlight[white]{t_2} {:}
+    \highlight[white]{T_1}
+  }
+  { \highlight[white]{\Gamma} \vdash
+    \highlight[white]{t_1} ~
+    \highlight[white]{t_2} {:}
+    \highlight[white]{T_2}
+  }
+
+  \infrule[T-Abs]
+  { \highlight[white]{\Gamma} ,
+    \highlight[white]{x} {:}
+    \highlight[white]{T_1} \vdash
+    \highlight[white]{t} {:}
+    \highlight[white]{T_2}
+  }
+  { \highlight[white]{\Gamma} \vdash
+    (
+      \lambda~
+      \highlight[white]{x} {:}
+      \highlight[white]{T_1} .
+      \highlight[white]{t}
+    ) {:}
+    \highlight[white]{T_1} \rightarrow
+    \highlight[white]{T_2}
+  }
+    \end{overprint}
+  \end{mdframed}
+
+  \medskip
+
+    \begin{overprint}
+      \onslide<1>
+     \[
+    \prftree[r]{T-App}
+    {\prftree[r]{T-Abs}
+      {\prftree[r]{T-Var}
+        {
+          \highlight[white]{x} {:}
+          \highlight[white]{\text{Bool}} \in
+          \highlight[white]{x} {:}
+          \highlight[white]{\text{Bool}}
+        }
+        {
+          \highlight[white]{x} {:}
+          \highlight[white]{\text{Bool}} \vdash
+          \highlight[white]{x} {:}
+          \highlight[white]{\text{Bool}}
+        }
+      }
+      {\vdash
+        \lambda
+        \highlight[white]{x} {:}
+        \highlight[white]{\text{Bool}} .
+        \highlight[white]{x} {:}
+        \highlight[white]{\text{Bool}} \rightarrow
+        \highlight[white]{\text{Bool}}
+      }
+    }
+    {\prftree[r]{T-True}
+      {}
+      {\vdash
+        \highlight[white]{\text{true}} {:}
+        \highlight[white]{\text{Bool}}
+      }
+    }
+    {\vdash
+      (\lambda
+        \highlight[white]{x {:} \text{Bool} . x}
+      )
+      \highlight[white]{\text{true}} {:}
+      \highlight[white]{\text{Bool}}
+    }
+    \]
+      \onslide<2-4>
+     \[
+    \prftree[r]{T-App}
+    {\prftree[r]{T-Abs}
+      {\prftree[r]{T-Var}
+        {
+          \highlight[white]{x} {:}
+          \highlight[white]{\text{Bool}} \in
+          \highlight[white]{x} {:}
+          \highlight[white]{\text{Bool}}
+        }
+        {
+          \highlight[white]{x} {:}
+          \highlight[white]{\text{Bool}} \vdash
+          \highlight[white]{x} {:}
+          \highlight[white]{\text{Bool}}
+        }
+      }
+      {\vdash
+        \lambda
+        \highlight[white]{x} {:}
+        \highlight[white]{\text{Bool}} .
+        \highlight[white]{x} {:}
+        \highlight[white]{\text{Bool}} \rightarrow
+        \highlight[white]{\text{Bool}}
+      }
+    }
+    {\prftree[r]{T-True}
+      {}
+      {\vdash
+        \highlight[white]{\text{true}} {:}
+        \highlight[white]{\text{Bool}}
+      }
+    }
+    {\vdash
+      (\highlight[violet]{\lambda x {:} \text{Bool} . x})
+      \highlight[blue]{\text{true}} {:}
+      \highlight[purple]{\text{Bool}}
+    }
+    \]
+      \onslide<5>
+     \[
+    \prftree[r]{T-App}
+    {\prftree[r]{T-Abs}
+      {\prftree[r]{T-Var}
+        {
+          \highlight[white]{x} {:}
+          \highlight[white]{\text{Bool}} \in
+          \highlight[white]{x} {:}
+          \highlight[white]{\text{Bool}}
+        }
+        {
+          \highlight[white]{x} {:}
+          \highlight[white]{\text{Bool}} \vdash
+          \highlight[white]{x} {:}
+          \highlight[white]{\text{Bool}}
+        }
+      }
+      {\vdash
+        \highlight[violet]{\lambda~{x}~{:}~{\text{Bool}}~.~{x}} {:}
+        \highlight[white]{\text{Bool}} \rightarrow
+        \highlight[purple]{\text{Bool}}
+      }
+    }
+    {\prftree[r]{T-True}
+      {}
+      {\vdash
+        \highlight[blue]{\text{true}} {:}
+        \highlight[white]{\text{Bool}}
+      }
+    }
+    {\vdash
+      (\highlight[violet]{\lambda x {:} \text{Bool} . x})
+      \highlight[blue]{\text{true}} {:}
+      \highlight[purple]{\text{Bool}}
+    }
+    \]
+      \onslide<6-8>
+     \[
+    \prftree[r]{T-App}
+    {\prftree[r]{T-Abs}
+      {\prftree[r]{T-Var}
+        {
+          \highlight[white]{x} {:}
+          \highlight[white]{\text{Bool}} \in
+          \highlight[white]{x} {:}
+          \highlight[white]{\text{Bool}}
+        }
+        {
+          \highlight[white]{x} {:}
+          \highlight[white]{\text{Bool}} \vdash
+          \highlight[white]{x} {:}
+          \highlight[white]{\text{Bool}}
+        }
+      }
+      {\vdash
+        \highlight[violet]{\lambda~{x}~{:}~{\text{Bool}}~.~{x}} {:}
+        \highlight[white]{\text{Bool}} \rightarrow
+        \highlight[purple]{\text{Bool}}
+      }
+    }
+    {\prftree[r]{T-True}
+      {}
+      {\vdash
+        \highlight[blue]{\text{true}} {:}
+        \highlight[red]{\text{Bool}}
+      }
+    }
+    {\vdash
+      (\highlight[violet]{\lambda x {:} \text{Bool} . x})
+      \highlight[blue]{\text{true}} {:}
+      \highlight[purple]{\text{Bool}}
+    }
+    \]
+      \onslide<9>
+     \[
+    \prftree[r]{T-App}
+    {\prftree[r]{T-Abs}
+      {\prftree[r]{T-Var}
+        {
+          \highlight[white]{x} {:}
+          \highlight[white]{\text{Bool}} \in
+          \highlight[white]{x} {:}
+          \highlight[white]{\text{Bool}}
+        }
+        {
+          \highlight[white]{x} {:}
+          \highlight[white]{\text{Bool}} \vdash
+          \highlight[white]{x} {:}
+          \highlight[white]{\text{Bool}}
+        }
+      }
+      {\vdash
+        \highlight[violet]{\lambda~{x}~{:}~{\text{Bool}}~.~{x}} {:}
+        \highlight[red]{\text{Bool}} \rightarrow
+        \highlight[purple]{\text{Bool}}
+      }
+    }
+    {\prftree[r]{T-True}
+      {}
+      {\vdash
+        \highlight[blue]{\text{true}} {:}
+        \highlight[red]{\text{Bool}}
+      }
+    }
+    {\vdash
+      (\highlight[violet]{\lambda x {:} \text{Bool} . x})
+      \highlight[blue]{\text{true}} {:}
+      \highlight[purple]{\text{Bool}}
+    }
+    \]
+      \onslide<10>
+     \[
+    \prftree[r]{T-App}
+    {\prftree[r]{T-Abs}
+      {\prftree[r]{T-Var}
+        {
+          \highlight[white]{x} {:}
+          \highlight[white]{\text{Bool}} \in
+          \highlight[white]{x} {:}
+          \highlight[white]{\text{Bool}}
+        }
+        {
+          \highlight[white]{x} {:}
+          \highlight[white]{\text{Bool}} \vdash
+          \highlight[white]{x} {:}
+          \highlight[white]{\text{Bool}}
+        }
+      }
+      {\vdash
+        \highlight[violet]{\lambda~{x}~{:}~{\text{Bool}}~.~{x}} {:}
+        \highlight[red]{\text{Bool}} \rightarrow
+        \highlight[purple]{\text{Bool}}
+      }
+    }
+    {\prftree[r]{T-True}
+      {}
+      {\vdash
+        \highlight[white]{\text{true}} {:}
+        \highlight[white]{\text{Bool}}
+      }
+    }
+    {\vdash
+      (\highlight[white]{\lambda x {:} \text{Bool} . x})
+      \highlight[white]{\text{true}} {:}
+      \highlight[white]{\text{Bool}}
+    }
+    \]
+      \onslide<11-13>
+     \[
+    \prftree[r]{T-App}
+    {\prftree[r]{T-Abs}
+      {\prftree[r]{T-Var}
+        {
+          \highlight[white]{x} {:}
+          \highlight[white]{\text{Bool}} \in
+          \highlight[white]{x} {:}
+          \highlight[white]{\text{Bool}}
+        }
+        {
+          \highlight[white]{x} {:}
+          \highlight[white]{\text{Bool}} \vdash
+          \highlight[white]{x} {:}
+          \highlight[white]{\text{Bool}}
+        }
+      }
+      {\vdash
+        \lambda
+        \highlight[violet]{x} {:}
+        \highlight[red]{\text{Bool}} .
+        \highlight[blue]{x} {:}
+        \highlight[red]{\text{Bool}} \rightarrow
+        \highlight[purple]{\text{Bool}}
+      }
+    }
+    {\prftree[r]{T-True}
+      {}
+      {\vdash
+        \highlight[white]{\text{true}} {:}
+        \highlight[white]{\text{Bool}}
+      }
+    }
+    {\vdash
+      (\highlight[white]{\lambda x {:} \text{Bool} . x})
+      \highlight[white]{\text{true}} {:}
+      \highlight[white]{\text{Bool}}
+    }
+    \]
+      \onslide<14>
+     \[
+    \prftree[r]{T-App}
+    {\prftree[r]{T-Abs}
+      {\prftree[r]{T-Var}
+        {
+          \highlight[white]{x} {:}
+          \highlight[white]{\text{Bool}} \in
+          \highlight[white]{x} {:}
+          \highlight[white]{\text{Bool}}
+        }
+        {
+          \highlight[violet]{x} {:}
+          \highlight[red]{\text{Bool}} \vdash
+          \highlight[blue]{x} {:}
+          \highlight[purple]{\text{Bool}}
+        }
+      }
+      {\vdash
+        \lambda
+        \highlight[violet]{x} {:}
+        \highlight[red]{\text{Bool}} .
+        \highlight[blue]{x} {:}
+        \highlight[red]{\text{Bool}} \rightarrow
+        \highlight[purple]{\text{Bool}}
+      }
+    }
+    {\prftree[r]{T-True}
+      {}
+      {\vdash
+        \highlight[white]{\text{true}} {:}
+        \highlight[white]{\text{Bool}}
+      }
+    }
+    {\vdash
+      (\highlight[white]{\lambda x {:} \text{Bool} . x})
+      \highlight[white]{\text{true}} {:}
+      \highlight[white]{\text{Bool}}
+    }
+    \]
+      \onslide<15>
+     \[
+    \prftree[r]{T-App}
+    {\prftree[r]{T-Abs}
+      {\prftree[r]{T-Var}
+        {
+          \highlight[white]{x} {:}
+          \highlight[white]{\text{Bool}} \in
+          \highlight[white]{x~{:}~\text{Bool}}
+        }
+        {
+          \highlight[violet]{x} {:}
+          \highlight[red]{\text{Bool}} \vdash
+          \highlight[blue]{x} {:}
+          \highlight[purple]{\text{Bool}}
+        }
+      }
+      {\vdash
+        \lambda
+        \highlight[white]{x} {:}
+        \highlight[white]{\text{Bool}} .
+        \highlight[white]{x} {:}
+        \highlight[white]{\text{Bool}} \rightarrow
+        \highlight[white]{\text{Bool}}
+      }
+    }
+    {\prftree[r]{T-True}
+      {}
+      {\vdash
+        \highlight[white]{\text{true}} {:}
+        \highlight[white]{\text{Bool}}
+      }
+    }
+    {\vdash
+      (\highlight[white]{\lambda x {:} \text{Bool} . x})
+      \highlight[white]{\text{true}} {:}
+      \highlight[white]{\text{Bool}}
+    }
+    \]
+      \onslide<16-18>
+     \[
+    \prftree[r]{T-App}
+    {\prftree[r]{T-Abs}
+      {\prftree[r]{T-Var}
+        {
+          \highlight[white]{x} {:}
+          \highlight[white]{\text{Bool}} \in
+          \highlight[white]{x~{:}~\text{Bool}}
+        }
+        {
+          \highlight[red]{x {:} \text{Bool}} \vdash
+          \highlight[blue]{x} {:}
+          \highlight[purple]{\text{Bool}}
+        }
+      }
+      {\vdash
+        \lambda
+        \highlight[white]{x} {:}
+        \highlight[white]{\text{Bool}} .
+        \highlight[white]{x} {:}
+        \highlight[white]{\text{Bool}} \rightarrow
+        \highlight[white]{\text{Bool}}
+      }
+    }
+    {\prftree[r]{T-True}
+      {}
+      {\vdash
+        \highlight[white]{\text{true}} {:}
+        \highlight[white]{\text{Bool}}
+      }
+    }
+    {\vdash
+      (\highlight[white]{\lambda x {:} \text{Bool} . x})
+      \highlight[white]{\text{true}} {:}
+      \highlight[white]{\text{Bool}}
+    }
+    \]
+      \onslide<19>
+     \[
+    \prftree[r]{T-App}
+    {\prftree[r]{T-Abs}
+      {\prftree[r]{T-Var}
+        {
+          \highlight[blue]{x} {:}
+          \highlight[purple]{\text{Bool}} \in
+          \highlight[red]{x~{:}~\text{Bool}}
+        }
+        {
+          \highlight[red]{x {:} \text{Bool}} \vdash
+          \highlight[blue]{x} {:}
+          \highlight[purple]{\text{Bool}}
+        }
+      }
+      {\vdash
+        \lambda
+        \highlight[white]{x} {:}
+        \highlight[white]{\text{Bool}} .
+        \highlight[white]{x} {:}
+        \highlight[white]{\text{Bool}} \rightarrow
+        \highlight[white]{\text{Bool}}
+      }
+    }
+    {\prftree[r]{T-True}
+      {}
+      {\vdash
+        \highlight[white]{\text{true}} {:}
+        \highlight[white]{\text{Bool}}
+      }
+    }
+    {\vdash
+      (\highlight[white]{\lambda x {:} \text{Bool} . x})
+      \highlight[white]{\text{true}} {:}
+      \highlight[white]{\text{Bool}}
+    }
+    \]
+    \end{overprint}
+\end{frame}
+
+\begin{frame}
+  The typing relation rules out problematic terms like $\text{omega}$.
+\end{frame}
+
+\begin{frame}
+  It also rules out $\text{fix}$ - although we can add it back in later.
+\end{frame}
+
+\begin{frame}
+  It rules out enough problematic terms that $\text{STLC}$ is actually strongly normalizing.
+\end{frame}
+
+\begin{frame}
+  Finite terms will evaluate in a finite number of steps.
+\end{frame}
+
+\begin{frame}
+  If we're happy to give that up, we can add fix back in.
+\end{frame}
+
+\input{fix}
+
+\begin{frame}
+ We can add all kinds of other things to STLC. 
+\end{frame}
+
+\begin{frame}
+For example: pairs are straightforward to add.
+\end{frame}
+
+\input{pairs}
+
+\begin{frame}
+  Tuples, records, variants and lists are similar.
+\end{frame}
+
+\begin{frame}
+  Recursive types require a bit more work - and we'd need to get into pattern
+  matching, which we don't have time for.
+\end{frame}
+
+\begin{frame}
+  There are still some things that are clunky.
+\end{frame}
+
+\begin{frame}
+  We have to write a lot of different versions of $\text{id}$
+  \[ \lambda~x~{:}~\text{Bool}~.~x \]
+  \[ \lambda~x~{:}~\text{Int}~.~x \]
+\end{frame}
+
+\begin{frame}
+  Things are worse for $\text{const}$
+  \[ \lambda~x~{:}~\text{Bool}~.~\lambda~y~{:}~\text{Bool}~.~x \]
+  \[ \lambda~x~{:}~\text{Bool}~.~\lambda~y~{:}~\text{Int}~.~x \]
+  \[ \lambda~x~{:}~\text{Int}~.~\lambda~y~{:}~\text{Bool}~.~x \]
+  \[ \lambda~x~{:}~\text{Int}~.~\lambda~y~{:}~\text{Int}~.~x \]
+\end{frame}
+
+\begin{frame}
+  Don't even get me started on $\text{compose}$
+  \[
+    \lambda~f~{:}~\text{Bool}\rightarrow\text{Int}~.~\lambda~g~{:}~\text{Int}\rightarrow\text{Bool}~.~\lambda~x~{:}~\text{Int}~.~f~\left(g~x \right) \]
+  \[\ldots\]
+\end{frame}
+
+\begin{frame}
+  We will address this soon.
+\end{frame}

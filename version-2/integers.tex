@@ -1,0 +1,415 @@
+
+\section{Integers}
+
+\begin{frame}[c]
+  \begin{center}
+    Let us look at a simple language, starting with the terms.
+  \end{center}
+\end{frame}
+
+\begin{frame}
+\begin{displaymath}
+    \begin{aligned}
+t \quad:=\quad& ~ &\\
+  & ~ \left<\text{int}\right> \quad\quad &constant~integer\\
+  & ~ t + t \quad\quad &addition\\
+    \end{aligned}
+  \end{displaymath}
+\end{frame}
+
+\begin{frame}[c]
+    What do these terms look like?
+\end{frame}
+
+\begin{frame}
+\begin{displaymath}
+  3 
+\end{displaymath}
+\end{frame}
+
+\begin{frame}
+\begin{displaymath}
+  (1 + 2) + (3 + 4)
+\end{displaymath}
+\end{frame}
+
+\begin{frame}[c]
+  When we e{\it valu}ate a term, we are turning it into a {\it value}.
+\end{frame}
+
+\begin{frame}[c]
+    Values are specified as part of the {\it syntax} of a languge.
+\end{frame}
+
+\begin{frame}[c]
+    The small-step rules give us the {\it semantics} of a languge.
+\end{frame}
+
+\begin{frame}[c]
+  What are the values for the Integer language?
+\end{frame}
+
+\begin{frame}
+
+  By rules:
+
+  \infrule[V-Int]
+          {}
+          {\text{value}~\left<\text{int}\right>}
+\end{frame}
+
+\begin{frame}
+
+  By definitions:
+  
+\begin{displaymath}
+    \begin{aligned}
+v \quad:=\quad& ~ &\\
+  & ~ \left<\text{int}\right> \quad\quad &constant~integer\\
+    \end{aligned}
+  \end{displaymath}
+\end{frame}
+
+\begin{frame}[c]
+  Evaluation proceeds in {\it steps}.
+\end{frame}
+
+\begin{frame}[c]
+  The set of steps gives us the {\it small-step semantics} for the language.
+\end{frame}
+
+\begin{frame}[c]
+  \begin{mdframed}[frametitle={Small-step semantics}]
+
+  \infrule[E-Add1]
+         {t_1 \longrightarrow {t_1}^{\prime}}
+         {t_1 + t_2 \longrightarrow {t_1}^{\prime} + t_2}
+  \infrule[E-Add2]
+          {t_2 \longrightarrow {t_2}^{\prime}}
+          {v_1 + t_2 \longrightarrow v_1 + {t_2}^{\prime}}
+  \infrule[E-AddInt]
+          {}
+          {\left<\text{int}_1\right> + \left<\text{int}_2\right> \longrightarrow \left< \text{int}_1 + \text{int}_2 \right>}
+  \end{mdframed}
+
+  \medskip
+
+  \begin{overprint}
+  \onslide<+>
+  The steps are specified as a binary relation $t_1 \longrightarrow t_2$.
+  \onslide<+>
+  The relation $t_1 \longrightarrow t_2$ indicates that the term $t_1$ can step to $t_2$.
+  \onslide<+>
+  $\text{E-AddInt}$ does the actual addition.
+  \onslide<+>
+  $\text{E-Add1}$ and $\text{E-Add2}$ control the order in which the steps are
+  applied to get to the point where $\text{E-AddInt}$ applies.
+  \onslide<+>
+  Any term that cannot take a step is known as a {\it normal form}.
+  \onslide<+>
+  Values cannot take a step by definition and so are always normal forms.
+  \onslide<+>
+  Iterating the small-step relation until you reach a value is called {\it evaluation}.
+  \onslide<+>
+  Iterating the small-step relation until you reach a normal form is called {\it normalization}.
+  \onslide<+>
+  Usually evaluation and normalization are / are hoped to be the same thing.
+  \onslide<+>
+  If a term is not a value but is a normal form, then it is {\it stuck}.
+  \onslide<+>
+  A language can be {\it normalizing}: there is an evaluation order that means that finite-sized terms will always evaluate in finite time.
+  \onslide<+>
+  A language can be {\it strongly normalizing}: for any evaluation order, finite-sized terms will always evaluate in finite time.
+  \onslide<+>
+  The relationship between values and normal forms is a relationship between syntax and semantics.
+  \end{overprint}
+\end{frame}
+
+\begin{frame}
+
+  We can define evaluation in terms of a big-step relation:
+  
+  \infrule[Big-Value]
+          {}
+          {v \Rightarrow v}
+  \infrule[Big-Step]
+          {t \longrightarrow t^{\prime} \andalso t^{\prime} \Rightarrow v}
+          {t \Rightarrow v}
+\end{frame}
+
+\begin{frame}
+  Let us evaluate $(1 + 2) + (3 + 4)$.
+\end{frame}
+
+\begin{frame}[c]
+  \begin{mdframed}[frametitle={Previously...}]
+  \begin{overprint}
+  \onslide<1>
+  \infrule[E-Add1]
+  { \highlight[white]{\strut t_1} \longrightarrow
+    \highlight[white]{\strut {t_1}^{\prime}}
+  }
+  { \highlight[white]{\strut t_1} +
+    \highlight[white]{\strut t_2} \longrightarrow
+    \highlight[white]{\strut {t_1}^{\prime}} +
+    \highlight[white]{\strut t_2}
+  }
+
+  \infrule[E-AddInt]
+  {}
+  { \highlight[white]{\strut \left<\text{int}_1\right>} +
+    \highlight[white]{\strut \left<\text{int}_2\right>} \longrightarrow
+    \highlight[white]{\strut \left< \text{int}_1 + \text{int}_2 \right>}
+  }
+
+  \onslide<2>
+  \infrule[E-Add1]
+  { \highlight[white]{\strut t_1} \longrightarrow
+    \highlight[white]{\strut {t_1}^{\prime}}
+  }
+  { \highlight[white]{\strut t_1} +
+    \highlight[white]{\strut t_2} \longrightarrow
+    \highlight[white]{\strut {t_1}^{\prime}} +
+    \highlight[white]{\strut t_2}
+  }
+
+  \infrule[E-AddInt]
+  {}
+  { \highlight[white]{\strut \left<\text{int}_1\right>} +
+    \highlight[white]{\strut \left<\text{int}_2\right>} \longrightarrow
+    \highlight[white]{\strut \left< \text{int}_1 + \text{int}_2 \right>}
+  }
+
+  \onslide<3>
+  \infrule[E-Add1]
+  { \highlight[white]{\strut t_1} \longrightarrow
+    \highlight[white]{\strut {t_1}^{\prime}}
+  }
+  { \highlight[violet]{\strut t_1} +
+    \highlight[blue]{\strut t_2} \longrightarrow
+    \highlight[purple]{\strut {t_1}^{\prime}} +
+    \highlight[blue]{\strut t_2}
+  }
+
+  \infrule[E-AddInt]
+  {}
+  { \highlight[white]{\strut \left<\text{int}_1\right>} +
+    \highlight[white]{\strut \left<\text{int}_2\right>} \longrightarrow
+    \highlight[white]{\strut \left< \text{int}_1 + \text{int}_2 \right>}
+  }
+
+  \onslide<4>
+  \infrule[E-Add1]
+  { \highlight[violet]{\strut t_1} \longrightarrow
+    \highlight[purple]{\strut {t_1}^{\prime}}
+  }
+  { \highlight[violet]{\strut t_1} +
+    \highlight[blue]{\strut t_2} \longrightarrow
+    \highlight[purple]{\strut {t_1}^{\prime}} +
+    \highlight[blue]{\strut t_2}
+  }
+
+  \infrule[E-AddInt]
+  {}
+  { \highlight[white]{\strut \left<\text{int}_1\right>} +
+    \highlight[white]{\strut \left<\text{int}_2\right>} \longrightarrow
+    \highlight[white]{\strut \left< \text{int}_1 + \text{int}_2 \right>}
+  }
+
+  \onslide<5>
+  \infrule[E-Add1]
+  { \highlight[violet]{\strut t_1} \longrightarrow
+    \highlight[purple]{\strut {t_1}^{\prime}}
+  }
+  { \highlight[violet]{\strut t_1} +
+    \highlight[blue]{\strut t_2} \longrightarrow
+    \highlight[purple]{\strut {t_1}^{\prime}} +
+    \highlight[blue]{\strut t_2}
+  }
+
+  \infrule[E-AddInt]
+  {}
+  { \highlight[white]{\strut \left<\text{int}_1\right>} +
+    \highlight[white]{\strut \left<\text{int}_2\right>} \longrightarrow
+    \highlight[white]{\strut \left< \text{int}_1 + \text{int}_2 \right>}
+  }
+
+  \onslide<6,7>
+  \infrule[E-Add1]
+  { \highlight[white]{\strut t_1} \longrightarrow
+    \highlight[white]{\strut {t_1}^{\prime}}
+  }
+  { \highlight[white]{\strut t_1} +
+    \highlight[white]{\strut t_2} \longrightarrow
+    \highlight[white]{\strut {t_1}^{\prime}} +
+    \highlight[white]{\strut t_2}
+  }
+
+  \infrule[E-AddInt]
+  {}
+  { \highlight[white]{\strut \left<\text{int}_1\right>} +
+    \highlight[white]{\strut \left<\text{int}_2\right>} \longrightarrow
+    \highlight[white]{\strut \left< \text{int}_1 + \text{int}_2 \right>}
+  }
+
+  \onslide<8>
+  \infrule[E-Add1]
+  { \highlight[white]{\strut t_1} \longrightarrow
+    \highlight[white]{\strut {t_1}^{\prime}}
+  }
+  { \highlight[white]{\strut t_1} +
+    \highlight[white]{\strut t_2} \longrightarrow
+    \highlight[white]{\strut {t_1}^{\prime}} +
+    \highlight[white]{\strut t_2}
+  }
+
+  \infrule[E-AddInt]
+  {}
+  { \highlight[red]{\strut \left<\text{int}_1\right>} +
+    \highlight[blue]{\strut \left<\text{int}_2\right>} \longrightarrow
+    \highlight[purple]{\strut \left< \text{int}_1 + \text{int}_2 \right>}
+  }
+
+  \end{overprint}
+  \end{mdframed}
+  \vfill
+  \begin{overprint}
+    \onslide<1>
+    \[ \prftree[r]{E-Add1}
+    {\prftree[r]{E-AddInt}
+      {}
+      { \highlight[white]{\strut 1} +
+        \highlight[white]{\strut 2} \longrightarrow
+        \highlight[white]{\strut 3}
+      }
+    }
+    { \left(\highlight[white]{\strut 1 + 2}\right) +
+      \left(\highlight[white]{\strut 3 + 4}\right)
+      \longrightarrow
+      \highlight[white]{\strut 3} +
+      \left(\highlight[white]{\strut 3 + 4}\right)
+    }\]
+    \onslide<2>
+    \[ \prftree[r]{E-Add1}
+    {\prftree[r]{E-AddInt}
+      {}
+      { \highlight[white]{\strut 1} +
+        \highlight[white]{\strut 2} \longrightarrow
+        \highlight[white]{\strut 3}
+      }
+    }
+    { \left(\highlight[violet]{\strut 1 + 2}\right) +
+      \left(\highlight[blue]{\strut 3 + 4}\right)
+      \longrightarrow
+      \highlight[purple]{\strut 3} +
+      \left(\highlight[blue]{\strut 3 + 4}\right)
+    }\]
+    \onslide<3>
+    \[ \prftree[r]{E-Add1}
+    {\prftree[r]{E-AddInt}
+      {}
+      { \highlight[white]{\strut 1} +
+        \highlight[white]{\strut 2} \longrightarrow
+        \highlight[white]{\strut 3}
+      }
+    }
+    { \left(\highlight[violet]{\strut 1 + 2}\right) +
+      \left(\highlight[blue]{\strut 3 + 4}\right)
+      \longrightarrow
+      \highlight[purple]{\strut 3} +
+      \left(\highlight[blue]{\strut 3 + 4}\right)
+    }\]
+    \onslide<4>
+    \[ \prftree[r]{E-Add1}
+    {\prftree[r]{E-AddInt}
+      {}
+      { \highlight[white]{\strut 1} +
+        \highlight[white]{\strut 2} \longrightarrow
+        \highlight[white]{\strut 3}
+      }
+    }
+    { \left(\highlight[violet]{\strut 1 + 2}\right) +
+      \left(\highlight[blue]{\strut 3 + 4}\right)
+      \longrightarrow
+      \highlight[purple]{\strut 3} +
+      \left(\highlight[blue]{\strut 3 + 4}\right)
+    }\]
+    \onslide<5>
+    \[ \prftree[r]{E-Add1}
+    {\prftree[r]{E-AddInt}
+      {}
+      { \highlight[violet]{\strut 1 + \strut 2}
+        \longrightarrow
+        \highlight[purple]{\strut 3}
+      }
+    }
+    { \left(\highlight[violet]{\strut 1 + 2}\right) +
+      \left(\highlight[blue]{\strut 3 + 4}\right)
+      \longrightarrow
+      \highlight[purple]{\strut 3} +
+      \left(\highlight[blue]{\strut 3 + 4}\right)
+    }\]
+    \onslide<6>
+    \[ \prftree[r]{E-Add1}
+    {\prftree[r]{E-AddInt}
+      {}
+      { \highlight[violet]{\strut 1 + \strut 2}
+        \longrightarrow
+        \highlight[purple]{\strut 3}
+      }
+    }
+    { \left(\highlight[white]{\strut 1 + 2}\right) +
+      \left(\highlight[white]{\strut 3 + 4}\right)
+      \longrightarrow
+      \highlight[white]{\strut 3} +
+      \left(\highlight[white]{\strut 3 + 4}\right)
+    }\]
+    \onslide<7,8>
+    \[ \prftree[r]{E-Add1}
+    {\prftree[r]{E-AddInt}
+      {}
+      { \highlight[red]{\strut 1} +
+        \highlight[blue]{\strut 2}
+        \longrightarrow
+        \highlight[purple]{\strut 3}
+      }
+    }
+    { \left(\highlight[white]{\strut 1 + 2}\right) +
+      \left(\highlight[white]{\strut 3 + 4}\right)
+      \longrightarrow
+      \highlight[white]{\strut 3} +
+      \left(\highlight[white]{\strut 3 + 4}\right)
+    }\]
+  \end{overprint}
+\end{frame}
+
+\begin{frame}
+  The complete evaluation takes three steps. \\
+
+  First:
+  \begin{displaymath}
+    \prftree[r]{E-Add1}
+    {\prftree[r]{E-AddInt}
+      {}
+      {1 + 2 \longrightarrow 3}
+    }
+    {(1 + 2) + (3 + 4) \longrightarrow 3 + (3 + 4)}
+  \end{displaymath}
+
+  Then:
+  \begin{displaymath}
+    \prftree[r]{E-Add2}
+    {\prftree[r]{E-AddInt}
+      {}
+      {3 + 4 \longrightarrow 7}
+    }
+    {3 + (3 + 4) \longrightarrow 3 + 7}
+  \end{displaymath}
+
+  Finally:
+  \begin{displaymath}
+    \prftree[r]{E-AddInt}
+    {}
+    {3 + 7 \longrightarrow 10}
+  \end{displaymath}
+\end{frame}

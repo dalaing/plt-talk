@@ -1,0 +1,99 @@
+
+\section{Natural deduction rules}
+
+\begin{frame}[c]
+  We use natural deduction style rules for most of this.
+\end{frame}
+
+\begin{frame}
+  \infrule[Rule-Name]
+          {Assumption_1 \andalso Assumption_2 \andalso \ldots}
+          {Conclusion}
+\end{frame}
+
+\begin{frame}[c]
+  \begin{mdframed}[frametitle={Rules for evenness}]
+
+  \infrule[Even-Zero]
+          {}
+          {\text{even}~0}
+  \infrule[Even-Add]
+          {\text{even}~x}
+          {\text{even}~\left(x + 2\right)}
+  \end{mdframed}
+
+  \medskip
+
+  \begin{overprint}
+  \onslide<+>
+  Some rules - like $\text{Even-Zero}$ - have no assumptions, and are known as {\it axioms}.
+  \onslide<+>
+  Some rules - like $\text{Even-Add}$ - are recursive.
+  \onslide<+>
+  The relations are determined by the union of all of the rules.
+  \onslide<+>
+  Usually only one rule will apply at one time, and so the order we organize these rules in doesn't matter.
+  \onslide<+>
+  We are also dealing with an "open world".
+  \onslide<+>
+  Rules will often get added to a system without having to go back and alter the other rules.
+  \end{overprint}
+\end{frame}
+
+\begin{frame}[c]
+  \begin{mdframed}[frametitle={Rules for evenness, now with bonus rules}]
+
+  \infrule[Even-Zero]
+          {}
+          {\text{even}~0}
+  \infrule[Even-Add]
+          {\text{even}~x}
+          {\text{even}~\left(x + 2\right)}
+  \infrule[Even-Odd]
+          {\text{odd}~x}
+          {\text{even}~\left(x + 1\right)}
+  \infrule[Odd-Even]
+          {\text{even}~x}
+          {\text{odd}~\left(x + 1\right)}
+  \end{mdframed}
+
+  \medskip
+
+  \begin{overprint}
+  \onslide<+>
+  Let us add some more rules.
+  \onslide<+>
+  Now we could apply these rules in a few different orders to determine $\text{even 4}$.
+  \onslide<+>
+  We want the rules to be {\it deterministic} - the answers through all of the paths agree, and the paths are finite.
+  \end{overprint}
+\end{frame}
+
+\begin{frame}[c]
+  \begin{mdframed}[frametitle={Equivalence relations}]
+
+  \infrule[Reflexivity]
+          {}
+          {P = P}
+  \infrule[Symmetry]
+          {Q = P}
+          {P = Q}
+  \infrule[Transitivity]
+          {P = Q \andalso Q = R}
+          {P = R}
+  \end{mdframed}
+
+  \medskip
+
+  \begin{overprint}
+  \onslide<+>
+  Sometimes we have rules like $\text{Symmetry}$, which could be applied over and over and spin forever.
+  \onslide<+>
+  Those rules usually exist in that form to explain why a system has some desired properties, or to assist with proofs.
+  \onslide<+>
+  There will often be a second equivalent set of rules applied that are deterministic and terminating - known as {\i algorithmic} to assist with implementations.
+  \onslide<+>
+  This is usually proved by a proof of logical equivalence of the non-deterministic and algorithmic rules sets.
+  \end{overprint}
+\end{frame}
+

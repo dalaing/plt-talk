@@ -1,0 +1,558 @@
+
+\section{Booleans and Natural numbers}
+
+\begin{frame}[c]
+  We are going to combine a few of these languages.
+\end{frame}
+
+\begin{frame}
+  \begin{mdframed}[frametitle={Terms}]
+\begin{displaymath}
+    \begin{aligned}
+t \quad:=\quad& ~ &\\
+  & ~ \text{false} \quad\quad &constant~false\\
+  & ~ \text{true} \quad\quad &constant~true\\
+  & ~ t ~ \text{or} ~ t \quad\quad &disjunction\\
+  & ~ \text{O} \quad\quad &constant~zero \\
+  & ~ \text{succ}~t \quad\quad &successor \\
+  & ~ \text{pred}~t \quad\quad &predecessor \\
+  & ~ \highlight{\text{iszero}~t} \quad\quad &iszero \\
+  & ~ \highlight{\text{if}~t~\text{then}~t~\text{else}~t} \quad\quad &if \\
+    \end{aligned}
+  \end{displaymath}
+  \end{mdframed}
+\end{frame}
+
+\begin{frame}
+  \begin{mdframed}[frametitle={Small-step semantics for $\text{iszero}$}]
+  \infrule[E-IsZero]
+         {t \longrightarrow t^{\prime}}
+         {\text{iszero}~t \longrightarrow \text{iszero}~t^{\prime}}
+  \infrule[E-IsZeroZero]
+         {}
+         {\text{iszero}~\text{O} \longrightarrow \text{true}}
+  \infrule[$\text{E-IsZeroSucc}^{\text{*}}$]
+        {}
+        {\text{iszero}~\left( \text{succ}~v \right) \longrightarrow \text{false}}
+  \end{mdframed}
+  \medskip
+  * Uses $\text{t}$ in place of $\text{v}$ for the lazy version.
+\end{frame}
+
+\begin{frame}
+  \begin{mdframed}[frametitle={Small-step semantics for $\text{if}$}]
+  \infrule[E-If]
+         {t_1 \longrightarrow {t_1}^{\prime}}
+         {
+           \text{if}~t_1~\text{then}~t_2~\text{else}~t_3
+           \longrightarrow
+           \text{if}~{t_1}^{\prime}~\text{then}~t_2~\text{else}~t_3
+        }
+  \infrule[E-IfTrue]
+          {}       
+          {
+           \text{if}~\text{true}~\text{then}~t_2~\text{else}~t_3
+           \longrightarrow
+           t_2
+          }       
+  \infrule[E-IfFalse]
+          {}       
+          {
+           \text{if}~\text{false}~\text{then}~t_2~\text{else}~t_3
+           \longrightarrow
+           t_3
+          }       
+  \end{mdframed}
+\end{frame}
+
+\begin{frame}
+  This term is stuck:
+\begin{displaymath}
+\text{iszero}~\text{false}
+\end{displaymath}
+ as is this one:
+\begin{displaymath}
+\text{if}~\text{O}~\text{then}~\text{false}~\text{else}~\text{true}
+\end{displaymath}
+\end{frame}
+
+\begin{frame}[c]
+  We can break values down further to try to keep things on-track.
+\end{frame}
+
+\begin{frame}
+  \begin{mdframed}[frametitle={Values}]
+\begin{displaymath}
+    \begin{aligned}
+bv \quad:=\quad& ~ &\\
+  & ~ \text{false} \quad\quad &false~value \\
+  & ~ \text{true} \quad\quad &true~value \\
+nv \quad:=\quad& ~ \qquad\qquad &\\
+  & ~ \text{O} \quad\quad &zero~value \\
+  & ~ \text{succ}~nv \quad\quad &successor~value \\
+v \quad:=\quad& ~ \qquad\qquad &\\
+  & ~ bv \quad\quad &boolean~value \\
+  & ~ nv \quad\quad &natural~number~value \\
+    \end{aligned}
+  \end{displaymath}
+  \end{mdframed}
+\end{frame}
+
+\begin{frame}
+  \begin{mdframed}[frametitle={Small-step semantics}]
+  \infrule[E-IsZeroSucc]
+        {}
+        {\text{iszero}~ \left( \text{succ}~\highlight{nv} \right) \longrightarrow \text{false}}
+  \end{mdframed}
+\end{frame}
+
+\begin{frame}
+  These terms are still stuck:
+\begin{displaymath}
+\text{iszero}~\text{false}
+\end{displaymath}
+\begin{displaymath}
+\text{if}~\text{O}~\text{then}~\text{false}~\text{else}~\text{true}
+\end{displaymath}
+\end{frame}
+
+\begin{frame}[c]
+  The finer-grained values have more clearly communicated intent.
+\end{frame}
+
+\begin{frame}[c]
+  The more detailed break down of values may effect {\it when} a term gets stuck, but not whether a term will get stuck.
+\end{frame}
+
+\begin{frame}[c]
+  We want to work out which terms will or won't get stuck without having to evaluate the terms.
+\end{frame}
+
+\begin{frame}[c]
+  Enter {\it types}.
+\end{frame}
+
+\begin{frame}
+  \begin{mdframed}[frametitle={Types}]
+\begin{displaymath}
+    \begin{aligned}
+\text{T} \quad:=\quad& ~ &\\
+  & ~ \text{Bool} \quad\quad &\text{type of booleans} \\
+  & ~ \text{Nat} \quad\quad &\text{type of natural numbers} \\
+    \end{aligned}
+  \end{displaymath}
+  \end{mdframed}
+\end{frame}
+
+\begin{frame}
+
+  \begin{mdframed}[frametitle={Typing rules (Booleans)}]
+
+  \infrule[T-False]
+          {}
+          {\vdash \text{false} {:} \text{Bool}}
+  \infrule[T-True]
+          {}
+          {\vdash \text{true} {:} \text{Bool}}
+  \infrule[T-Or]
+          {\vdash t_1 {:} \text{Bool} \andalso \vdash t_2 {:} \text{Bool}}
+          {\vdash t_1~\text{or}~t_2 {:} \text{Bool}}
+  \end{mdframed}
+
+  \medskip
+  
+  \begin{overprint}
+    \onslide<+>
+  We have a binary relation $\vdash t {:} T$.
+    \onslide<+>
+  This indicates that the term $t$ is {\it well-typed} and has type $T$.
+    \onslide<+>
+  Any term which doesn't match any of these rules is {\it ill-typed}.
+    \onslide<+>
+  Anything on the left of the $\vdash$ is additional context that the typing rules need.
+    \onslide<+>
+  For now we don't need any more context.
+    \onslide<+>
+  We can use these rules to check that a given term has a particular type.
+    \onslide<+>
+  We can use these rules to {\it infer} the type for a particular term.
+    \onslide<+>
+    At this point our type inference is syntax-directed - we can walk through
+    the syntax tree, applying one rule at a time.
+  \end{overprint}
+  
+\end{frame}
+
+\begin{frame}
+
+  \begin{mdframed}[frametitle={Typing rules (Natural numbers)}]
+
+  \infrule[T-Zero]
+          {}
+          {\vdash \text{O} {:} \text{Nat}}
+  \infrule[T-Succ]
+          {\vdash t {:} \text{Nat}}
+          {\vdash \text{succ}~t {:} \text{Nat}}
+  \infrule[T-Pred]
+          {\vdash t {:} \text{Nat}}
+          {\vdash \text{pred}~t {:} \text{Nat}}
+
+  \end{mdframed}
+\end{frame}
+
+\begin{frame}
+
+  \begin{mdframed}[frametitle={Typing rules (both)}]
+  
+  \infrule[T-IsZero]
+          {\vdash t {:} \text{Nat}}
+          {\vdash \text{iszero}~t {:} \text{Bool}}
+  \infrule[T-If]
+          {\vdash t_1 {:} \text{Bool} \andalso \vdash t_2 {:} T \andalso \vdash t_3 {:} T}
+          {\vdash \text{if}~t_1~\text{then}~t_2~\text{else}~t_3 {:} T}
+
+  \end{mdframed}
+
+  \medskip
+  
+  \begin{overprint}
+    \onslide<+>
+    \onslide<+>
+  These rule out the stuck terms we saw previously:
+
+  \begin{displaymath}
+  \text{iszero}~\text{false}
+  \end{displaymath}
+  and
+  \begin{displaymath}
+  \text{if}~\text{O}~\text{then}~\text{false}~\text{else}~\text{true}
+  \end{displaymath}
+    \onslide<+>
+    They also rule out terms that are not stuck:
+  \begin{displaymath}
+  \text{if}~\text{true}~\text{then}~\text{O}~\text{else}~\text{true}
+  \end{displaymath}
+    as the rule $\text{T-If}$ states that both branches of the $\text{if}$ have to have the same type.
+    \onslide<+>
+    This kind of thing is normally not a big deal.
+    \onslide<+>
+    When a type system rules out some terms that were not stuck, it is called a {\it conservative} type system.
+  \end{overprint}
+
+\end{frame}
+
+\begin{frame}[c]
+  For now, each well-typed term will have a unique type.
+\end{frame}
+
+\begin{frame}[c]
+  Later on that will relax, and we'll be more concerned with the {\it principal
+    type} of a term.
+\end{frame}
+
+\begin{frame}[c]
+  There are two main properties which relate the type system of a language and
+  the small-step semantics of a language.
+\end{frame}
+
+\begin{frame}[c]
+
+  {\bf Progress}
+
+  \bigskip
+
+  \begin{overprint}
+    \onslide<1>
+    $
+    \highlight[white]{\forall}
+    \highlight[white]{\vdash t {:} T}
+    \left (
+    \highlight[white]{\text{value}~t}
+    \highlight[white]{\vee}
+    \highlight[white]{\exists t^{\prime} \left( t \longrightarrow t^{\prime} \right)}
+    \right)
+    $
+    \onslide<2>
+    $
+    \highlight{\forall}
+    \highlight[white]{\vdash t {:} T}
+    \left (
+    \highlight[white]{\text{value}~t}
+    \highlight[white]{\vee}
+    \highlight[white]{\exists t^{\prime} \left( t \longrightarrow t^{\prime} \right)}
+    \right)
+    $
+    \onslide<3>
+    $
+    \highlight[white]{\forall}
+    \highlight{\vdash t {:} T}
+    \left (
+    \highlight[white]{\text{value}~t}
+    \highlight[white]{\vee}
+    \highlight[white]{\exists t^{\prime} \left( t \longrightarrow t^{\prime} \right)}
+    \right)
+    $
+    \onslide<4>
+    $
+    \highlight[white]{\forall}
+    \highlight[white]{\vdash t {:} T}
+    \left (
+    \highlight[white]{\text{value}~t}
+    \highlight{\vee}
+    \highlight[white]{\exists t^{\prime} \left( t \longrightarrow t^{\prime} \right)}
+    \right)
+    $
+    \onslide<5>
+    $
+    \highlight[white]{\forall}
+    \highlight[white]{\vdash t {:} T}
+    \left (
+    \highlight{\text{value}~t}
+    \highlight[white]{\vee}
+    \highlight[white]{\exists t^{\prime} \left( t \longrightarrow t^{\prime} \right)}
+    \right)
+    $
+    \onslide<6>
+    $
+    \highlight[white]{\forall}
+    \highlight[white]{\vdash t {:} T}
+    \left (
+    \highlight[white]{\text{value}~t}
+    \highlight[white]{\vee}
+    \highlight{\exists t^{\prime} \left( t \longrightarrow t^{\prime} \right)}
+    \right)
+    $
+  \end{overprint}
+
+  \bigskip
+
+  \begin{overprint}
+    \onslide<+>
+    $
+    \highlight[white]{\text{For all}}
+    \highlight[white]{\text{well-typed terms,}} \\
+    \highlight[white]{\text{the term is}}
+    \highlight[white]{\text{either}}
+    \text{a}
+    \highlight[white]{\text{value}}
+    \text{or} \\
+    \highlight[white]{\text{is able to step}}
+    \text{.}
+    $
+    \onslide<+>
+    $
+    \highlight{\text{For all}}
+    \highlight[white]{\text{well-typed terms,}} \\
+    \highlight[white]{\text{the term is}}
+    \highlight[white]{\text{either}}
+    \text{a}
+    \highlight[white]{\text{value}}
+    \text{or} \\
+    \highlight[white]{\text{is able to step}}
+    \text{.}
+    $
+    \onslide<+>
+    $
+    \highlight[white]{\text{For all}}
+    \highlight{\text{well-typed terms,}} \\
+    \highlight[white]{\text{the term is}}
+    \highlight[white]{\text{either}}
+    \text{a}
+    \highlight[white]{\text{value}}
+    \text{or} \\
+    \highlight[white]{\text{is able to step}}
+    \text{.}
+    $
+    \onslide<+>
+    $
+    \highlight[white]{\text{For all}}
+    \highlight[white]{\text{well-typed terms,}} \\
+    \highlight[white]{\text{the term is}}
+    \highlight{\text{either}}
+    \text{a}
+    \highlight[white]{\text{value}}
+    \text{or} \\
+    \highlight[white]{\text{is able to step}}
+    \text{.}
+    $
+    \onslide<+>
+    $
+    \highlight[white]{\text{For all}}
+    \highlight[white]{\text{well-typed terms,}} \\
+    \highlight[white]{\text{the term is}}
+    \highlight[white]{\text{either}}
+    \text{a}
+    \highlight{\text{value}}
+    \text{or} \\
+    \highlight[white]{\text{is able to step}}
+    \text{.}
+    $
+    \onslide<+>
+    $
+    \highlight[white]{\text{For all}}
+    \highlight[white]{\text{well-typed terms,}} \\
+    \highlight[white]{\text{the term is}}
+    \highlight[white]{\text{either}}
+    \text{a}
+    \highlight[white]{\text{value}}
+    \text{or} \\
+    \highlight{\text{is able to step}}
+    \text{.}
+    $
+  \end{overprint}
+\end{frame}
+
+\begin{frame}[c]
+
+  {\bf Preservation}
+
+  \bigskip
+
+  \begin{overprint}
+    \onslide<1>
+    $
+    \highlight[white]{\forall}
+    \highlight[white]{\vdash t {:} T}
+    \left(
+      \highlight[white]{\exists t^{\prime} \left(t \longrightarrow t^{\prime}\right)}
+      \highlight[white]{\implies}
+      \highlight[white]{\vdash t^{\prime} {:} T}
+    \right)
+    $
+    \onslide<2>
+    $
+    \highlight{\forall}
+    \highlight[white]{\vdash t {:} T}
+    \left(
+      \highlight[white]{\exists t^{\prime} \left(t \longrightarrow t^{\prime}\right)}
+      \highlight[white]{\implies}
+      \highlight[white]{\vdash t^{\prime} {:} T}
+    \right)
+    $
+    \onslide<3>
+    $
+    \highlight[white]{\forall}
+    \highlight{\vdash t {:} T}
+    \left(
+      \highlight[white]{\exists t^{\prime} \left(t \longrightarrow t^{\prime}\right)}
+      \highlight[white]{\implies}
+      \highlight[white]{\vdash t^{\prime} {:} T}
+    \right)
+    $
+    \onslide<4>
+    $
+    \highlight[white]{\forall}
+    \highlight[white]{\vdash t {:} T}
+    \left(
+      \highlight[white]{\exists t^{\prime} \left(t \longrightarrow t^{\prime}\right)}
+      \highlight{\implies}
+      \highlight[white]{\vdash t^{\prime} {:} T}
+    \right)
+    $
+    \onslide<5>
+    $
+    \highlight[white]{\forall}
+    \highlight[white]{\vdash t {:} T}
+    \left(
+      \highlight{\exists t^{\prime} \left(t \longrightarrow t^{\prime}\right)}
+      \highlight[white]{\implies}
+      \highlight[white]{\vdash t^{\prime} {:} T}
+    \right)
+    $
+    \onslide<6>
+    $
+    \highlight[white]{\forall}
+    \highlight{\vdash t {:} T}
+    \left(
+      \highlight[white]{\exists t^{\prime} \left(t \longrightarrow t^{\prime}\right)}
+      \highlight[white]{\implies}
+      \highlight{\vdash t^{\prime} {:} T}
+    \right)
+    $
+  \end{overprint}
+
+  \bigskip
+
+  \begin{overprint}
+    \onslide<+>
+    $
+    \highlight[white]{\text{For all}}
+    \highlight[white]{\text{well-typed terms}}
+    \text{,} \\
+    \highlight[white]{\text{if}}
+    \highlight[white]{\text{the term can take a step}} \\
+    \highlight[white]{\text{the type is unchanged}}
+    \text{.}
+    $
+    \onslide<+>
+    $
+    \highlight{\text{For all}}
+    \highlight[white]{\text{well-typed terms}}
+    \text{,} \\
+    \highlight[white]{\text{if}}
+    \highlight[white]{\text{the term can take a step}} \\
+    \highlight[white]{\text{the type is unchanged}}
+    \text{.}
+    $
+    \onslide<+>
+    $
+    \highlight[white]{\text{For all}}
+    \highlight{\text{well-typed terms}}
+    \text{,} \\
+    \highlight[white]{\text{if}}
+    \highlight[white]{\text{the term can take a step}} \\
+    \highlight[white]{\text{the type is unchanged}}
+    \text{.}
+    $
+    \onslide<+>
+    $
+    \highlight[white]{\text{For all}}
+    \highlight[white]{\text{well-typed terms}}
+    \text{,} \\
+    \highlight{\text{if}}
+    \highlight[white]{\text{the term can take a step}} \\
+    \highlight[white]{\text{the type is unchanged}}
+    \text{.}
+    $
+    \onslide<+>
+    $
+    \highlight[white]{\text{For all}}
+    \highlight[white]{\text{well-typed terms}}
+    \text{,} \\
+    \highlight[white]{\text{if}}
+    \highlight{\text{the term can take a step}} \\
+    \highlight[white]{\text{the type is unchanged}}
+    \text{.}
+    $
+    \onslide<+>
+    $
+    \highlight[white]{\text{For all}}
+    \highlight[white]{\text{well-typed terms}}
+    \text{,} \\
+    \highlight[white]{\text{if}}
+    \highlight[white]{\text{the term can take a step}} \\
+    \highlight{\text{the type is unchanged}}
+    \text{.}
+    $
+  \end{overprint}
+\end{frame}
+
+\begin{frame}[c]
+  Progress and preservation give us type-safety: well-typed terms do not get stuck.
+  \begin{itemize}
+  \pause
+  \item<+-> Progress means that well-typed terms are either values or can take a step.
+  \item<+-> Values are not stuck, so if we are at a value we are done.
+  \item<+-> Preservation means that well-typed terms that can take a step do not change type.
+  \item<+-> After the step we have a well-typed term, so it is either a value or can
+    take a step...
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[c]
+  Progress and preservation also tie together syntax, semantics and typing.
+\end{frame}
+
+\begin{frame}[c]
+  Together they mean we can use type systems to (approximately) classify which terms will or will not get stuck.
+\end{frame}

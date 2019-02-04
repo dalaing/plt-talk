@@ -1,0 +1,72 @@
+
+\begin{frame}[fragile]
+  \begin{minted}{haskell}
+data Term =
+    TmInt Int
+  | TmAdd Term Term
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{minted}{haskell}
+value :: Term -> Maybe Term
+value (TmInt i) = Just (TmInt i)
+value _         = Nothing
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{minted}{haskell}
+step :: Term -> Maybe Term
+
+step (TmAdd (TmInt i1) (TmInt i2)) = 
+  return $ TmInt (i1 + i2)
+
+step (TmAdd (TmInt i1) t2) = do
+  t2' <- step t2
+  return $ TmAdd (TmInt i1) t2'
+
+step (TmAdd t1 t2) =  do
+  t1' <- step t1
+  return $ TmAdd t1' t2
+
+step _ = Nothing
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{minted}{haskell}
+eval :: Term -> Maybe Term
+
+eval tm = 
+  case step tm of
+    Just tm' -> eval tm
+    Nothing  -> value tm
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{mdframed}[frametitle={Previously...}]
+\begin{minted}{haskell}
+step :: Term -> Maybe Term
+step (TmAdd (TmInt i1) (TmInt i2)) = -- E-AddInt
+  return $ TmInt (i1 + i2)
+...
+step (TmAdd t1 t2) =  do             -- E-Add1
+  t1' <- step t1
+  return $ TmAdd t1' t2
+...
+\end{minted}
+  \end{mdframed}
+  \vfill
+\begin{minted}{haskell}
+> step $
+    TmAdd 
+      (TmAdd (TmInt 1) (TmInt 2)) 
+      (TmAdd (TmInt 3) (TmInt 4))
+Just $ 
+  TmAdd 
+    (TmInt 3) 
+    (TmAdd (TmInt 3) (TmInt 4))
+\end{minted}
+\end{frame}

@@ -1,0 +1,39 @@
+
+\begin{frame}
+  \begin{mdframed}[frametitle={Terms}]
+\begin{displaymath}
+    \begin{aligned}
+t \quad:=\quad& \ldots &\\
+  & ~ fix~t \quad\quad &fixed~point\\
+    \end{aligned}
+\end{displaymath}
+  \end{mdframed}
+\end{frame}
+
+\begin{frame}
+  \begin{mdframed}[frametitle={Small-step semantics}]
+
+  \infrule[E-Fix1]
+  {t \longrightarrow t^{\prime}}
+  {fix~t \longrightarrow fix~t^{\prime}}
+
+  \infrule[E-FixBeta]
+  {}
+  {fix
+    \left(\lambda~x {:} T . t\right)
+    \longrightarrow \left[x \mapsto
+    fix \left(\lambda~x {:} T . t\right)
+    \right]t}
+
+  \end{mdframed}
+\end{frame}
+
+\begin{frame}
+  \begin{mdframed}[frametitle={Typing rules}]
+
+  \infrule[T-Fix]
+  {\vdash t {:} T \rightarrow T}
+  {\vdash fix~t {:} T}
+
+  \end{mdframed}
+\end{frame}

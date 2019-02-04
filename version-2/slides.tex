@@ -1,0 +1,62 @@
+\documentclass[center,aspectratio=169]{beamer}
+
+\title{Programming Language Theory}
+\author{Dave Laing}
+\date{BFPG March 2017}
+
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{array}
+\usepackage{color}
+\usepackage{minted}
+\usepackage{mdframed}
+\usepackage{prftree}
+\usepackage{bcprules}
+
+\newcolumntype{L}{>{$}l<{$}}
+\newcolumntype{R}{>{$}r<{$}}
+
+% \highlight[<colour>]{<stuff>}
+\newcommand{\highlight}[2][lightgray]{\mathchoice%
+  {\colorbox{#1}{$\displaystyle#2$}}%
+  {\colorbox{#1}{$\textstyle#2$}}%
+  {\colorbox{#1}{$\scriptstyle#2$}}%
+  {\colorbox{#1}{$\scriptscriptstyle#2$}}}%
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamersize{text margin left = 10pt, text margin right = 10pt}
+
+\AtBeginSection[]%
+{%
+\begin{frame}[plain]%
+  \begin{center}%
+    \usebeamerfont{section title}\usebeamercolor[fg]{section title}\insertsection%
+  \end{center}%
+\end{frame}%
+}
+
+\begin{document}
+
+\begin{frame}
+\maketitle
+\end{frame}
+
+\include{introduction}
+
+\include{natural-deduction-rules}
+
+\include{integers}
+
+\include{booleans}
+
+\include{natural-numbers}
+
+\include{booleans-and-natural-numbers}
+
+\include{lambda-calculus}
+
+\include{simply-typed-lambda-calculus}
+
+\include{conclusion}
+
+\end{document}
