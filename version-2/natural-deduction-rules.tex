@@ -97,3 +97,165 @@
   \end{overprint}
 \end{frame}
 
+\begin{frame}[fragile]
+  \onslide<+->
+  \begin{minted}{haskell}
+type RuleSet a b = a -> Maybe b
+  \end{minted}
+
+  \onslide<+->
+  \begin{minted}{haskell}
+type Rule a b = RuleSet a b -> a -> Maybe b
+  \end{minted}
+
+  \onslide<+->
+  \begin{minted}{haskell}
+mkRuleSet :: [Rule a b] -> RuleSet a b
+  \end{minted}
+
+  \onslide<+->
+  \begin{minted}{haskell}
+mkRuleSet rules =
+  let
+    ruleSet a =
+      asum .
+      fmap (\f -> f ruleSet a) $
+      rules
+  in
+    ruleSet
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{minted}{haskell}
+evenZero :: Rule Int ()
+evenZero _ x
+  | x == 0 = Just ()
+  | otherwise = Nothing
+      \end{minted}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+  \infrule[Even-Zero]
+          {}
+          {\text{even}~0}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{minted}{haskell}
+evenAddTwo :: Rule Int ()
+evenAddTwo e n
+  | n >= 2 = e (n - 2)
+  | otherwise = Nothing
+      \end{minted}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+  \infrule[Even-Add]
+          {\text{even}~x}
+          {\text{even}~\left(x + 2\right)}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{minted}{haskell}
+evenR :: RuleSet Int ()
+evenR = mkRuleSet [evenZero, evenAddTwo]
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile,c]
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+  \begin{minted}{haskell}
+evenOdd :: RuleSet Int () -> Rule Int ()
+evenOdd o _ n
+  | n >= 1 = o (n - 1)
+  | otherwise = Nothing
+  \end{minted}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+  \infrule[Even-Odd]
+          {\text{odd}~x}
+          {\text{even}~\left(x + 1\right)}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+  \begin{minted}{haskell}
+oddEven :: RuleSet Int () -> Rule Int ()
+oddEven e _ n
+  | n >= 1 = e (n - 1)
+  | otherwise = Nothing
+  \end{minted}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+  \infrule[Odd-Even]
+          {\text{even}~x}
+          {\text{odd}~\left(x + 1\right)}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \begin{minted}{haskell}
+evenR, oddR :: RuleSet Int ()
+evenR = mkRuleSet [evenZero, evenOdd oddR]
+oddR  = mkRuleSet [oddEven evenR]
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{minted}{haskell}
+evenR, oddR :: RuleSet Int ()
+evenR = mkRuleSet [evenZero, evenAddTwo, evenOdd oddR]
+oddR  = mkRuleSet [oddEven evenR]
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \onslide<+->
+  \begin{minted}{haskell}
+> evenR 3
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+Nothing
+  \end{minted}
+
+  \onslide<+->
+  \begin{minted}{haskell}
+> evenR 4
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+Just ()
+  \end{minted}
+
+  \onslide<+->
+  \begin{minted}{haskell}
+> oddR 3
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+Just ()
+  \end{minted}
+
+  \onslide<+->
+  \begin{minted}{haskell}
+> oddR 4
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+Nothing
+  \end{minted}
+\end{frame}
