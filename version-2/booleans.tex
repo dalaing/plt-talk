@@ -18,7 +18,7 @@ v \quad:=\quad& ~ &\\
 \end{frame}
 
 \begin{frame}
-  \begin{mdframed}[frametitle={Small-step semantics}]
+  \begin{mdframed}[frametitle={Small-step semantics (eager)}]
     \begin{columns}
       \begin{column}{0.5\textwidth}
         \infrule[E-Or1]
@@ -47,11 +47,7 @@ v \quad:=\quad& ~ &\\
 \end{frame}
 
 \begin{frame}[c]
-  We should probably short-circuit the evaluation...
-\end{frame}
-
-\begin{frame}[c]
-  \begin{mdframed}[frametitle={Small-step semantics}]
+  \begin{mdframed}[frametitle={Small-step semantics (lazy)}]
   \infrule[E-Or1]
          {t_1 \longrightarrow {t_1}^{\prime}}
          {t_1~\text{or}~t_2 \longrightarrow {t_1}^{\prime}~\text{or}~t_2}
@@ -62,27 +58,5 @@ v \quad:=\quad& ~ &\\
           {}
           {\text{true}~\text{or}~t_2 \longrightarrow \text{true}}
   \end{mdframed}
-
-  \medskip
-
-  \begin{overprint}
-  \onslide<+>
-  \onslide<+>
-  In the languages we've seen so far, at most one rule applies to each term.
-  \onslide<+>
-  If the rules for the steps overlap for a particular term, but the result of the step is the same for all of the overlapping rules, then all is well.
-  \onslide<+>
-  This means that we don't have to worry about the order in which the rules are applied.
-  \onslide<+>
-  In other cases where rules overlap, they can be harder to deal with.
-  \onslide<+>
-  If we had the short-circuiting rules and the non-short circuiting rules in use
-  at the same time, we would have some troubles.
-  \onslide<+>
-  If we non-deterministically choose a rule to apply we will end up stepping to
-  different terms, but evaluation will end up at the same value.
-  \onslide<+>
-  Things could be worse.
-  \end{overprint}
 \end{frame}
 

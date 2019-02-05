@@ -5,14 +5,13 @@
 ## Integer
 
 ## Booleans
-- clean up
 - add Haskell code
-- allude to the different versions being eager vs lazy
 
 ## Naturals
 - clean up
 - add Haskell code
 - put the eager and lazy versions of Nat on separate slides
+- step through the evaluation of pred (S (pred (S S O))) under eager and lazy evaluation
 
 ## Booleans and Naturals
 - clean up

@@ -98,6 +98,90 @@
 \end{frame}
 
 \begin{frame}[fragile]
+  \begin{minted}{haskell}
+class Applicative f => Alternative f where
+  empty :: f a
+  (<|>) :: f a -> f a -> f a
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \onslide<+->
+  \begin{minted}{haskell}
+> Nothing <|> Nothing
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+Nothing
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> Just 1 <|> Nothing
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+Just 1
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> Nothing <|> Just 2
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+Just 2
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> Just 1 <|> Just 2
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+Just 1
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{minted}{haskell}
+asum :: (Foldable t, Alternative f) => t (f a) -> f a 
+asum = foldr (<|>) empty
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{minted}{haskell}
+> asum [Just 1, Just 2, Just 3]
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+Just 1
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> asum [Nothing, Just 2, Just 3]
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+Just 2
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> asum [Nothing, Nothing, Nothing]
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+Nothing
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> asum []
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+Nothing
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
   \onslide<+->
   \begin{minted}{haskell}
 type RuleSet a b = a -> Maybe b
@@ -119,7 +203,7 @@ mkRuleSet rules =
   let
     ruleSet a =
       asum .
-      fmap (\f -> f ruleSet a) $
+      fmap (\r -> r ruleSet a) $
       rules
   in
     ruleSet
