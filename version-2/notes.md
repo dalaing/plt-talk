@@ -8,7 +8,8 @@
 
 ## Booleans and Naturals
 - clean up
-- add Haskell code
+- animate the typing derivation
+- add Haskell code for checking and inference
 
 ## LC
 - clean up

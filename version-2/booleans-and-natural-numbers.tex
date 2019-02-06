@@ -24,19 +24,33 @@ t \quad:=\quad& ~ &\\
 \end{frame}
 
 \begin{frame}
-  \begin{mdframed}[frametitle={Small-step semantics for $\text{iszero}$}]
+  \begin{mdframed}[frametitle={Small-step semantics for $\text{iszero}$ (eager)}]
   \infrule[E-IsZero]
          {t \longrightarrow t^{\prime}}
          {\text{iszero}~t \longrightarrow \text{iszero}~t^{\prime}}
   \infrule[E-IsZeroZero]
          {}
          {\text{iszero}~\text{O} \longrightarrow \text{true}}
-  \infrule[$\text{E-IsZeroSucc}^{\text{*}}$]
+  \infrule[E-IsZeroSucc]
         {}
         {\text{iszero}~\left( \text{succ}~v \right) \longrightarrow \text{false}}
   \end{mdframed}
   \medskip
-  * Uses $\text{t}$ in place of $\text{v}$ for the lazy version.
+\end{frame}
+
+\begin{frame}
+  \begin{mdframed}[frametitle={Small-step semantics for $\text{iszero}$} (lazy)]
+  \infrule[E-IsZero]
+         {t \longrightarrow t^{\prime}}
+         {\text{iszero}~t \longrightarrow \text{iszero}~t^{\prime}}
+  \infrule[E-IsZeroZero]
+         {}
+         {\text{iszero}~\text{O} \longrightarrow \text{true}}
+  \infrule[E-IsZeroSucc]
+        {}
+        {\text{iszero}~\left( \text{succ}~t \right) \longrightarrow \text{false}}
+  \end{mdframed}
+  \medskip
 \end{frame}
 
 \begin{frame}
@@ -144,34 +158,36 @@ v \quad:=\quad& ~ \qquad\qquad &\\
   \end{mdframed}
 \end{frame}
 
+\begin{frame}[c]
+  There is a typing relation $\Gamma \vdash t~{:}~T$.
+\end{frame}
+
+\begin{frame}[c]
+  This indicates that the term $t$ is {\it well-typed} and has type $T$ inside the context of $\Gamma$.
+\end{frame}
+
+\begin{frame}[c]
+  At the moment we don't have any relevant context, so we work with $\vdash t~{:}~T$.
+\end{frame}
+
 \begin{frame}
 
   \begin{mdframed}[frametitle={Typing rules (Booleans)}]
 
   \infrule[T-False]
           {}
-          {\vdash \text{false} {:} \text{Bool}}
+          {\vdash \text{false}~{:}~\text{Bool}}
   \infrule[T-True]
           {}
-          {\vdash \text{true} {:} \text{Bool}}
+          {\vdash \text{true}~{:}~\text{Bool}}
   \infrule[T-Or]
-          {\vdash t_1 {:} \text{Bool} \andalso \vdash t_2 {:} \text{Bool}}
-          {\vdash t_1~\text{or}~t_2 {:} \text{Bool}}
+          {\vdash t_1~{:}~\text{Bool} \andalso \vdash t_2~{:}~\text{Bool}}
+          {\vdash t_1~\text{or}~t_2~{:}~\text{Bool}}
   \end{mdframed}
 
   \medskip
   
   \begin{overprint}
-    \onslide<+>
-  We have a binary relation $\vdash t {:} T$.
-    \onslide<+>
-  This indicates that the term $t$ is {\it well-typed} and has type $T$.
-    \onslide<+>
-  Any term which doesn't match any of these rules is {\it ill-typed}.
-    \onslide<+>
-  Anything on the left of the $\vdash$ is additional context that the typing rules need.
-    \onslide<+>
-  For now we don't need any more context.
     \onslide<+>
   We can use these rules to check that a given term has a particular type.
     \onslide<+>
@@ -189,13 +205,13 @@ v \quad:=\quad& ~ \qquad\qquad &\\
 
   \infrule[T-Zero]
           {}
-          {\vdash \text{O} {:} \text{Nat}}
+          {\vdash \text{O} ~{:}~ \text{Nat}}
   \infrule[T-Succ]
-          {\vdash t {:} \text{Nat}}
-          {\vdash \text{succ}~t {:} \text{Nat}}
+          {\vdash t ~{:}~ \text{Nat}}
+          {\vdash \text{succ}~t ~{:}~ \text{Nat}}
   \infrule[T-Pred]
-          {\vdash t {:} \text{Nat}}
-          {\vdash \text{pred}~t {:} \text{Nat}}
+          {\vdash t ~{:}~ \text{Nat}}
+          {\vdash \text{pred}~t ~{:}~ \text{Nat}}
 
   \end{mdframed}
 \end{frame}
@@ -205,11 +221,11 @@ v \quad:=\quad& ~ \qquad\qquad &\\
   \begin{mdframed}[frametitle={Typing rules (both)}]
   
   \infrule[T-IsZero]
-          {\vdash t {:} \text{Nat}}
-          {\vdash \text{iszero}~t {:} \text{Bool}}
+          {\vdash t ~{:}~ \text{Nat}}
+          {\vdash \text{iszero}~t ~{:}~ \text{Bool}}
   \infrule[T-If]
-          {\vdash t_1 {:} \text{Bool} \andalso \vdash t_2 {:} T \andalso \vdash t_3 {:} T}
-          {\vdash \text{if}~t_1~\text{then}~t_2~\text{else}~t_3 {:} T}
+          {\vdash t_1 ~{:}~ \text{Bool} \andalso \vdash t_2 ~{:}~ T \andalso \vdash t_3 ~{:}~ T}
+          {\vdash \text{if}~t_1~\text{then}~t_2~\text{else}~t_3 ~{:}~ T}
 
   \end{mdframed}
 
@@ -248,6 +264,38 @@ v \quad:=\quad& ~ \qquad\qquad &\\
 \begin{frame}[c]
   Later on that will relax, and we'll be more concerned with the {\it principal
     type} of a term.
+\end{frame}
+
+\begin{frame}[c,shrink=10]
+
+\[\prftree[r]{T-If}
+  {\prftree[r]{T-IsZero}
+    {\prftree[r]{T-Succ}
+      {\prftree[r]{T-Zero}
+        {}
+        {\vdash \text{O} ~{:}~ \text{Nat} }
+      }
+      {\vdash \text{succ}~\text{O} ~{:}~ \text{Nat} }
+    }
+    {\vdash \text{iszero} \left( \text{succ} ~ \text{O} \right) ~{:}~ \text{Bool}}
+  }
+  {\prftree[r]{T-False}
+    {}
+    {\vdash \text{false} ~{:}~ \text{Bool}}
+  }
+  {\prftree[r]{T-Or}
+    {\prftree[r]{T-True}
+      {}
+      {\vdash \text{true} ~{:}~ \text{Bool}}
+    }
+    {\prftree[r]{T-False}
+      {}
+      {\vdash \text{false} ~{:}~ \text{Bool}}
+    }
+    {\vdash \text{true}~\text{or}~\text{false} ~{:}~ \text{Bool}}
+  }
+  {\vdash \text{if}~\left(\text{iszero}~\left(\text{succ}~\text{O}\right)\right)~\text{then}~\text{false}~\text{else}\left(\text{false}~\text{or}~\text{false}\right) ~{:}~ \text{Bool}}\]
+
 \end{frame}
 
 \begin{frame}[c]
