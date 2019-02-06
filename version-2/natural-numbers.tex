@@ -2,21 +2,11 @@
 \section{Natural numbers}
 
 \begin{frame}[c]
-  A natural number is either zero or the successor of a natural number
+  A natural number is either zero or the successor of a natural number.
 \end{frame}
 
 \begin{frame}[c]
-  This is more or less working in a unary number system
-\end{frame}
-
-\begin{frame}[c]
-  \begin{displaymath}
-    3 \equiv succ~succ~succ~O
-  \end{displaymath}
-\end{frame}
-
-\begin{frame}[c]
-  We can have eager natural numbers or lazy natural numbers
+  This is a unary number system.
 \end{frame}
 
 \begin{frame}
@@ -51,40 +41,72 @@ v \quad:=\quad& ~ &\\
   \end{mdframed}
 \end{frame}
 
-\begin{frame}
-  \begin{mdframed}[frametitle={Small-step semantics}]
+\begin{frame}[c]
+  \begin{displaymath}
+  \text{succ}~O
+  \end{displaymath}
+\end{frame}
 
-  \infrule[$\text{E-Succ}^{\text{*}}$]
-         {t_1 \longrightarrow {t_1}^{\prime}}
-         {\text{succ}~t_1 \longrightarrow \text{succ}~{t_1}^{\prime}}
+\begin{frame}[c]
+  \begin{displaymath}
+  \text{succ} \left( \text{pred} \left( \text{succ}~O \right) \right)
+  \end{displaymath}
+\end{frame}
+
+\begin{frame}
+  \begin{mdframed}[frametitle={Small-step semantics (eager)}]
+
+  \infrule[E-Succ]
+         {\highlight{t_1 \longrightarrow {t_1}^{\prime}}}
+        {\highlight{\text{succ}~t_1 \longrightarrow \text{succ}~{t_1}^{\prime}}}
   \infrule[E-Pred]
           {t_1 \longrightarrow {t_1}^{\prime}}
           {\text{pred}~t_1 \longrightarrow \text{pred}~{t_1}^{\prime}}
   \infrule[E-PredZero]
           {}
           {\text{pred}~\text{O} \longrightarrow \text{O}}
-  \infrule[$\text{E-PredSucc}^{\text{**}}$]
+  \infrule[E-PredSucc]
           {}
-          {\text{pred} ~ \left( \text{succ}~v \right) \longrightarrow v}
+          {\text{pred} ~ \left( \text{succ}~\highlight{v} \right) \longrightarrow \highlight{v}}
+  \end{mdframed}
+\end{frame}
 
-  * Only for eager evaluation
-  ** Uses $v$ for eager evaluation and $t$ for lazy evaluation
+\begin{frame}
+  \begin{mdframed}[frametitle={Small-step semantics (lazy)}]
+
+  \invisible{\infrule[E-Succ]
+        {t_1 \longrightarrow {t_1}^{\prime}}
+        {\text{succ}~t_1 \longrightarrow \text{succ}~{t_1}^{\prime}}}
+  \infrule[E-Pred]
+          {t_1 \longrightarrow {t_1}^{\prime}}
+          {\text{pred}~t_1 \longrightarrow \text{pred}~{t_1}^{\prime}}
+  \infrule[E-PredZero]
+          {}
+          {\text{pred}~\text{O} \longrightarrow \text{O}}
+  \infrule[E-PredSucc]
+          {}
+          {\text{pred} ~ \left( \text{succ}~\highlight{t} \right) \longrightarrow \highlight{t}}
   \end{mdframed}
 \end{frame}
 
 \begin{frame}[c]
-  These are the same natural numbers under eager evaluation:
-  
-  \[\text{succ}~O\]
+  These are both versions of the number 1.
 
-  and under lazy evaluation:
+  \vfill
 
-  \[\text{succ} \left( \text{pred} \left( \text{succ}~O \right) \right)\]
+  With eager evaluation:
+  \begin{displaymath}
+  \text{succ}~O
+  \end{displaymath}
+
+  With lazy evaluation:
+  \begin{displaymath}
+  \text{succ} \left( \text{pred} \left( \text{succ}~O \right) \right)
+  \end{displaymath}
 \end{frame}
 
 \begin{frame}[c]
-  Under eager evaluation, we don't want our values to have anything in them that
-  needs to take a step.
+  Under eager evaluation, we don't want our values to have anything in them that needs to take a step.
 \end{frame}
 
 \begin{frame}[c]
@@ -94,7 +116,9 @@ v \quad:=\quad& ~ &\\
 \begin{frame}[c]
   This is fine:
 
-  \[\text{succ} \left( \text{pred} \left( \text{succ}~O \right) \right)\]
+  \begin{displaymath}
+  \text{succ} \left( \text{pred} \left( \text{succ}~O \right) \right)
+  \end{displaymath}
 
   because a natural number is either zero or the successor of a natural number.
 \end{frame}
@@ -102,8 +126,318 @@ v \quad:=\quad& ~ &\\
 \begin{frame}[c]
   If we use $\text{pred}$  on this:
 
-  \[\text{succ} \left( \text{pred} \left( \text{succ}~O \right) \right)\]
+  \begin{displaymath}
+  \text{succ} \left( \text{pred} \left( \text{succ}~O \right) \right)
+  \end{displaymath}
 
   then the outer $\text{succ}$ will be removed and evaluation will continue
   until we hit a $\text{O}$ or end up with another $\text{succ}$ on the outside.
+\end{frame}
+
+\begin{frame}[c]
+  If we don't use $\text{pred}$  on this:
+
+  \begin{displaymath}
+  \text{succ} \left( \text{pred} \left( \text{succ}~O \right) \right)
+  \end{displaymath}
+
+  then no one cared about it anyhow, so nothing of value is lost.
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{minted}{haskell}
+data Term =
+    TmZero
+  | TmSucc Term
+  | TmPred Term
+  deriving (Eq, Ord, Show)
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{minted}{haskell}
+vZero :: Rule Term ()
+vZero _ TmZero =
+  Just ()
+vZero _ _ =
+  Nothing
+      \end{minted}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+  \infrule[V-Zero]
+         {}
+        {\text{value} ~ \text{O}}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{minted}{haskell}
+vSuccEager :: Rule Term ()
+vSuccEager value (TmSucc tm) = do
+  _ <- value tm
+  pure ()
+vSuccEager _ _ =
+  Nothing
+      \end{minted}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+  \infrule[V-Succ]
+         {}
+        {\text{value} ~ \left(\text{succ}~\text{v}\right)}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{minted}{haskell}
+valueEagerR :: RuleSet Term ()
+valueEagerR =
+  mkRuleSet [vZero, vSuccEager]
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{minted}{haskell}
+vSuccLazy :: Rule Term ()
+vSuccLazy _ (TmSucc tm) =
+  pure ()
+vSuccLazy _ _ =
+  Nothing
+      \end{minted}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+  \infrule[V-Succ]
+         {}
+        {\text{value} ~ \left(\text{succ}~\text{t}\right)}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{minted}{haskell}
+valueLazyR :: RuleSet Term ()
+valueLazyR =
+  mkRuleSet [vZero, vSuccLazy]
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{minted}{haskell}
+eSucc :: Rule Term Term
+eSucc step (TmSucc tm) = do
+  tm' <- step tm
+  pure $ TmSucc tm'
+eSucc _ _ =
+  Nothing
+      \end{minted}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+  \infrule[E-Succ]
+         {t_1 \longrightarrow {t_1}^{\prime}}
+        {\text{succ}~t_1 \longrightarrow \text{succ}~{t_1}^{\prime}}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{minted}{haskell}
+ePred :: Rule Term Term
+ePred step (TmPred tm) = do
+  tm' <- step tm
+  pure $ TmPred tm'
+ePred _ _ =
+  Nothing
+      \end{minted}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+  \infrule[E-Pred]
+          {t_1 \longrightarrow {t_1}^{\prime}}
+          {\text{pred}~t_1 \longrightarrow \text{pred}~{t_1}^{\prime}}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{minted}{haskell}
+ePredZero :: Rule Term Term
+ePredZero _ (TmPred TmZero) =
+  Just TmZero
+ePredZero _ _ =
+  Nothing
+      \end{minted}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+  \infrule[E-PredZero]
+          {}
+          {\text{pred}~\text{O} \longrightarrow \text{O}}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{minted}{haskell}
+ePredSuccEager :: RuleSet Term () -> Rule Term Term
+ePredSuccEager value _ (TmPred (TmSucc tm)) = do
+  _ <- value tm
+  pure tm
+ePredSuccEager _ _ _ =
+  Nothing
+      \end{minted}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+  \infrule[E-PredSucc]
+          {}
+          {\text{pred} ~ \left( \text{succ}~v \right) \longrightarrow v}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{minted}{haskell}
+stepEagerR :: RuleSet Term Term
+stepEagerR =
+  mkRuleSet [eSucc, ePred, ePredZero, ePredSuccEager valueEagerR]
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{minted}{haskell}
+ePredSuccLazy :: Rule Term Term
+ePredSuccLazy _ (TmPred (TmSucc tm)) =
+  Just tm
+ePredSuccLazy _ _ =
+  Nothing
+      \end{minted}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+  \infrule[E-PredSucc]
+          {}
+          {\text{pred} ~ \left( \text{succ}~t \right) \longrightarrow t}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{minted}{haskell}
+stepLazyR :: RuleSet Term Term
+stepLazyR =
+  mkRuleSet [ePred, ePredZero, ePredSuccLazy]
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \onslide<+->
+  \begin{minted}{haskell}
+> let tm = TmSucc (TmPred (TmSucc TmZero))
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> stepEagerR tm
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+Just (TmSucc TmZero)
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> stepEagerR >=> stepEagerR $ tm
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+Nothing
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \onslide<+->
+  \begin{minted}{haskell}
+> let tm = TmSucc (TmPred (TmSucc TmZero))
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> stepLazyR tm
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+Nothing
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \onslide<+->
+  \begin{minted}{haskell}
+> let tm = TmSucc (TmPred (TmSucc TmZero))
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> stepEagerR $ TmPred tm
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+Just (TmPred (TmSucc TmZero))
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> stepEagerR >=> stepEagerR $ TmPred tm
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+Just TmZero
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> stepEagerR >=> stepEagerR >=> stepEagerR $ TmPred tm
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+Nothing
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \onslide<+->
+  \begin{minted}{haskell}
+> let tm = TmSucc (TmPred (TmSucc TmZero))
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> stepLazyR $ TmPred tm
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+Just (TmPred (TmSucc TmZero))
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> stepLazyR >=> stepLazyR $ TmPred tm
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+Just TmZero
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> stepLazyR >=> stepLazyR >=> stepLazyR $ TmPred tm
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+Nothing
+  \end{minted}
 \end{frame}

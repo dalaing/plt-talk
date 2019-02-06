@@ -28,10 +28,6 @@ This is the abstract syntax of our language.
 \end{overprint}
 \end{frame}
 
-\begin{frame}[c]
-    What do these terms look like?
-\end{frame}
-
 \begin{frame}
 \begin{displaymath}
   3 
@@ -168,7 +164,7 @@ Having the rules can help with the implementation.
          {t_1 \longrightarrow {t_1}^{\prime}}
          {t_1 + t_2 \longrightarrow {t_1}^{\prime} + t_2}
   \infrule[E-Add2]
-          {\text{value} \ t_1 \andalso t_2 \longrightarrow {t_2}^{\prime}}
+          {\text{value}~t_1 \andalso t_2 \longrightarrow {t_2}^{\prime}}
           {t_1 + t_2 \longrightarrow t_1 + {t_2}^{\prime}}
   \end{mdframed}
 
@@ -516,8 +512,8 @@ eAdd2 _ _ _ =
     \end{column}
     \begin{column}{0.5\textwidth}
       \infrule[E-Add2]
-          {\text{value} \ t_1 \andalso t_2 \longrightarrow {t_2}^{\prime}}
-          {t_1 + t_2 \longrightarrow t_1 + {t_2}^{\prime}}
+          {t_2 \longrightarrow {t_2}^{\prime}}
+          {v_1 + t_2 \longrightarrow v_1 + {t_2}^{\prime}}
     \end{column}
   \end{columns}
 \end{frame}
