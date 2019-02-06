@@ -3,9 +3,7 @@
 ## Introduction
 ## Rules
 ## Integer
-
 ## Booleans
-- add Haskell code
 
 ## Naturals
 - clean up

@@ -60,3 +60,245 @@ v \quad:=\quad& ~ &\\
   \end{mdframed}
 \end{frame}
 
+
+\begin{frame}[fragile]
+  \begin{minted}{haskell}
+data Term =
+    TmFalse
+  | TmTrue
+  | TmOr Term Term
+  deriving (Eq, Ord, Show)
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{minted}{haskell}
+vFalse :: Rule Term ()
+vFalse _ TmFalse =
+  Just ()
+vFalse _ _ =
+  Nothing
+      \end{minted}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \infrule[V-False]
+          {}
+          {\text{value}~\text{false}}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{minted}{haskell}
+vTrue :: Rule Term ()
+vTrue _ TmTrue =
+  Just ()
+vTrue _ _ =
+  Nothing
+      \end{minted}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \infrule[V-True]
+          {}
+          {\text{value}~\text{true}}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{minted}{haskell}
+valueR :: RuleSet Term ()
+valueR =
+  mkRuleSet [vFalse, vTrue]
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{minted}{haskell}
+eOr1 :: Rule Term Term
+eOr1 step (TmOr tm1 tm2) = do
+  tm1' <- step tm1
+  pure $ TmOr tm1' tm2
+eOr1 _ _ =
+  Nothing
+      \end{minted}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \infrule[E-Or1]
+       {t_1 \longrightarrow {t_1}^{\prime}}
+       {t_1~\text{or}~t_2 \longrightarrow {t_1}^{\prime}~\text{or}~t_2}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{minted}{haskell}
+eOr2 :: RuleSet Term () -> Rule Term Term
+eOr2 value step (TmOr tm1 tm2) = do
+  _ <- value tm1
+  tm2' <- step tm2
+  pure $ TmOr tm1 tm2'
+eOr2 _ _ _ =
+  Nothing
+      \end{minted}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \infrule[E-Or2]
+        {\text{value} \ t_1 \andalso t_2 \longrightarrow {t_2}^{\prime}}
+        {t_1~\text{or}~t_2 \longrightarrow t_1~\text{or}~{t_2}^{\prime}}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{minted}{haskell}
+eOrFalseFalse :: Rule Term Term
+eOrFalseFalse _ (TmOr TmFalse TmFalse) =
+  Just TmFalse
+eOrFalseFalse _ _ =
+  Nothing
+      \end{minted}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \infrule[E-OrFalseFalse]
+        {}
+        {\text{false}~\text{or}~\text{false} \longrightarrow \text{false}}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{minted}{haskell}
+stepEagerR :: RuleSet Term Term
+stepEagerR =
+  mkRuleSet [ eOr1, eOr2
+            , eOrFalseFalse, eOrFalseTrue, eOrTrueFalse, eOrTrueTrue
+            ]
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{minted}{haskell}
+eOrFalse :: Rule Term Term
+eOrFalse _ (TmOr TmFalse tm2) =
+  Just tm2
+eOrFalse _ _ =
+  Nothing
+      \end{minted}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \infrule[E-OrFalse]
+        {}
+        {\text{false}~\text{or}~t_2 \longrightarrow t_2}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{minted}{haskell}
+eOrTrue :: Rule Term Term
+eOrTrue _ (TmOr TmTrue _) =
+  Just TmTrue
+eOrTrue _ _ =
+  Nothing
+      \end{minted}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \infrule[E-OrTrue]
+        {}
+        {\text{true}~\text{or}~t_2 \longrightarrow \text{true}}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{minted}{haskell}
+stepLazyR :: RuleSet Term Term
+stepLazyR =
+  mkRuleSet [eOr1, eOrFalse, eOrTrue]
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \onslide<+->
+  \begin{minted}{haskell}
+> let tm = TmOr (TmOr TmFalse TmTrue) (TmOr TmFalse TmTrue)
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> stepEagerR tm
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+Just (TmOr TmTrue (TmOr TmFalse TmTrue))
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> stepEagerR >=> stepEagerR $ tm
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+Just (TmOr TmTrue TmTrue)
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> stepEagerR >=> stepEagerR >=> stepEagerR $ tm
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+Just TmTrue
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> stepEagerR >=> stepEagerR >=> stepEagerR >=> stepEagerR $ tm
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+Nothing
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \onslide<+->
+  \begin{minted}{haskell}
+> let tm = TmOr (TmOr TmFalse TmTrue) (TmOr TmFalse TmTrue)
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> stepLazyR tm
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+Just (TmOr TmTrue (TmOr TmFalse TmTrue))
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> stepLazyR >=> stepLazyR $ tm
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+Just TmTrue
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> stepLazyR >=> stepLazyR >=> stepLazyR $ tm
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+Nothing
+  \end{minted}
+\end{frame}

@@ -38,6 +38,8 @@ eOr2 value step (TmOr tm1 tm2) = do
   _ <- value tm1
   tm2' <- step tm2
   pure $ TmOr tm1 tm2'
+eOr2 _ _ _ =
+  Nothing
 
 eOrFalseFalse :: Rule Term Term
 eOrFalseFalse _ (TmOr TmFalse TmFalse) =
@@ -76,7 +78,7 @@ eOrTrue _ _ =
   Nothing
 
 stepEagerR :: RuleSet Term Term
-stepEagerR = mkRuleSet [eOr1, eOr2, eOrFalseFalse, eOrFalseTrue, eOrTrueFalse, eOrTrueTrue]
+stepEagerR = mkRuleSet [eOr1, eOr2 valueR, eOrFalseFalse, eOrFalseTrue, eOrTrueFalse, eOrTrueTrue]
 
 stepLazyR :: RuleSet Term Term
 stepLazyR = mkRuleSet [eOr1, eOrFalse, eOrTrue]

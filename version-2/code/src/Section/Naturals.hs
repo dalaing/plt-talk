@@ -30,7 +30,7 @@ vSuccEager _ _ =
 
 vSuccLazy :: Rule Term ()
 vSuccLazy _ (TmSucc tm) =
-  pure $ TmSucc tm
+  pure ()
 vSuccLazy _ _ =
   Nothing
 
@@ -60,8 +60,8 @@ ePredZero _ (TmPred TmZero) =
 ePredZero _ _ =
   Nothing
 
-ePredSuccEager :: Rule Term () -> Rule Term Term
-ePredSuccEager value _ (TmPred (TmSucc tm)) =
+ePredSuccEager :: RuleSet Term () -> Rule Term Term
+ePredSuccEager value _ (TmPred (TmSucc tm)) = do
   _ <- value tm
   pure tm
 ePredSuccEager _ _ _ =
@@ -74,7 +74,7 @@ ePredSuccLazy _ _ =
   Nothing
 
 stepEagerR :: RuleSet Term Term
-stepEagerR = mkRuleSet [eSucc, ePred, ePredZero, ePredSuccEager]
+stepEagerR = mkRuleSet [eSucc, ePred, ePredZero, ePredSuccEager valueEagerR]
 
 stepLazyR :: RuleSet Term Term
 stepLazyR = mkRuleSet [ePred, ePredZero, ePredSuccLazy]

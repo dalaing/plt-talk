@@ -443,7 +443,7 @@ intValue _ _ =
   \end{minted}
     \end{column}
     \begin{column}{0.5\textwidth}
-  \infrule[V-Int]
+      \infrule[V-Int]
           {}
           {\text{value}~\left<\text{int}\right>}
     \end{column}
@@ -453,7 +453,8 @@ intValue _ _ =
 \begin{frame}[fragile]
   \begin{minted}{haskell}
 valueR :: RuleSet Term ()
-valueR = mkRuleSet [vInt]
+valueR =
+  mkRuleSet [vInt]
   \end{minted}
 \end{frame}
 
@@ -488,11 +489,12 @@ eAdd1 :: Rule Term Term
 eAdd1 step (TmAdd tm1 tm2) = do
   tm1' <- step tm1
   pure $ TmAdd tm1' tm2
-eAdd1 _ _ = Nothing
+eAdd1 _ _ =
+  Nothing
   \end{minted}
     \end{column}
     \begin{column}{0.5\textwidth}
-  \infrule[E-Add1]
+      \infrule[E-Add1]
          {t_1 \longrightarrow {t_1}^{\prime}}
          {t_1 + t_2 \longrightarrow {t_1}^{\prime} + t_2}
     \end{column}
@@ -508,11 +510,12 @@ eAdd2 value step (TmAdd tm1 tm2) = do
   _ <- value tm1
   tm2' <- step tm2
   pure $ TmAdd tm1 tm2'
-eAdd2 _ _ _ = Nothing
+eAdd2 _ _ _ =
+  Nothing
   \end{minted}
     \end{column}
     \begin{column}{0.5\textwidth}
-  \infrule[E-Add2]
+      \infrule[E-Add2]
           {\text{value} \ t_1 \andalso t_2 \longrightarrow {t_2}^{\prime}}
           {t_1 + t_2 \longrightarrow t_1 + {t_2}^{\prime}}
     \end{column}
@@ -527,11 +530,12 @@ eAdd2 :: Rule Term Term
 eAdd2 step (TmAdd tm1@(TmInt _) tm2) = do
   tm2' <- step tm2
   pure $ TmAdd tm1 tm2'
-eAdd2 _ _ = Nothing
+eAdd2 _ _ =
+  Nothing
   \end{minted}
     \end{column}
     \begin{column}{0.5\textwidth}
-  \infrule[E-Add2]
+      \infrule[E-Add2]
           {t_2 \longrightarrow {t_2}^{\prime}}
           {v_1 + t_2 \longrightarrow v_1 + {t_2}^{\prime}}
     \end{column}
@@ -560,7 +564,8 @@ eAddInt _ _ =
 \begin{frame}[fragile]
   \begin{minted}{haskell}
 stepR :: RuleSet Term Term
-stepR = mkRuleSet [eAdd1, eAdd2, eAddInt]
+stepR =
+  mkRuleSet [eAdd1, eAdd2, eAddInt]
   \end{minted}
 \end{frame}
 
@@ -611,7 +616,8 @@ iterR r x = case r x of
   Just x' -> iterR r x'
 
 eval :: Term -> Term
-eval = iterR stepR
+eval =
+  iterR stepR
   \end{minted}
 \end{frame}
 
