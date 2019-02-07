@@ -156,7 +156,7 @@ eIsZeroSuccEager :: RuleSet Term () -> Rule Term Term
 eIsZeroSuccEager value _ (TmIsZero (TmSucc tm)) = do
   v <- value tm
   pure TmFalse
-eIsZeroSuccEager _ _ =
+eIsZeroSuccEager _ _ _ =
   Nothing
 
 eIsZeroSuccLazy :: Rule Term Term
