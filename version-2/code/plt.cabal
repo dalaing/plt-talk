@@ -20,6 +20,7 @@ library
                      , Section.Integers
                      , Section.Booleans
                      , Section.Naturals
+                     , Section.BooleansAndNaturals
                      , Util.Rules
   -- other-modules:
   -- other-extensions:
