@@ -21,9 +21,11 @@ library
                      , Section.Booleans
                      , Section.Naturals
                      , Section.BooleansAndNaturals
+                     , Section.LC
+                     , Section.STLC
                      , Util.Rules
   -- other-modules:
   -- other-extensions:
-  build-depends:       base >=4.11 && <4.12
+  build-depends:       base >=4.11 && <4.12, bound, containers, deriving-compat
   hs-source-dirs:      src
   default-language:    Haskell2010
