@@ -139,13 +139,86 @@ ePredSuccLazy _ (TmPred (TmSucc tm)) =
 ePredSuccLazy _ _ =
   Nothing
 
+eIsZero :: Rule Term Term
+eIsZero step (TmIsZero tm) = do
+  tm' <- step tm
+  pure $ TmIsZero tm'
+eIsZero _ _ =
+  Nothing
+
+eIsZeroZero :: Rule Term Term
+eIsZeroZero _ (TmIsZero TmZero) = do
+  pure TmTrue
+eIsZeroZero _ _ =
+  Nothing
+
+eIsZeroSuccEager :: RuleSet Term () -> Rule Term Term
+eIsZeroSuccEager value _ (TmIsZero (TmSucc tm)) = do
+  v <- value tm
+  pure TmFalse
+eIsZeroSuccEager _ _ =
+  Nothing
+
+eIsZeroSuccLazy :: Rule Term Term
+eIsZeroSuccLazy _ (TmIsZero (TmSucc tm)) =
+  pure TmFalse
+eIsZeroSuccLazy _ _ =
+  Nothing
+
+eIf :: Rule Term Term
+eIf step (TmIf tm1 tm2 tm3) = do
+  tm1' <- step tm1
+  pure $ TmIf tm1' tm2 tm3
+eIf _ _ =
+  Nothing
+
+eIfTrue :: Rule Term Term
+eIfTrue _ (TmIf TmTrue tm _) =
+  pure tm
+eIfTrue _ _ =
+  Nothing
+
+eIfFalse :: Rule Term Term
+eIfFalse _ (TmIf TmFalse _ tm) =
+  pure tm
+eIfFalse _ _ =
+  Nothing
+
 stepEagerR :: RuleSet Term Term
 stepEagerR =
-  mkRuleSet [eOr1, eOr2 valueEagerR, eOrFalseFalse, eOrFalseTrue, eOrTrueFalse, eOrTrueTrue, eSucc, ePred, ePredZero, ePredSuccEager valueEagerR]
+  mkRuleSet [ eOr1
+            , eOr2 valueEagerR
+            , eOrFalseFalse
+            , eOrFalseTrue
+            , eOrTrueFalse
+            , eOrTrueTrue
+            , eSucc
+            , ePred
+            , ePredZero
+            , ePredSuccEager valueEagerR
+            , eIsZero
+            , eIsZeroZero
+            , eIsZeroSuccEager valueEagerR
+            , eIf
+            , eIfTrue
+            , eIfFalse
+            ]
 
 stepLazyR :: RuleSet Term Term
 stepLazyR =
-  mkRuleSet [eOr1, eOrFalse, eOrTrue, ePred, ePredZero, ePredSuccLazy]
+  mkRuleSet [ eOr1
+            , eOrFalse
+            , eOrTrue
+            , ePred
+            , ePredZero
+            , ePredSuccLazy
+            , eIsZero
+            , eIsZeroZero
+            , eIsZeroSuccLazy
+            , eIf
+            , eIfTrue
+            , eIfFalse
+            ]
 
 data Type =
     TyBool
@@ -167,113 +240,116 @@ expectEq step tm1 tm2 = do
   then Just ty1
   else Nothing
 
-tTrue :: Rule Term Type
-tTrue _ TmTrue =
+inferTrue :: Rule Term Type
+inferTrue _ TmTrue =
   Just TyBool
-tTrue _ _ =
+inferTrue _ _ =
   Nothing
 
-tFalse :: Rule Term Type
-tFalse _ TmFalse =
+inferFalse :: Rule Term Type
+inferFalse _ TmFalse =
   Just TyBool
-tFalse _ _ =
+inferFalse _ _ =
   Nothing
 
-tOr :: Rule Term Type
-tOr step (TmOr tm1 tm2) = do
+inferOr :: Rule Term Type
+inferOr step (TmOr tm1 tm2) = do
   expect step tm1 TyBool
   expect step tm2 TyBool
   pure TyBool
-tOr _ _ =
+inferOr _ _ =
   Nothing
 
-tZero :: Rule Term Type
-tZero _ TmZero =
+inferZero :: Rule Term Type
+inferZero _ TmZero =
   Just TyNat
-tZero _ _ =
+inferZero _ _ =
   Nothing
 
-tSucc :: Rule Term Type
-tSucc step (TmSucc tm) = do
+inferSucc :: Rule Term Type
+inferSucc step (TmSucc tm) = do
   expect step tm TyNat
   pure TyNat
-tSucc _ _ =
+inferSucc _ _ =
   Nothing
 
-tPred :: Rule Term Type
-tPred step (TmPred tm) = do
+inferPred :: Rule Term Type
+inferPred step (TmPred tm) = do
   expect step tm TyNat
   pure TyNat
-tPred _ _ =
+inferPred _ _ =
   Nothing
 
-tIsZero :: Rule Term Type
-tIsZero step (TmIsZero tm) = do
+inferIsZero :: Rule Term Type
+inferIsZero step (TmIsZero tm) = do
   expect step tm TyNat
   pure TyBool
-tIsZero _ _ =
+inferIsZero _ _ =
   Nothing
 
-tIf :: Rule Term Type
-tIf step (TmIf tm1 tm2 tm3) = do
+inferIf :: Rule Term Type
+inferIf step (TmIf tm1 tm2 tm3) = do
   expect step tm1 TyBool
   expectEq step tm1 tm2
+inferIf _ _ =
+  Nothing
 
 infer :: RuleSet Term Type
 infer =
-  mkRuleSet [tFalse, tTrue, tOr, tZero, tSucc, tPred, tIsZero, tIf]
+  mkRuleSet [inferFalse, inferTrue, inferOr, inferZero, inferSucc, inferPred, inferIsZero, inferIf]
 
-cTrue :: Rule (Term, Type) ()
-cTrue _ (TmTrue, TyBool) =
+checkTrue :: Rule (Term, Type) ()
+checkTrue _ (TmTrue, TyBool) =
   pure ()
-cTrue _ _ =
+checkTrue _ _ =
   Nothing
 
-cFalse :: Rule (Term, Type) ()
-cFalse _ (TmFalse, TyBool) =
+checkFalse :: Rule (Term, Type) ()
+checkFalse _ (TmFalse, TyBool) =
   pure ()
-cFalse _ _ =
+checkFalse _ _ =
   Nothing
 
-cOr :: Rule (Term, Type) ()
-cOr step (TmOr tm1 tm2, TyBool) = do
+checkOr :: Rule (Term, Type) ()
+checkOr step (TmOr tm1 tm2, TyBool) = do
   step (tm1, TyBool)
   step (tm2, TyBool)
-cOr _ _ =
+checkOr _ _ =
   Nothing
 
-cZero :: Rule (Term, Type) ()
-cZero _ (TmZero, TyNat) =
+checkZero :: Rule (Term, Type) ()
+checkZero _ (TmZero, TyNat) =
   pure ()
-cZero _ _ =
+checkZero _ _ =
   Nothing
 
-cSucc :: Rule (Term, Type) ()
-cSucc step (TmSucc tm, TyNat) =
+checkSucc :: Rule (Term, Type) ()
+checkSucc step (TmSucc tm, TyNat) =
   step (tm, TyNat)
-cSucc _ _ =
+checkSucc _ _ =
   Nothing
 
-cPred :: Rule (Term, Type) ()
-cPred step (TmPred tm, TyNat) =
+checkPred :: Rule (Term, Type) ()
+checkPred step (TmPred tm, TyNat) =
   step (tm, TyNat)
-cPred _ _ =
+checkPred _ _ =
   Nothing
 
-cIsZero :: Rule (Term, Type) ()
-cIsZero step (TmIsZero tm, TyBool) =
+checkIsZero :: Rule (Term, Type) ()
+checkIsZero step (TmIsZero tm, TyBool) =
   step (tm, TyNat)
-cIsZero _ _ =
+checkIsZero _ _ =
   Nothing
 
-cIf :: Rule (Term, Type) ()
-cIf step (TmIf tm1 tm2 tm3, ty) = do
+checkIf :: Rule (Term, Type) ()
+checkIf step (TmIf tm1 tm2 tm3, ty) = do
   step (tm1, TyBool)
   step (tm2, ty)
   step (tm3, ty)
-cIf _ _ =
+checkIf _ _ =
   Nothing
 
 check :: RuleSet (Term, Type) ()
 check =
-  mkRuleSet [cFalse, cTrue, cOr, cZero, cSucc, cPred, cIsZero, cIf]
+  mkRuleSet [checkFalse, checkTrue, checkOr, checkZero, checkSucc, checkPred, checkIsZero, checkIf]
+

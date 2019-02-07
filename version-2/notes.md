@@ -7,8 +7,6 @@
 ## Naturals
 
 ## Booleans and Naturals
-- add Haskell code for checking and inference
-  - goes before properties
 - add determinism as a property
 
 ## Variables

@@ -1310,6 +1310,177 @@ v \quad:=\quad& ~ \qquad\qquad &\\
 
 \end{frame}
 
+\begin{frame}[fragile]
+  \begin{minted}{haskell}
+data Type =
+    TyBool
+  | TyNat
+  deriving (Eq, Ord, Show)
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{minted}{haskell}
+checkIsZero :: Rule (Term, Type) ()
+checkIsZero step (TmIsZero tm, TyBool) =
+  step (tm, TyNat)
+checkIsZero _ _ =
+  Nothing
+      \end{minted}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+  \infrule[T-IsZero]
+          {\vdash t ~{:}~ \text{Nat}}
+          {\vdash \text{iszero}~t ~{:}~ \text{Bool}}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{minted}{haskell}
+checkIf :: Rule (Term, Type) ()
+checkIf step (TmIf tm1 tm2 tm3, ty) = do
+  step (tm1, TyBool)
+  step (tm2, ty)
+  step (tm3, ty)
+checkIf _ _ =
+  Nothing
+      \end{minted}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+  \infrule[T-If]
+          {\vdash t_1 ~{:}~ \text{Bool} \andalso \vdash t_2 ~{:}~ T \andalso \vdash t_3 ~{:}~ T}
+          {\vdash \text{if}~t_1~\text{then}~t_2~\text{else}~t_3 ~{:}~ T}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \onslide<+->
+  \begin{minted}{haskell}
+> let tmBad = TmIf (TmIsZero (TmSucc TmFalse)) TmFalse (TmOr TmTrue TmFalse)
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> check (tmBad, TyBool)
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+Nothing
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> let tmGood = TmIf (TmIsZero (TmSucc TmZero)) TmFalse (TmOr TmTrue TmFalse)
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> check (tmGood, TyBool)
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+Just ()
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> check (tmGood, TyNat)
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+Nothing
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{minted}{haskell}
+expect :: Eq ty => RuleSet tm ty -> tm -> ty -> Maybe ()
+expect step tm ty = do
+  ty' <- step tm
+  if (ty == ty')
+  then Just ()
+  else Nothing
+
+expectEq :: Eq ty => RuleSet tm ty -> tm -> tm -> Maybe ty
+expectEq step tm1 tm2 = do
+  ty1 <- step tm1
+  ty2 <- step tm2
+  if (ty1 == ty2)
+  then Just ty1
+  else Nothing
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{minted}{haskell}
+inferIsZero :: Rule Term Type
+inferIsZero step (TmIsZero tm) = do
+  expect step tm TyNat
+  pure TyBool
+inferIsZero _ _ =
+  Nothing
+      \end{minted}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+  \infrule[T-IsZero]
+          {\vdash t ~{:}~ \text{Nat}}
+          {\vdash \text{iszero}~t ~{:}~ \text{Bool}}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{minted}{haskell}
+inferIf :: Rule Term Type
+inferIf step (TmIf tm1 tm2 tm3) = do
+  expect step tm1 TyBool
+  expectEq step tm1 tm2
+inferIf _ _ =
+  Nothing
+      \end{minted}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+  \infrule[T-If]
+          {\vdash t_1 ~{:}~ \text{Bool} \andalso \vdash t_2 ~{:}~ T \andalso \vdash t_3 ~{:}~ T}
+          {\vdash \text{if}~t_1~\text{then}~t_2~\text{else}~t_3 ~{:}~ T}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \onslide<+->
+  \begin{minted}{haskell}
+> let tmBad = TmIf (TmIsZero (TmSucc TmFalse)) TmFalse (TmOr TmTrue TmFalse)
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> infer tmBad
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+Nothing
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> let tmGood = TmIf (TmIsZero (TmSucc TmZero)) TmFalse (TmOr TmTrue TmFalse)
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> infer tmGood
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+Just TyBool
+  \end{minted}
+\end{frame}
+
+
 \begin{frame}[c]
   There are two main properties which relate the type system of a language and
   the small-step semantics of a language.
