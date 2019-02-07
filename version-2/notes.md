@@ -7,10 +7,7 @@
 ## Naturals
 
 ## Booleans and Naturals
-- add determinism as a property
-
-## Variables
-- add them to the context ahead of introducing LC? or do this at the start of LC?
+- add determinism as a property?
 
 ## LC
 - clean up
