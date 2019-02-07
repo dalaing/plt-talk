@@ -266,35 +266,1047 @@ v \quad:=\quad& ~ \qquad\qquad &\\
     type} of a term.
 \end{frame}
 
-\begin{frame}[c,shrink=10]
+\begin{frame}[c,shrink=20]
 
+\begin{overprint}
+
+\onslide<1>
 \[\prftree[r]{T-If}
   {\prftree[r]{T-IsZero}
     {\prftree[r]{T-Succ}
       {\prftree[r]{T-Zero}
         {}
-        {\vdash \text{O} ~{:}~ \text{Nat} }
+        {\vdash \highlight[white]{\text{O}} ~{:}~ \highlight[white]{\text{Nat}}}
       }
-      {\vdash \text{succ}~\text{O} ~{:}~ \text{Nat} }
+      {\vdash \highlight[white]{\text{succ}~\highlight[white]{\text{O}}} ~{:}~ \highlight[white]{\text{Nat}}}
     }
-    {\vdash \text{iszero} \left( \text{succ} ~ \text{O} \right) ~{:}~ \text{Bool}}
+    {\vdash \highlight[white]{\text{iszero} \left( \highlight[white]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[white]{\text{Bool}}}
   }
   {\prftree[r]{T-False}
     {}
-    {\vdash \text{false} ~{:}~ \text{Bool}}
+    {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
   }
   {\prftree[r]{T-Or}
     {\prftree[r]{T-True}
       {}
-      {\vdash \text{true} ~{:}~ \text{Bool}}
+      {\vdash \highlight[white]{\text{true}} ~{:}~ \highlight[white]{\text{Bool}}}
     }
     {\prftree[r]{T-False}
       {}
-      {\vdash \text{false} ~{:}~ \text{Bool}}
+      {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
     }
-    {\vdash \text{true}~\text{or}~\text{false} ~{:}~ \text{Bool}}
+    {\vdash \highlight[white]{\highlight[white]{\text{true}}~\text{or}~\highlight[white]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
   }
-  {\vdash \text{if}~\left(\text{iszero}~\left(\text{succ}~\text{O}\right)\right)~\text{then}~\text{false}~\text{else}\left(\text{false}~\text{or}~\text{false}\right) ~{:}~ \text{Bool}}\]
+  {\vdash \highlight[white]{
+    \text{if}~
+    \left(\highlight[white]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \text{then}~
+    \highlight[white]{\text{false}}~
+    \text{else}~
+    \left(\highlight[white]{\text{true}~\text{or}~\text{false}}\right)} ~
+    {:}~
+    \highlight[white]{\text{Bool}}}\]
+
+\onslide<2>
+\[\prftree[r]{T-If}
+  {\prftree[r]{T-IsZero}
+    {\prftree[r]{T-Succ}
+      {\prftree[r]{T-Zero}
+        {}
+        {\vdash \highlight[white]{\text{O}} ~{:}~ \highlight[white]{\text{Nat}}}
+      }
+      {\vdash \highlight[white]{\text{succ}~\highlight[white]{\text{O}}} ~{:}~ \highlight[white]{\text{Nat}}}
+    }
+    {\vdash \highlight[white]{\text{iszero} \left( \highlight[white]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\prftree[r]{T-False}
+    {}
+    {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\prftree[r]{T-Or}
+    {\prftree[r]{T-True}
+      {}
+      {\vdash \highlight[white]{\text{true}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\prftree[r]{T-False}
+      {}
+      {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\vdash \highlight[white]{\highlight[white]{\text{true}}~\text{or}~\highlight[white]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\vdash \highlight[violet]{
+    \text{if}~
+    \left(\highlight[violet]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \text{then}~
+    \highlight[violet]{\text{false}}~
+    \text{else}~
+    \left(\highlight[violet]{\text{true}~\text{or}~\text{false}}\right)} ~
+    {:}~
+    \highlight[white]{\text{Bool}}}\]
+
+\onslide<3>
+\[\prftree[r]{T-If}
+  {\prftree[r]{T-IsZero}
+    {\prftree[r]{T-Succ}
+      {\prftree[r]{T-Zero}
+        {}
+        {\vdash \highlight[white]{\text{O}} ~{:}~ \highlight[white]{\text{Nat}}}
+      }
+      {\vdash \highlight[white]{\text{succ}~\highlight[white]{\text{O}}} ~{:}~ \highlight[white]{\text{Nat}}}
+    }
+    {\vdash \highlight[white]{\text{iszero} \left( \highlight[white]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\prftree[r]{T-False}
+    {}
+    {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\prftree[r]{T-Or}
+    {\prftree[r]{T-True}
+      {}
+      {\vdash \highlight[white]{\text{true}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\prftree[r]{T-False}
+      {}
+      {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\vdash \highlight[white]{\highlight[white]{\text{true}}~\text{or}~\highlight[white]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\vdash \highlight[white]{
+    \text{if}~
+    \left(\highlight[violet]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \text{then}~
+    \highlight[white]{\text{false}}~
+    \text{else}~
+    \left(\highlight[white]{\text{true}~\text{or}~\text{false}}\right)} ~
+    {:}~
+    \highlight[white]{\text{Bool}}}\]
+
+\onslide<4>
+\[\prftree[r]{T-If}
+  {\prftree[r]{T-IsZero}
+    {\prftree[r]{T-Succ}
+      {\prftree[r]{T-Zero}
+        {}
+        {\vdash \highlight[white]{\text{O}} ~{:}~ \highlight[white]{\text{Nat}}}
+      }
+      {\vdash \highlight[white]{\text{succ}~\highlight[white]{\text{O}}} ~{:}~ \highlight[white]{\text{Nat}}}
+    }
+    {\vdash \highlight[violet]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\prftree[r]{T-False}
+    {}
+    {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\prftree[r]{T-Or}
+    {\prftree[r]{T-True}
+      {}
+      {\vdash \highlight[white]{\text{true}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\prftree[r]{T-False}
+      {}
+      {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\vdash \highlight[white]{\highlight[white]{\text{true}}~\text{or}~\highlight[white]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\vdash \highlight[white]{
+    \text{if}~
+    \left(\highlight[violet]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \text{then}~
+    \highlight[white]{\text{false}}~
+    \text{else}~
+    \left(\highlight[white]{\text{true}~\text{or}~\text{false}}\right)} ~
+    {:}~
+    \highlight[white]{\text{Bool}}}\]
+
+\onslide<5>
+\[\prftree[r]{T-If}
+  {\prftree[r]{T-IsZero}
+    {\prftree[r]{T-Succ}
+      {\prftree[r]{T-Zero}
+        {}
+        {\vdash \highlight[white]{\text{O}} ~{:}~ \highlight[white]{\text{Nat}}}
+      }
+      {\vdash \highlight[white]{\text{succ}~\highlight[white]{\text{O}}} ~{:}~ \highlight[white]{\text{Nat}}}
+    }
+    {\vdash \highlight[white]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\prftree[r]{T-False}
+    {}
+    {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\prftree[r]{T-Or}
+    {\prftree[r]{T-True}
+      {}
+      {\vdash \highlight[white]{\text{true}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\prftree[r]{T-False}
+      {}
+      {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\vdash \highlight[white]{\highlight[white]{\text{true}}~\text{or}~\highlight[white]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\vdash \highlight[white]{
+    \text{if}~
+    \left(\highlight[violet]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \text{then}~
+    \highlight[white]{\text{false}}~
+    \text{else}~
+    \left(\highlight[white]{\text{true}~\text{or}~\text{false}}\right)} ~
+    {:}~
+    \highlight[white]{\text{Bool}}}\]
+
+\onslide<6>
+\[\prftree[r]{T-If}
+  {\prftree[r]{T-IsZero}
+    {\prftree[r]{T-Succ}
+      {\prftree[r]{T-Zero}
+        {}
+        {\vdash \highlight[white]{\text{O}} ~{:}~ \highlight[white]{\text{Nat}}}
+      }
+      {\vdash \highlight[violet]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[white]{\text{Nat}}}
+    }
+    {\vdash \highlight[white]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\prftree[r]{T-False}
+    {}
+    {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\prftree[r]{T-Or}
+    {\prftree[r]{T-True}
+      {}
+      {\vdash \highlight[white]{\text{true}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\prftree[r]{T-False}
+      {}
+      {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\vdash \highlight[white]{\highlight[white]{\text{true}}~\text{or}~\highlight[white]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\vdash \highlight[white]{
+    \text{if}~
+    \left(\highlight[violet]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \text{then}~
+    \highlight[white]{\text{false}}~
+    \text{else}~
+    \left(\highlight[white]{\text{true}~\text{or}~\text{false}}\right)} ~
+    {:}~
+    \highlight[white]{\text{Bool}}}\]
+
+\onslide<7>
+\[\prftree[r]{T-If}
+  {\prftree[r]{T-IsZero}
+    {\prftree[r]{T-Succ}
+      {\prftree[r]{T-Zero}
+        {}
+        {\vdash \highlight[white]{\text{O}} ~{:}~ \highlight[white]{\text{Nat}}}
+      }
+      {\vdash \highlight[white]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[white]{\text{Nat}}}
+    }
+    {\vdash \highlight[white]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\prftree[r]{T-False}
+    {}
+    {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\prftree[r]{T-Or}
+    {\prftree[r]{T-True}
+      {}
+      {\vdash \highlight[white]{\text{true}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\prftree[r]{T-False}
+      {}
+      {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\vdash \highlight[white]{\highlight[white]{\text{true}}~\text{or}~\highlight[white]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\vdash \highlight[white]{
+    \text{if}~
+    \left(\highlight[violet]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \text{then}~
+    \highlight[white]{\text{false}}~
+    \text{else}~
+    \left(\highlight[white]{\text{true}~\text{or}~\text{false}}\right)} ~
+    {:}~
+    \highlight[white]{\text{Bool}}}\]
+
+\onslide<8>
+\[\prftree[r]{T-If}
+  {\prftree[r]{T-IsZero}
+    {\prftree[r]{T-Succ}
+      {\prftree[r]{T-Zero}
+        {}
+        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[white]{\text{Nat}}}
+      }
+      {\vdash \highlight[white]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[white]{\text{Nat}}}
+    }
+    {\vdash \highlight[white]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\prftree[r]{T-False}
+    {}
+    {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\prftree[r]{T-Or}
+    {\prftree[r]{T-True}
+      {}
+      {\vdash \highlight[white]{\text{true}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\prftree[r]{T-False}
+      {}
+      {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\vdash \highlight[white]{\highlight[white]{\text{true}}~\text{or}~\highlight[white]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\vdash \highlight[white]{
+    \text{if}~
+    \left(\highlight[violet]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \text{then}~
+    \highlight[white]{\text{false}}~
+    \text{else}~
+    \left(\highlight[white]{\text{true}~\text{or}~\text{false}}\right)} ~
+    {:}~
+    \highlight[white]{\text{Bool}}}\]
+
+\onslide<9>
+\[\prftree[r]{T-If}
+  {\prftree[r]{T-IsZero}
+    {\prftree[r]{T-Succ}
+      {\prftree[r]{T-Zero}
+        {}
+        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[blue]{\text{Nat}}}
+      }
+      {\vdash \highlight[white]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[white]{\text{Nat}}}
+    }
+    {\vdash \highlight[white]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\prftree[r]{T-False}
+    {}
+    {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\prftree[r]{T-Or}
+    {\prftree[r]{T-True}
+      {}
+      {\vdash \highlight[white]{\text{true}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\prftree[r]{T-False}
+      {}
+      {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\vdash \highlight[white]{\highlight[white]{\text{true}}~\text{or}~\highlight[white]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\vdash \highlight[white]{
+    \text{if}~
+    \left(\highlight[violet]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \text{then}~
+    \highlight[white]{\text{false}}~
+    \text{else}~
+    \left(\highlight[white]{\text{true}~\text{or}~\text{false}}\right)} ~
+    {:}~
+    \highlight[white]{\text{Bool}}}\]
+
+\onslide<10>
+\[\prftree[r]{T-If}
+  {\prftree[r]{T-IsZero}
+    {\prftree[r]{T-Succ}
+      {\prftree[r]{T-Zero}
+        {}
+        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[blue]{\text{Nat}}}
+      }
+      {\vdash \highlight[violet]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[white]{\text{Nat}}}
+    }
+    {\vdash \highlight[white]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\prftree[r]{T-False}
+    {}
+    {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\prftree[r]{T-Or}
+    {\prftree[r]{T-True}
+      {}
+      {\vdash \highlight[white]{\text{true}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\prftree[r]{T-False}
+      {}
+      {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\vdash \highlight[white]{\highlight[white]{\text{true}}~\text{or}~\highlight[white]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\vdash \highlight[white]{
+    \text{if}~
+    \left(\highlight[violet]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \text{then}~
+    \highlight[white]{\text{false}}~
+    \text{else}~
+    \left(\highlight[white]{\text{true}~\text{or}~\text{false}}\right)} ~
+    {:}~
+    \highlight[white]{\text{Bool}}}\]
+
+\onslide<11>
+\[\prftree[r]{T-If}
+  {\prftree[r]{T-IsZero}
+    {\prftree[r]{T-Succ}
+      {\prftree[r]{T-Zero}
+        {}
+        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[blue]{\text{Nat}}}
+      }
+      {\vdash \highlight[violet]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[blue]{\text{Nat}}}
+    }
+    {\vdash \highlight[white]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\prftree[r]{T-False}
+    {}
+    {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\prftree[r]{T-Or}
+    {\prftree[r]{T-True}
+      {}
+      {\vdash \highlight[white]{\text{true}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\prftree[r]{T-False}
+      {}
+      {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\vdash \highlight[white]{\highlight[white]{\text{true}}~\text{or}~\highlight[white]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\vdash \highlight[white]{
+    \text{if}~
+    \left(\highlight[violet]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \text{then}~
+    \highlight[white]{\text{false}}~
+    \text{else}~
+    \left(\highlight[white]{\text{true}~\text{or}~\text{false}}\right)} ~
+    {:}~
+    \highlight[white]{\text{Bool}}}\]
+
+\onslide<12>
+\[\prftree[r]{T-If}
+  {\prftree[r]{T-IsZero}
+    {\prftree[r]{T-Succ}
+      {\prftree[r]{T-Zero}
+        {}
+        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[blue]{\text{Nat}}}
+      }
+      {\vdash \highlight[violet]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[blue]{\text{Nat}}}
+    }
+    {\vdash \highlight[violet]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\prftree[r]{T-False}
+    {}
+    {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\prftree[r]{T-Or}
+    {\prftree[r]{T-True}
+      {}
+      {\vdash \highlight[white]{\text{true}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\prftree[r]{T-False}
+      {}
+      {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\vdash \highlight[white]{\highlight[white]{\text{true}}~\text{or}~\highlight[white]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\vdash \highlight[white]{
+    \text{if}~
+    \left(\highlight[violet]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \text{then}~
+    \highlight[white]{\text{false}}~
+    \text{else}~
+    \left(\highlight[white]{\text{true}~\text{or}~\text{false}}\right)} ~
+    {:}~
+    \highlight[white]{\text{Bool}}}\]
+
+\onslide<13>
+\[\prftree[r]{T-If}
+  {\prftree[r]{T-IsZero}
+    {\prftree[r]{T-Succ}
+      {\prftree[r]{T-Zero}
+        {}
+        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[blue]{\text{Nat}}}
+      }
+      {\vdash \highlight[violet]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[blue]{\text{Nat}}}
+    }
+    {\vdash \highlight[violet]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[blue]{\text{Bool}}}
+  }
+  {\prftree[r]{T-False}
+    {}
+    {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\prftree[r]{T-Or}
+    {\prftree[r]{T-True}
+      {}
+      {\vdash \highlight[white]{\text{true}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\prftree[r]{T-False}
+      {}
+      {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\vdash \highlight[white]{\highlight[white]{\text{true}}~\text{or}~\highlight[white]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\vdash \highlight[white]{
+    \text{if}~
+    \left(\highlight[violet]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \text{then}~
+    \highlight[white]{\text{false}}~
+    \text{else}~
+    \left(\highlight[white]{\text{true}~\text{or}~\text{false}}\right)} ~
+    {:}~
+    \highlight[white]{\text{Bool}}}\]
+
+\onslide<14>
+\[\prftree[r]{T-If}
+  {\prftree[r]{T-IsZero}
+    {\prftree[r]{T-Succ}
+      {\prftree[r]{T-Zero}
+        {}
+        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[blue]{\text{Nat}}}
+      }
+      {\vdash \highlight[violet]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[blue]{\text{Nat}}}
+    }
+    {\vdash \highlight[violet]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[blue]{\text{Bool}}}
+  }
+  {\prftree[r]{T-False}
+    {}
+    {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\prftree[r]{T-Or}
+    {\prftree[r]{T-True}
+      {}
+      {\vdash \highlight[white]{\text{true}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\prftree[r]{T-False}
+      {}
+      {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\vdash \highlight[white]{\highlight[white]{\text{true}}~\text{or}~\highlight[white]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\vdash \highlight[white]{
+    \text{if}~
+    \left(\highlight[white]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \text{then}~
+    \highlight[violet]{\text{false}}~
+    \text{else}~
+    \left(\highlight[white]{\text{true}~\text{or}~\text{false}}\right)} ~
+    {:}~
+    \highlight[white]{\text{Bool}}}\]
+
+\onslide<15>
+\[\prftree[r]{T-If}
+  {\prftree[r]{T-IsZero}
+    {\prftree[r]{T-Succ}
+      {\prftree[r]{T-Zero}
+        {}
+        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[blue]{\text{Nat}}}
+      }
+      {\vdash \highlight[violet]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[blue]{\text{Nat}}}
+    }
+    {\vdash \highlight[violet]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[blue]{\text{Bool}}}
+  }
+  {\prftree[r]{T-False}
+    {}
+    {\vdash \highlight[violet]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\prftree[r]{T-Or}
+    {\prftree[r]{T-True}
+      {}
+      {\vdash \highlight[white]{\text{true}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\prftree[r]{T-False}
+      {}
+      {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\vdash \highlight[white]{\highlight[white]{\text{true}}~\text{or}~\highlight[white]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\vdash \highlight[white]{
+    \text{if}~
+    \left(\highlight[white]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \text{then}~
+    \highlight[violet]{\text{false}}~
+    \text{else}~
+    \left(\highlight[white]{\text{true}~\text{or}~\text{false}}\right)} ~
+    {:}~
+    \highlight[white]{\text{Bool}}}\]
+
+\onslide<16>
+\[\prftree[r]{T-If}
+  {\prftree[r]{T-IsZero}
+    {\prftree[r]{T-Succ}
+      {\prftree[r]{T-Zero}
+        {}
+        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[blue]{\text{Nat}}}
+      }
+      {\vdash \highlight[violet]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[blue]{\text{Nat}}}
+    }
+    {\vdash \highlight[violet]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[blue]{\text{Bool}}}
+  }
+  {\prftree[r]{T-False}
+    {}
+    {\vdash \highlight[violet]{\text{false}} ~{:}~ \highlight[blue]{\text{Bool}}}
+  }
+  {\prftree[r]{T-Or}
+    {\prftree[r]{T-True}
+      {}
+      {\vdash \highlight[white]{\text{true}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\prftree[r]{T-False}
+      {}
+      {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\vdash \highlight[white]{\highlight[white]{\text{true}}~\text{or}~\highlight[white]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\vdash \highlight[white]{
+    \text{if}~
+    \left(\highlight[white]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \text{then}~
+    \highlight[violet]{\text{false}}~
+    \text{else}~
+    \left(\highlight[white]{\text{true}~\text{or}~\text{false}}\right)} ~
+    {:}~
+    \highlight[white]{\text{Bool}}}\]
+
+\onslide<17>
+\[\prftree[r]{T-If}
+  {\prftree[r]{T-IsZero}
+    {\prftree[r]{T-Succ}
+      {\prftree[r]{T-Zero}
+        {}
+        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[blue]{\text{Nat}}}
+      }
+      {\vdash \highlight[violet]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[blue]{\text{Nat}}}
+    }
+    {\vdash \highlight[violet]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[blue]{\text{Bool}}}
+  }
+  {\prftree[r]{T-False}
+    {}
+    {\vdash \highlight[violet]{\text{false}} ~{:}~ \highlight[blue]{\text{Bool}}}
+  }
+  {\prftree[r]{T-Or}
+    {\prftree[r]{T-True}
+      {}
+      {\vdash \highlight[white]{\text{true}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\prftree[r]{T-False}
+      {}
+      {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\vdash \highlight[white]{\highlight[white]{\text{true}}~\text{or}~\highlight[white]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\vdash \highlight[white]{
+    \text{if}~
+    \left(\highlight[white]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \text{then}~
+    \highlight[white]{\text{false}}~
+    \text{else}~
+    \left(\highlight[violet]{\text{true}~\text{or}~\text{false}}\right)} ~
+    {:}~
+    \highlight[white]{\text{Bool}}}\]
+
+\onslide<18>
+\[\prftree[r]{T-If}
+  {\prftree[r]{T-IsZero}
+    {\prftree[r]{T-Succ}
+      {\prftree[r]{T-Zero}
+        {}
+        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[blue]{\text{Nat}}}
+      }
+      {\vdash \highlight[violet]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[blue]{\text{Nat}}}
+    }
+    {\vdash \highlight[violet]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[blue]{\text{Bool}}}
+  }
+  {\prftree[r]{T-False}
+    {}
+    {\vdash \highlight[violet]{\text{false}} ~{:}~ \highlight[blue]{\text{Bool}}}
+  }
+  {\prftree[r]{T-Or}
+    {\prftree[r]{T-True}
+      {}
+      {\vdash \highlight[white]{\text{true}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\prftree[r]{T-False}
+      {}
+      {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\vdash \highlight[violet]{\highlight[violet]{\text{true}}~\text{or}~\highlight[violet]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\vdash \highlight[white]{
+    \text{if}~
+    \left(\highlight[white]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \text{then}~
+    \highlight[white]{\text{false}}~
+    \text{else}~
+    \left(\highlight[violet]{\text{true}~\text{or}~\text{false}}\right)} ~
+    {:}~
+    \highlight[white]{\text{Bool}}}\]
+
+\onslide<19>
+\[\prftree[r]{T-If}
+  {\prftree[r]{T-IsZero}
+    {\prftree[r]{T-Succ}
+      {\prftree[r]{T-Zero}
+        {}
+        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[blue]{\text{Nat}}}
+      }
+      {\vdash \highlight[violet]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[blue]{\text{Nat}}}
+    }
+    {\vdash \highlight[violet]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[blue]{\text{Bool}}}
+  }
+  {\prftree[r]{T-False}
+    {}
+    {\vdash \highlight[violet]{\text{false}} ~{:}~ \highlight[blue]{\text{Bool}}}
+  }
+  {\prftree[r]{T-Or}
+    {\prftree[r]{T-True}
+      {}
+      {\vdash \highlight[white]{\text{true}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\prftree[r]{T-False}
+      {}
+      {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\vdash \highlight[white]{\highlight[violet]{\text{true}}~\text{or}~\highlight[white]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\vdash \highlight[white]{
+    \text{if}~
+    \left(\highlight[white]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \text{then}~
+    \highlight[white]{\text{false}}~
+    \text{else}~
+    \left(\highlight[violet]{\text{true}~\text{or}~\text{false}}\right)} ~
+    {:}~
+    \highlight[white]{\text{Bool}}}\]
+
+\onslide<20>
+\[\prftree[r]{T-If}
+  {\prftree[r]{T-IsZero}
+    {\prftree[r]{T-Succ}
+      {\prftree[r]{T-Zero}
+        {}
+        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[blue]{\text{Nat}}}
+      }
+      {\vdash \highlight[violet]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[blue]{\text{Nat}}}
+    }
+    {\vdash \highlight[violet]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[blue]{\text{Bool}}}
+  }
+  {\prftree[r]{T-False}
+    {}
+    {\vdash \highlight[violet]{\text{false}} ~{:}~ \highlight[blue]{\text{Bool}}}
+  }
+  {\prftree[r]{T-Or}
+    {\prftree[r]{T-True}
+      {}
+      {\vdash \highlight[violet]{\text{true}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\prftree[r]{T-False}
+      {}
+      {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\vdash \highlight[white]{\highlight[violet]{\text{true}}~\text{or}~\highlight[white]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\vdash \highlight[white]{
+    \text{if}~
+    \left(\highlight[white]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \text{then}~
+    \highlight[white]{\text{false}}~
+    \text{else}~
+    \left(\highlight[violet]{\text{true}~\text{or}~\text{false}}\right)} ~
+    {:}~
+    \highlight[white]{\text{Bool}}}\]
+
+\onslide<21>
+\[\prftree[r]{T-If}
+  {\prftree[r]{T-IsZero}
+    {\prftree[r]{T-Succ}
+      {\prftree[r]{T-Zero}
+        {}
+        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[blue]{\text{Nat}}}
+      }
+      {\vdash \highlight[violet]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[blue]{\text{Nat}}}
+    }
+    {\vdash \highlight[violet]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[blue]{\text{Bool}}}
+  }
+  {\prftree[r]{T-False}
+    {}
+    {\vdash \highlight[violet]{\text{false}} ~{:}~ \highlight[blue]{\text{Bool}}}
+  }
+  {\prftree[r]{T-Or}
+    {\prftree[r]{T-True}
+      {}
+      {\vdash \highlight[violet]{\text{true}} ~{:}~ \highlight[blue]{\text{Bool}}}
+    }
+    {\prftree[r]{T-False}
+      {}
+      {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\vdash \highlight[white]{\highlight[violet]{\text{true}}~\text{or}~\highlight[white]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\vdash \highlight[white]{
+    \text{if}~
+    \left(\highlight[white]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \text{then}~
+    \highlight[white]{\text{false}}~
+    \text{else}~
+    \left(\highlight[violet]{\text{true}~\text{or}~\text{false}}\right)} ~
+    {:}~
+    \highlight[white]{\text{Bool}}}\]
+
+\onslide<22>
+\[\prftree[r]{T-If}
+  {\prftree[r]{T-IsZero}
+    {\prftree[r]{T-Succ}
+      {\prftree[r]{T-Zero}
+        {}
+        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[blue]{\text{Nat}}}
+      }
+      {\vdash \highlight[violet]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[blue]{\text{Nat}}}
+    }
+    {\vdash \highlight[violet]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[blue]{\text{Bool}}}
+  }
+  {\prftree[r]{T-False}
+    {}
+    {\vdash \highlight[violet]{\text{false}} ~{:}~ \highlight[blue]{\text{Bool}}}
+  }
+  {\prftree[r]{T-Or}
+    {\prftree[r]{T-True}
+      {}
+      {\vdash \highlight[violet]{\text{true}} ~{:}~ \highlight[blue]{\text{Bool}}}
+    }
+    {\prftree[r]{T-False}
+      {}
+      {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\vdash \highlight[white]{\highlight[white]{\text{true}}~\text{or}~\highlight[violet]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\vdash \highlight[white]{
+    \text{if}~
+    \left(\highlight[white]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \text{then}~
+    \highlight[white]{\text{false}}~
+    \text{else}~
+    \left(\highlight[violet]{\text{true}~\text{or}~\text{false}}\right)} ~
+    {:}~
+    \highlight[white]{\text{Bool}}}\]
+
+\onslide<23>
+\[\prftree[r]{T-If}
+  {\prftree[r]{T-IsZero}
+    {\prftree[r]{T-Succ}
+      {\prftree[r]{T-Zero}
+        {}
+        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[blue]{\text{Nat}}}
+      }
+      {\vdash \highlight[violet]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[blue]{\text{Nat}}}
+    }
+    {\vdash \highlight[violet]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[blue]{\text{Bool}}}
+  }
+  {\prftree[r]{T-False}
+    {}
+    {\vdash \highlight[violet]{\text{false}} ~{:}~ \highlight[blue]{\text{Bool}}}
+  }
+  {\prftree[r]{T-Or}
+    {\prftree[r]{T-True}
+      {}
+      {\vdash \highlight[violet]{\text{true}} ~{:}~ \highlight[blue]{\text{Bool}}}
+    }
+    {\prftree[r]{T-False}
+      {}
+      {\vdash \highlight[violet]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
+    }
+    {\vdash \highlight[white]{\highlight[white]{\text{true}}~\text{or}~\highlight[violet]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\vdash \highlight[white]{
+    \text{if}~
+    \left(\highlight[white]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \text{then}~
+    \highlight[white]{\text{false}}~
+    \text{else}~
+    \left(\highlight[violet]{\text{true}~\text{or}~\text{false}}\right)} ~
+    {:}~
+    \highlight[white]{\text{Bool}}}\]
+
+\onslide<24>
+\[\prftree[r]{T-If}
+  {\prftree[r]{T-IsZero}
+    {\prftree[r]{T-Succ}
+      {\prftree[r]{T-Zero}
+        {}
+        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[blue]{\text{Nat}}}
+      }
+      {\vdash \highlight[violet]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[blue]{\text{Nat}}}
+    }
+    {\vdash \highlight[violet]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[blue]{\text{Bool}}}
+  }
+  {\prftree[r]{T-False}
+    {}
+    {\vdash \highlight[violet]{\text{false}} ~{:}~ \highlight[blue]{\text{Bool}}}
+  }
+  {\prftree[r]{T-Or}
+    {\prftree[r]{T-True}
+      {}
+      {\vdash \highlight[violet]{\text{true}} ~{:}~ \highlight[blue]{\text{Bool}}}
+    }
+    {\prftree[r]{T-False}
+      {}
+      {\vdash \highlight[violet]{\text{false}} ~{:}~ \highlight[blue]{\text{Bool}}}
+    }
+    {\vdash \highlight[white]{\highlight[white]{\text{true}}~\text{or}~\highlight[violet]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\vdash \highlight[white]{
+    \text{if}~
+    \left(\highlight[white]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \text{then}~
+    \highlight[white]{\text{false}}~
+    \text{else}~
+    \left(\highlight[violet]{\text{true}~\text{or}~\text{false}}\right)} ~
+    {:}~
+    \highlight[white]{\text{Bool}}}\]
+
+\onslide<25>
+\[\prftree[r]{T-If}
+  {\prftree[r]{T-IsZero}
+    {\prftree[r]{T-Succ}
+      {\prftree[r]{T-Zero}
+        {}
+        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[blue]{\text{Nat}}}
+      }
+      {\vdash \highlight[violet]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[blue]{\text{Nat}}}
+    }
+    {\vdash \highlight[violet]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[blue]{\text{Bool}}}
+  }
+  {\prftree[r]{T-False}
+    {}
+    {\vdash \highlight[violet]{\text{false}} ~{:}~ \highlight[blue]{\text{Bool}}}
+  }
+  {\prftree[r]{T-Or}
+    {\prftree[r]{T-True}
+      {}
+      {\vdash \highlight[violet]{\text{true}} ~{:}~ \highlight[blue]{\text{Bool}}}
+    }
+    {\prftree[r]{T-False}
+      {}
+      {\vdash \highlight[violet]{\text{false}} ~{:}~ \highlight[blue]{\text{Bool}}}
+    }
+    {\vdash \highlight[violet]{\highlight[violet]{\text{true}}~\text{or}~\highlight[violet]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
+  }
+  {\vdash \highlight[white]{
+    \text{if}~
+    \left(\highlight[white]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \text{then}~
+    \highlight[white]{\text{false}}~
+    \text{else}~
+    \left(\highlight[violet]{\text{true}~\text{or}~\text{false}}\right)} ~
+    {:}~
+    \highlight[white]{\text{Bool}}}\]
+
+\onslide<26>
+\[\prftree[r]{T-If}
+  {\prftree[r]{T-IsZero}
+    {\prftree[r]{T-Succ}
+      {\prftree[r]{T-Zero}
+        {}
+        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[blue]{\text{Nat}}}
+      }
+      {\vdash \highlight[violet]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[blue]{\text{Nat}}}
+    }
+    {\vdash \highlight[violet]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[blue]{\text{Bool}}}
+  }
+  {\prftree[r]{T-False}
+    {}
+    {\vdash \highlight[violet]{\text{false}} ~{:}~ \highlight[blue]{\text{Bool}}}
+  }
+  {\prftree[r]{T-Or}
+    {\prftree[r]{T-True}
+      {}
+      {\vdash \highlight[violet]{\text{true}} ~{:}~ \highlight[blue]{\text{Bool}}}
+    }
+    {\prftree[r]{T-False}
+      {}
+      {\vdash \highlight[violet]{\text{false}} ~{:}~ \highlight[blue]{\text{Bool}}}
+    }
+    {\vdash \highlight[violet]{\highlight[violet]{\text{true}}~\text{or}~\highlight[violet]{\text{false}}} ~{:}~ \highlight[blue]{\text{Bool}}}
+  }
+  {\vdash \highlight[white]{
+    \text{if}~
+    \left(\highlight[white]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \text{then}~
+    \highlight[white]{\text{false}}~
+    \text{else}~
+    \left(\highlight[violet]{\text{true}~\text{or}~\text{false}}\right)} ~
+    {:}~
+    \highlight[white]{\text{Bool}}}\]
+
+\onslide<27>
+\[\prftree[r]{T-If}
+  {\prftree[r]{T-IsZero}
+    {\prftree[r]{T-Succ}
+      {\prftree[r]{T-Zero}
+        {}
+        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[blue]{\text{Nat}}}
+      }
+      {\vdash \highlight[violet]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[blue]{\text{Nat}}}
+    }
+    {\vdash \highlight[violet]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[blue]{\text{Bool}}}
+  }
+  {\prftree[r]{T-False}
+    {}
+    {\vdash \highlight[violet]{\text{false}} ~{:}~ \highlight[blue]{\text{Bool}}}
+  }
+  {\prftree[r]{T-Or}
+    {\prftree[r]{T-True}
+      {}
+      {\vdash \highlight[violet]{\text{true}} ~{:}~ \highlight[blue]{\text{Bool}}}
+    }
+    {\prftree[r]{T-False}
+      {}
+      {\vdash \highlight[violet]{\text{false}} ~{:}~ \highlight[blue]{\text{Bool}}}
+    }
+    {\vdash \highlight[violet]{\highlight[violet]{\text{true}}~\text{or}~\highlight[violet]{\text{false}}} ~{:}~ \highlight[blue]{\text{Bool}}}
+  }
+  {\vdash \highlight[violet]{
+    \text{if}~
+    \left(\highlight[violet]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \text{then}~
+    \highlight[violet]{\text{false}}~
+    \text{else}~
+    \left(\highlight[violet]{\text{true}~\text{or}~\text{false}}\right)} ~
+    {:}~
+    \highlight[white]{\text{Bool}}}\]
+
+\onslide<28>
+\[\prftree[r]{T-If}
+  {\prftree[r]{T-IsZero}
+    {\prftree[r]{T-Succ}
+      {\prftree[r]{T-Zero}
+        {}
+        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[blue]{\text{Nat}}}
+      }
+      {\vdash \highlight[violet]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[blue]{\text{Nat}}}
+    }
+    {\vdash \highlight[violet]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[blue]{\text{Bool}}}
+  }
+  {\prftree[r]{T-False}
+    {}
+    {\vdash \highlight[violet]{\text{false}} ~{:}~ \highlight[blue]{\text{Bool}}}
+  }
+  {\prftree[r]{T-Or}
+    {\prftree[r]{T-True}
+      {}
+      {\vdash \highlight[violet]{\text{true}} ~{:}~ \highlight[blue]{\text{Bool}}}
+    }
+    {\prftree[r]{T-False}
+      {}
+      {\vdash \highlight[violet]{\text{false}} ~{:}~ \highlight[blue]{\text{Bool}}}
+    }
+    {\vdash \highlight[violet]{\highlight[violet]{\text{true}}~\text{or}~\highlight[violet]{\text{false}}} ~{:}~ \highlight[blue]{\text{Bool}}}
+  }
+  {\vdash \highlight[violet]{
+    \text{if}~
+    \left(\highlight[violet]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \text{then}~
+    \highlight[violet]{\text{false}}~
+    \text{else}~
+    \left(\highlight[violet]{\text{true}~\text{or}~\text{false}}\right)} ~
+    {:}~
+    \highlight[blue]{\text{Bool}}}\]
+
+\end{overprint}
 
 \end{frame}
 

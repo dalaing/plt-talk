@@ -7,8 +7,6 @@
 ## Naturals
 
 ## Booleans and Naturals
-- clean up
-- animate the typing derivation
 - add Haskell code for checking and inference
 
 ## LC
