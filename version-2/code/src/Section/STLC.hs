@@ -10,6 +10,7 @@ module Section.STLC where
 
 import Control.Monad (ap)
 import Data.Functor.Classes
+import Data.Maybe (isJust)
 
 import Data.Map (Map)
 import qualified Data.Map as Map
@@ -17,7 +18,13 @@ import qualified Data.Map as Map
 import Bound
 import Data.Deriving (deriveEq1, deriveOrd1, deriveShow1)
 
+import Hedgehog
+import qualified Hedgehog.Gen as Gen
+import qualified Hedgehog.Range as Range
+
 import Util.Rules
+
+import Debug.Trace
 
 data Type =
     TyBool
@@ -291,52 +298,67 @@ eApp2Eager value step (TmApp tm1 tm2) = do
 eApp2Eager _ _ _ =
   Nothing
 
-eAppLam :: Rule (Term a) (Term a)
-eAppLam _ (TmApp (TmLam _ _ s) tm) =
+eAppLamEager :: RuleSet (Term a) () -> Rule (Term a) (Term a)
+eAppLamEager value _ (TmApp (TmLam _ _ s) tm) = do
+  _ <- value tm
   pure $ instantiate1 tm s
-eAppLam _ _ =
+eAppLamEager _ _ _ =
   Nothing
+
+eAppLamLazy :: Rule (Term a) (Term a)
+eAppLamLazy _ (TmApp (TmLam _ _ s) tm) =
+  pure $ instantiate1 tm s
+eAppLamLazy _ _ =
+  Nothing
+
+evalRulesEager :: [Rule (Term a) (Term a)]
+evalRulesEager =
+  [ eOr1
+  , eOr2 valueEagerR
+  , eOrFalseFalse
+  , eOrFalseTrue
+  , eOrTrueFalse
+  , eOrTrueTrue
+  , eSucc
+  , ePred
+  , ePredZero
+  , ePredSuccEager valueEagerR
+  , eIsZero
+  , eIsZeroZero
+  , eIsZeroSuccEager valueEagerR
+  , eIf
+  , eIfTrue
+  , eIfFalse
+  , eApp1
+  , eApp2Eager valueEagerR
+  , eAppLamEager valueEagerR
+  ]
 
 stepEagerR :: RuleSet (Term a) (Term a)
 stepEagerR =
-  mkRuleSet [ eOr1
-            , eOr2 valueEagerR
-            , eOrFalseFalse
-            , eOrFalseTrue
-            , eOrTrueFalse
-            , eOrTrueTrue
-            , eSucc
-            , ePred
-            , ePredZero
-            , ePredSuccEager valueEagerR
-            , eIsZero
-            , eIsZeroZero
-            , eIsZeroSuccEager valueEagerR
-            , eIf
-            , eIfTrue
-            , eIfFalse
-            , eApp1
-            , eApp2Eager valueEagerR
-            , eAppLam
-            ]
+  mkRuleSet evalRulesEager
+
+evalRulesLazy :: [Rule (Term a) (Term a)]
+evalRulesLazy =
+  [ eOr1
+  , eOrFalse
+  , eOrTrue
+  , ePred
+  , ePredZero
+  , ePredSuccLazy
+  , eIsZero
+  , eIsZeroZero
+  , eIsZeroSuccLazy
+  , eIf
+  , eIfTrue
+  , eIfFalse
+  , eApp1
+  , eAppLamLazy
+  ]
 
 stepLazyR :: RuleSet (Term a) (Term a)
 stepLazyR =
-  mkRuleSet [ eOr1
-            , eOrFalse
-            , eOrTrue
-            , ePred
-            , ePredZero
-            , ePredSuccLazy
-            , eIsZero
-            , eIsZeroZero
-            , eIsZeroSuccLazy
-            , eIf
-            , eIfTrue
-            , eIfFalse
-            , eApp1
-            , eAppLam
-            ]
+  mkRuleSet evalRulesLazy
 
 type Context a = Map a Type
 
@@ -411,7 +433,7 @@ inferIsZero _ _ =
 inferIf :: Rule (Context a, Term a) Type
 inferIf step (ctx, TmIf tm1 tm2 tm3) = do
   expect step ctx tm1 TyBool
-  expectEq step ctx tm1 tm2
+  expectEq step ctx tm2 tm3
 inferIf _ _ =
   Nothing
 
@@ -526,25 +548,17 @@ checkLam step (ctx, TmLam v ty s, TyArr tyF tyT) = do
 checkLam _ _ =
   Nothing
 
--- checkApp :: Rule (Context String, Term String, Type) ()
--- checkApp step (ctx, TmApp tm1 tm2, ty) = do
---   ty1 <- infer' (ctx, tm1)
---   case ty1 of
---     TyArr tyF tyT -> do
---       if tyT == ty
---       then step (ctx, tm2, tyF)
---       else Nothing
---     _ ->
---       Nothing
--- checkApp _ _ =
---   Nothing
-
-checkApp :: RuleSet (Context String, Term String, Type) Type
-         -> Rule (Context String, Term String, Type) ()
-checkApp checkArrR step (ctx, TmApp tm1 tm2, tyT) = do
-  tyF <- checkArrR (ctx, tm1, tyT)
-  step (ctx, tm2, tyF)
-checkApp _ _ _ =
+checkApp :: Rule (Context String, Term String, Type) ()
+checkApp step (ctx, TmApp tm1 tm2, ty) = do
+  ty1 <- infer' (ctx, tm1)
+  case ty1 of
+    TyArr tyF tyT -> do
+      if tyT == ty
+      then step (ctx, tm2, tyF)
+      else Nothing
+    _ ->
+      Nothing
+checkApp _ _ =
   Nothing
 
 check' :: RuleSet (Context String, Term String, Type) ()
@@ -559,31 +573,121 @@ check' =
             , checkIf
             , checkVar
             , checkLam
-            , checkApp checkArr'
+            , checkApp
             ]
 
-checkArrLam :: RuleSet (Context String, Term String, Type) ()
-            -> Rule (Context String, Term String, Type) Type
-checkArrLam checkR _ (ctx, TmLam v tyF s, tyT) = do
-  checkR (addToContext v tyF ctx, instantiate1 (TmVar v) s, tyT)
-  pure tyF
-checkArrLam _ _ _ =
-  Nothing
+checkType :: Term String -> Type -> Maybe ()
+checkType tm ty = check' (Map.empty, tm, ty)
 
-checkArrApp :: RuleSet (Context a, Term a, Type) ()
-            -> Rule (Context a, Term a, Type) Type
-checkArrApp checkR step (ctx, TmApp tm1 tm2, tyT) = do
-  tyF <- step (ctx, tm1, tyT)
-  checkR (ctx, tm2, tyF)
-  pure tyF
-checkArrApp _ _ _ =
-  Nothing
+genTerm :: Gen (Term String)
+genTerm = genTerm' []
 
-checkArr' :: RuleSet (Context String, Term String, Type) Type
-checkArr' =
-  mkRuleSet [ checkArrLam check'
-            , checkArrApp check'
-            ]
+genTerm' :: [String] -> Gen (Term String)
+genTerm' vs =
+  Gen.recursive Gen.choice
+    ((if null vs then id else ((TmVar <$> Gen.element vs) :))
+    [ pure TmZero
+    , pure TmFalse
+    , pure TmTrue
+    ])
+    [ Gen.subterm (genTerm' vs) TmSucc
+    , Gen.subterm (genTerm' vs) TmPred
+    , Gen.subterm (genTerm' vs) TmIsZero
+    , Gen.subterm2 (genTerm' vs) (genTerm' vs) TmOr
+    , Gen.subterm3 (genTerm' vs) (genTerm' vs) (genTerm' vs) TmIf
+    , Gen.subterm2 (genTerm' vs) (genTerm' vs) TmApp
+    , do
+        v <- Gen.filter (not . (`elem` vs)) (pure <$> Gen.alpha)
+        ty <- genType
+        Gen.subtermM (genTerm' (v : vs)) $ \tm -> pure $ lam v ty tm
+    ]
 
-check :: Term String -> Type -> Maybe ()
-check tm ty = check' (Map.empty, tm, ty)
+stlcRulesEagerDeterminstic :: Property
+stlcRulesEagerDeterminstic =
+  deterministic genTerm evalRulesEager
+
+stlcRulesLazyDeterminstic :: Property
+stlcRulesLazyDeterminstic =
+  deterministic genTerm evalRulesLazy
+
+stlcRulesEagerExactlyOne :: Property
+stlcRulesEagerExactlyOne =
+  exactlyOne genTerm valueEagerR stepEagerR
+
+stlcRulesLazyExactlyOne :: Property
+stlcRulesLazyExactlyOne =
+  exactlyOne genTerm valueLazyR stepLazyR
+
+genType :: Gen Type
+genType =
+  Gen.recursive Gen.choice
+  [ pure TyBool, pure TyNat]
+  [ Gen.subterm2 genType genType TyArr ]
+
+genTypedTerm' :: Context String -> Type -> Gen (Term String)
+genTypedTerm' ctx TyBool =
+  Gen.recursive Gen.choice
+    [ pure TmFalse
+    , pure TmTrue
+    ]
+    [ Gen.subterm (genTypedTerm' ctx TyNat) TmIsZero
+    , Gen.subterm2 (genTypedTerm' ctx TyBool) (genTypedTerm' ctx TyBool) TmOr
+    , Gen.subterm3 (genTypedTerm' ctx TyBool) (genTypedTerm' ctx TyBool) (genTypedTerm' ctx TyBool) TmIf
+    , genType >>= \tyF -> Gen.subterm2 (genTypedTerm' ctx (TyArr tyF TyBool)) (genTypedTerm' ctx tyF) TmApp
+    ]
+genTypedTerm' ctx TyNat =
+  Gen.recursive Gen.choice
+    [ pure TmZero ]
+    [ Gen.subterm (genTypedTerm' ctx TyNat) TmSucc
+    , Gen.subterm (genTypedTerm' ctx TyNat) TmPred
+    , Gen.subtermM2 (genTypedTerm' ctx TyNat) (genTypedTerm' ctx TyNat) $ \n1 n2 -> do
+        b <- genTypedTerm' ctx TyBool
+        pure $ TmIf b n1 n2
+    , genType >>= \tyF -> Gen.subterm2 (genTypedTerm' ctx (TyArr tyF TyNat)) (genTypedTerm' ctx tyF) TmApp
+    ]
+genTypedTerm' ctx ty@(TyArr ty1 ty2) =
+  Gen.recursive Gen.choice
+    [ Gen.discard ]
+    [ Gen.filter (`Map.notMember` ctx) (pure <$> Gen.alpha) >>= \v ->
+        Gen.subterm (genTypedTerm' (addToContext v ty1 ctx) ty2) (lam v ty1)
+    , Gen.subtermM2 (genTypedTerm' ctx ty) (genTypedTerm' ctx ty) $ \f1 f2 -> do
+        b <- genTypedTerm' ctx TyBool
+        pure $ TmIf b f1 f2
+    , genType >>= \tyF -> Gen.subterm2 (genTypedTerm' ctx (TyArr tyF ty)) (genTypedTerm' ctx tyF) TmApp
+    ]
+
+genTypedTerm :: Type -> Gen (Term String)
+genTypedTerm = genTypedTerm' Map.empty
+
+genWellTypedTerm :: Gen (Term String)
+genWellTypedTerm =
+  genType >>= genTypedTerm
+
+progress :: RuleSet (Term String) () -> RuleSet (Term String) (Term String) -> Property
+progress value step = property $ do
+  tm <- forAll genWellTypedTerm
+  (isJust (value tm) || isJust (step tm)) === True
+
+preservation :: RuleSet (Term String) (Term String) -> Property
+preservation step = property $ do
+  (ty, tm) <- forAll $ do
+    ty' <- genType
+    tm' <- Gen.filter (isJust . step) (genTypedTerm ty')
+    pure (ty', tm')
+  Just ty === (step tm >>= infer)
+
+checkCorrect :: Property
+checkCorrect = property $ do
+  (ty, tm) <- forAll $ do
+    ty' <- genType
+    tm' <- genTypedTerm ty'
+    pure (ty', tm')
+  checkType tm ty === Just ()
+
+inferCorrect :: Property
+inferCorrect = property $ do
+  (ty, tm) <- forAll $ do
+    ty' <- genType
+    tm' <- genTypedTerm ty'
+    pure (ty', tm')
+  infer tm === Just ty

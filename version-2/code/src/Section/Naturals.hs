@@ -7,6 +7,10 @@ Portability : non-portable
 -}
 module Section.Naturals where
 
+import Hedgehog
+import qualified Hedgehog.Gen as Gen
+import qualified Hedgehog.Range as Range
+
 import Util.Rules
 
 data Term =
@@ -75,10 +79,41 @@ ePredSuccLazy _ (TmPred (TmSucc tm)) =
 ePredSuccLazy _ _ =
   Nothing
 
+evalRulesEager :: [Rule Term Term]
+evalRulesEager =
+  [eSucc, ePred, ePredZero, ePredSuccEager valueEagerR]
+
 stepEagerR :: RuleSet Term Term
 stepEagerR =
-  mkRuleSet [eSucc, ePred, ePredZero, ePredSuccEager valueEagerR]
+  mkRuleSet evalRulesEager
+
+evalRulesLazy :: [Rule Term Term]
+evalRulesLazy = [ePred, ePredZero, ePredSuccLazy]
 
 stepLazyR :: RuleSet Term Term
 stepLazyR =
-  mkRuleSet [ePred, ePredZero, ePredSuccLazy]
+  mkRuleSet evalRulesLazy
+
+genTerm :: Gen Term
+genTerm =
+  Gen.recursive Gen.choice
+    [ pure TmZero ]
+    [ Gen.subterm genTerm TmSucc
+    , Gen.subterm genTerm TmPred
+    ]
+
+natRulesEagerDeterminstic :: Property
+natRulesEagerDeterminstic =
+  deterministic genTerm evalRulesEager
+
+natRulesLazyDeterminstic :: Property
+natRulesLazyDeterminstic =
+  deterministic genTerm evalRulesLazy
+
+natRulesEagerExactlyOne :: Property
+natRulesEagerExactlyOne =
+  exactlyOne genTerm valueEagerR stepEagerR
+
+natRulesLazyExactlyOne :: Property
+natRulesLazyExactlyOne =
+  exactlyOne genTerm valueLazyR stepLazyR

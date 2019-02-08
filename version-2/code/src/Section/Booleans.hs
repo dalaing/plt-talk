@@ -7,6 +7,9 @@ Portability : non-portable
 -}
 module Section.Booleans where
 
+import Hedgehog
+import qualified Hedgehog.Gen as Gen
+
 import Util.Rules
 
 data Term =
@@ -77,8 +80,36 @@ eOrTrue _ (TmOr TmTrue _) =
 eOrTrue _ _ =
   Nothing
 
+evalRulesEager :: [Rule Term Term]
+evalRulesEager = [eOr1, eOr2 valueR, eOrFalseFalse, eOrFalseTrue, eOrTrueFalse, eOrTrueTrue]
+
 stepEagerR :: RuleSet Term Term
-stepEagerR = mkRuleSet [eOr1, eOr2 valueR, eOrFalseFalse, eOrFalseTrue, eOrTrueFalse, eOrTrueTrue]
+stepEagerR = mkRuleSet evalRulesEager
+
+evalRulesLazy :: [Rule Term Term]
+evalRulesLazy = [eOr1, eOrFalse, eOrTrue]
 
 stepLazyR :: RuleSet Term Term
-stepLazyR = mkRuleSet [eOr1, eOrFalse, eOrTrue]
+stepLazyR = mkRuleSet evalRulesLazy
+
+genTerm :: Gen Term
+genTerm =
+  Gen.recursive Gen.choice
+    [ pure TmFalse, pure TmTrue ]
+    [ Gen.subterm2 genTerm genTerm TmOr ]
+
+boolRulesEagerDeterminstic :: Property
+boolRulesEagerDeterminstic =
+  deterministic genTerm evalRulesEager
+
+boolRulesLazyDeterminstic :: Property
+boolRulesLazyDeterminstic =
+  deterministic genTerm evalRulesLazy
+
+boolRulesEagerExactlyOne :: Property
+boolRulesEagerExactlyOne =
+  exactlyOne genTerm valueR stepEagerR
+
+boolRulesLazyExactlyOne :: Property
+boolRulesLazyExactlyOne =
+  exactlyOne genTerm valueR stepLazyR

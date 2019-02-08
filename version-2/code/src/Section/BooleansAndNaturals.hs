@@ -7,6 +7,11 @@ Portability : non-portable
 -}
 module Section.BooleansAndNaturals where
 
+import Data.Maybe (isJust)
+
+import Hedgehog
+import qualified Hedgehog.Gen as Gen
+
 import Util.Rules
 
 data Term =
@@ -184,41 +189,49 @@ eIfFalse _ (TmIf TmFalse _ tm) =
 eIfFalse _ _ =
   Nothing
 
+evalRulesEager :: [Rule Term Term]
+evalRulesEager =
+  [ eOr1
+  , eOr2 valueEagerR
+  , eOrFalseFalse
+  , eOrFalseTrue
+  , eOrTrueFalse
+  , eOrTrueTrue
+  , eSucc
+  , ePred
+  , ePredZero
+  , ePredSuccEager valueEagerR
+  , eIsZero
+  , eIsZeroZero
+  , eIsZeroSuccEager valueEagerR
+  , eIf
+  , eIfTrue
+  , eIfFalse
+  ]
+
 stepEagerR :: RuleSet Term Term
 stepEagerR =
-  mkRuleSet [ eOr1
-            , eOr2 valueEagerR
-            , eOrFalseFalse
-            , eOrFalseTrue
-            , eOrTrueFalse
-            , eOrTrueTrue
-            , eSucc
-            , ePred
-            , ePredZero
-            , ePredSuccEager valueEagerR
-            , eIsZero
-            , eIsZeroZero
-            , eIsZeroSuccEager valueEagerR
-            , eIf
-            , eIfTrue
-            , eIfFalse
-            ]
+  mkRuleSet evalRulesEager
+
+evalRulesLazy :: [Rule Term Term]
+evalRulesLazy =
+  [ eOr1
+  , eOrFalse
+  , eOrTrue
+  , ePred
+  , ePredZero
+  , ePredSuccLazy
+  , eIsZero
+  , eIsZeroZero
+  , eIsZeroSuccLazy
+  , eIf
+  , eIfTrue
+  , eIfFalse
+  ]
 
 stepLazyR :: RuleSet Term Term
 stepLazyR =
-  mkRuleSet [ eOr1
-            , eOrFalse
-            , eOrTrue
-            , ePred
-            , ePredZero
-            , ePredSuccLazy
-            , eIsZero
-            , eIsZeroZero
-            , eIsZeroSuccLazy
-            , eIf
-            , eIfTrue
-            , eIfFalse
-            ]
+  mkRuleSet evalRulesLazy
 
 data Type =
     TyBool
@@ -290,7 +303,7 @@ inferIsZero _ _ =
 inferIf :: Rule Term Type
 inferIf step (TmIf tm1 tm2 tm3) = do
   expect step tm1 TyBool
-  expectEq step tm1 tm2
+  expectEq step tm2 tm3
 inferIf _ _ =
   Nothing
 
@@ -349,7 +362,93 @@ checkIf step (TmIf tm1 tm2 tm3, ty) = do
 checkIf _ _ =
   Nothing
 
-check :: RuleSet (Term, Type) ()
-check =
+checkType :: RuleSet (Term, Type) ()
+checkType =
   mkRuleSet [checkFalse, checkTrue, checkOr, checkZero, checkSucc, checkPred, checkIsZero, checkIf]
+
+genTerm :: Gen Term
+genTerm =
+  Gen.recursive Gen.choice
+    [ pure TmZero
+    , pure TmFalse
+    , pure TmTrue
+    ]
+    [ Gen.subterm genTerm TmSucc
+    , Gen.subterm genTerm TmPred
+    , Gen.subterm genTerm TmIsZero
+    , Gen.subterm2 genTerm genTerm TmOr
+    , Gen.subterm3 genTerm genTerm genTerm TmIf
+    ]
+
+boolNatRulesEagerDeterminstic :: Property
+boolNatRulesEagerDeterminstic =
+  deterministic genTerm evalRulesEager
+
+boolNatRulesLazyDeterminstic :: Property
+boolNatRulesLazyDeterminstic =
+  deterministic genTerm evalRulesLazy
+
+boolNatRulesEagerExactlyOne :: Property
+boolNatRulesEagerExactlyOne =
+  exactlyOne genTerm valueEagerR stepEagerR
+
+boolNatRulesLazyExactlyOne :: Property
+boolNatRulesLazyExactlyOne =
+  exactlyOne genTerm valueLazyR stepLazyR
+
+genType :: Gen Type
+genType = Gen.choice [ pure TyBool, pure TyNat ]
+
+genTypedTerm :: Type -> Gen Term
+genTypedTerm TyBool =
+  Gen.recursive Gen.choice
+    [ pure TmFalse
+    , pure TmTrue
+    ]
+    [ TmIsZero <$> genTypedTerm TyNat
+    , Gen.subterm2 (genTypedTerm TyBool) (genTypedTerm TyBool) TmOr
+    , Gen.subterm3 (genTypedTerm TyBool) (genTypedTerm TyBool) (genTypedTerm TyBool) TmIf
+    ]
+genTypedTerm TyNat =
+  Gen.recursive Gen.choice
+    [ pure TmZero ]
+    [ Gen.subterm (genTypedTerm TyNat) TmSucc
+    , Gen.subterm (genTypedTerm TyNat) TmPred
+    , Gen.subtermM2 (genTypedTerm TyNat) (genTypedTerm TyNat) $ \n1 n2 -> do
+        b <- genTypedTerm TyBool
+        pure $ TmIf b n1 n2
+    ]
+
+genWellTypedTerm :: Gen Term
+genWellTypedTerm =
+  genType >>= genTypedTerm
+
+progress :: RuleSet Term () -> RuleSet Term Term -> Property
+progress value step = property $ do
+  tm <- forAll genWellTypedTerm
+  (isJust (value tm) || isJust (step tm)) === True
+
+preservation :: RuleSet Term Term -> Property
+preservation step = property $ do
+  (ty, tm) <- forAll $ do
+    ty' <- genType
+    tm' <- Gen.filter (isJust . step) (genTypedTerm ty')
+    pure (ty', tm')
+  Just ty === (step tm >>= infer)
+
+checkCorrect :: Property
+checkCorrect = property $ do
+  (ty, tm) <- forAll $ do
+    ty' <- genType
+    tm' <- genTypedTerm ty'
+    pure (ty', tm')
+  checkType (tm, ty) === Just ()
+
+inferCorrect :: Property
+inferCorrect = property $ do
+  (ty, tm) <- forAll $ do
+    ty' <- genType
+    tm' <- genTypedTerm ty'
+    pure (ty', tm')
+  infer tm === Just ty
 

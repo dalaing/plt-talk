@@ -26,6 +26,6 @@ library
                      , Util.Rules
   -- other-modules:
   -- other-extensions:
-  build-depends:       base >=4.11 && <4.12, bound, containers, deriving-compat
+  build-depends:       base >=4.11 && <4.12, bound, containers, deriving-compat, hedgehog
   hs-source-dirs:      src
   default-language:    Haskell2010

@@ -7,6 +7,10 @@ Portability : non-portable
 -}
 module Section.Integers where
 
+import Hedgehog
+import qualified Hedgehog.Gen as Gen
+import qualified Hedgehog.Range as Range
+
 import Util.Rules
 
 data Term =
@@ -48,8 +52,25 @@ addInt _ (TmAdd (TmInt i1) (TmInt i2)) =
 addInt _ _ =
   Nothing
 
+evalRules :: [Rule Term Term]
+evalRules = [add1, add2 valueR, addInt]
+
 stepR :: RuleSet Term Term
-stepR = mkRuleSet [add1, add2 valueR, addInt]
+stepR = mkRuleSet evalRules
 
 eval :: Term -> Term
 eval = iterR stepR
+
+genTerm :: Gen Term
+genTerm =
+  Gen.recursive Gen.choice
+    [ TmInt <$> Gen.int (Range.linear 0 10) ]
+    [ Gen.subterm2 genTerm genTerm TmAdd ]
+
+intRulesDeterminstic :: Property
+intRulesDeterminstic =
+  deterministic genTerm evalRules
+
+intRulesExactlyOne :: Property
+intRulesExactlyOne =
+  exactlyOne genTerm valueR stepR

@@ -2,7 +2,7 @@
 \section{Lambda Calculus}
 
 \begin{frame}
-  This is where we step things up a notch
+  This is where we step things up a notch.
 \end{frame}
 
 \begin{frame}
@@ -18,29 +18,6 @@ v \quad:=\quad& ~ \ldots &\\
     \end{aligned}
   \end{displaymath}
   \end{mdframed}
-\end{frame}
-
-\begin{frame}
-  Let us look at some terms
-\end{frame}
-
-\begin{frame}
-  The term
-  \[x\]
-  is meaningless
-\end{frame}
-
-\begin{frame}
-  The term
-  \[x + 2\]
-  is also meaningless
-\end{frame}
-
-\begin{frame}
-  The term
-  \[\lambda~x~.~x + 2\]
-  is an anonymous equivalent to
-  \[f(x) = x + 2\]
 \end{frame}
 
 \begin{frame}
@@ -64,11 +41,36 @@ v \quad:=\quad& ~ \ldots &\\
 \end{frame}
 
 \begin{frame}
+  Let us look at some terms.
+\end{frame}
+
+\begin{frame}
+  The term
+  \[x\]
+  is meaningless.
+\end{frame}
+
+\begin{frame}
+  The term
+  \[x + 2\]
+  is also meaningless.
+\end{frame}
+
+\begin{frame}
+  The term
+  \[\lambda~x~.~x + 2\]
+  is an anonymous equivalent to
+  \[f(x) = x + 2\]
+\end{frame}
+
+\begin{frame}
   The term
   \[(\lambda~x . x + 2)~1 \]
   is equivalent to
   \[f(1)\]
-  when $f$ is defined as before
+  when $f$ is defined as
+  \[f(x) = x + 2\]
+  like before.
 \end{frame}
 
 \begin{frame}
@@ -91,21 +93,7 @@ v \quad:=\quad& ~ \ldots &\\
 \end{frame}
 
 \begin{frame}
-  \begin{mdframed}[frametitle={Small-step semantics}]
-  \infrule[E-App1]
-         {t_1 \longrightarrow {t_1}^{\prime}}
-         {t_1~t_2 \longrightarrow {t_1}^{\prime}~t_2}
-  \infrule[E-App2]
-         {t_2 \longrightarrow {t_2}^{\prime}}
-         {v_1~t_2 \longrightarrow v_1~{t_2}^{\prime}}
-  \infrule[E-AppLam]
-          {}
-          {\left(\lambda~x . t_{12}\right)~v_2 \longrightarrow \left[x \mapsto v_2 \right]~t_{12}}
-  \end{mdframed}
-\end{frame}
-
-\begin{frame}
-  Need to be careful with substitution.
+  We need to be careful with substitution.
 \end{frame}
 
 \begin{frame}
@@ -312,6 +300,10 @@ v \quad:=\quad& ~ \ldots &\\
   \end{overprint}
 \end{frame}
 
+\begin{frame}[c]
+Now we are equipped to deal with substitution.
+\end{frame}
+
 \begin{frame}
   \begin{mdframed}[frametitle={Substitution rules}]
   \begin{overprint}
@@ -465,6 +457,31 @@ v \quad:=\quad& ~ \ldots &\\
 \end{frame}
 
 \begin{frame}
+  \begin{mdframed}[frametitle={Small-step semantics (eager)}]
+  \infrule[E-App1]
+         {t_1 \longrightarrow {t_1}^{\prime}}
+         {t_1~t_2 \longrightarrow {t_1}^{\prime}~t_2}
+  \infrule[E-App2]
+         {t_2 \longrightarrow {t_2}^{\prime}}
+         {v_1~t_2 \longrightarrow v_1~{t_2}^{\prime}}
+  \infrule[E-AppLam]
+          {}
+          {\left(\lambda~x . t_{12}\right)~v_2 \longrightarrow \left[x \mapsto v_2 \right]~t_{12}}
+  \end{mdframed}
+\end{frame}
+
+\begin{frame}
+  \begin{mdframed}[frametitle={Small-step semantics (lazy)}]
+  \infrule[E-App1]
+         {t_1 \longrightarrow {t_1}^{\prime}}
+         {t_1~t_2 \longrightarrow {t_1}^{\prime}~t_2}
+  \infrule[E-AppLam]
+          {}
+          {\left(\lambda~x . t_{12}\right)~t_2 \longrightarrow \left[x \mapsto t_2 \right]~t_{12}}
+  \end{mdframed}
+\end{frame}
+
+\begin{frame}
   What can we do with lambda calculus?
 \end{frame}
 
@@ -518,5 +535,4 @@ v \quad:=\quad& ~ \ldots &\\
   One other big problem - there are plenty of stuck terms:
   \[1~2\]
 \end{frame}
-
 

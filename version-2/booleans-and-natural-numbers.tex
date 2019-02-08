@@ -1440,7 +1440,7 @@ inferIsZero _ _ =
 inferIf :: Rule Term Type
 inferIf step (TmIf tm1 tm2 tm3) = do
   expect step tm1 TyBool
-  expectEq step tm1 tm2
+  expectEq step tm2 tm3
 inferIf _ _ =
   Nothing
       \end{minted}
