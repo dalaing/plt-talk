@@ -526,17 +526,25 @@ checkLam step (ctx, TmLam v ty s, TyArr tyF tyT) = do
 checkLam _ _ =
   Nothing
 
-checkApp :: Rule (Context String, Term String, Type) ()
-checkApp step (ctx, TmApp tm1 tm2, ty) = do
-  ty1 <- infer' (ctx, tm1)
-  case ty1 of
-    TyArr tyF tyT -> do
-      if tyT == ty
-      then step (ctx, tm2, tyF)
-      else Nothing
-    _ ->
-      Nothing
-checkApp _ _ =
+-- checkApp :: Rule (Context String, Term String, Type) ()
+-- checkApp step (ctx, TmApp tm1 tm2, ty) = do
+--   ty1 <- infer' (ctx, tm1)
+--   case ty1 of
+--     TyArr tyF tyT -> do
+--       if tyT == ty
+--       then step (ctx, tm2, tyF)
+--       else Nothing
+--     _ ->
+--       Nothing
+-- checkApp _ _ =
+--   Nothing
+
+checkApp :: RuleSet (Context String, Term String, Type) Type
+         -> Rule (Context String, Term String, Type) ()
+checkApp checkArrR step (ctx, TmApp tm1 tm2, tyT) = do
+  tyF <- checkArrR (ctx, tm1, tyT)
+  step (ctx, tm2, tyF)
+checkApp _ _ _ =
   Nothing
 
 check' :: RuleSet (Context String, Term String, Type) ()
@@ -551,7 +559,30 @@ check' =
             , checkIf
             , checkVar
             , checkLam
-            , checkApp
+            , checkApp checkArr'
+            ]
+
+checkArrLam :: RuleSet (Context String, Term String, Type) ()
+            -> Rule (Context String, Term String, Type) Type
+checkArrLam checkR _ (ctx, TmLam v tyF s, tyT) = do
+  checkR (addToContext v tyF ctx, instantiate1 (TmVar v) s, tyT)
+  pure tyF
+checkArrLam _ _ _ =
+  Nothing
+
+checkArrApp :: RuleSet (Context a, Term a, Type) ()
+            -> Rule (Context a, Term a, Type) Type
+checkArrApp checkR step (ctx, TmApp tm1 tm2, tyT) = do
+  tyF <- step (ctx, tm1, tyT)
+  checkR (ctx, tm2, tyF)
+  pure tyF
+checkArrApp _ _ _ =
+  Nothing
+
+checkArr' :: RuleSet (Context String, Term String, Type) Type
+checkArr' =
+  mkRuleSet [ checkArrLam check'
+            , checkArrApp check'
             ]
 
 check :: Term String -> Type -> Maybe ()
