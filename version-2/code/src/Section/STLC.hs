@@ -647,10 +647,10 @@ genTypedTerm' ctx TyNat =
     ]
 genTypedTerm' ctx ty@(TyArr ty1 ty2) =
   Gen.recursive Gen.choice
-    [ Gen.discard ]
     [ Gen.filter (`Map.notMember` ctx) (pure <$> Gen.alpha) >>= \v ->
         Gen.subterm (genTypedTerm' (addToContext v ty1 ctx) ty2) (lam v ty1)
-    , Gen.subtermM2 (genTypedTerm' ctx ty) (genTypedTerm' ctx ty) $ \f1 f2 -> do
+    ]
+    [ Gen.subtermM2 (genTypedTerm' ctx ty) (genTypedTerm' ctx ty) $ \f1 f2 -> do
         b <- genTypedTerm' ctx TyBool
         pure $ TmIf b f1 f2
     , genType >>= \tyF -> Gen.subterm2 (genTypedTerm' ctx (TyArr tyF ty)) (genTypedTerm' ctx tyF) TmApp
