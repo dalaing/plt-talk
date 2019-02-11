@@ -7,12 +7,12 @@
     \begin{aligned}
 t \quad:=\quad& ~ \ldots &\\
   & ~ x \quad\quad &variable\\
-  & ~ \lambda~x \highlight{{:} T} . t \quad\quad &abstraction\\
+  & ~ \lambda~x \highlight[hlcol1]{{:} T} . t \quad\quad &abstraction\\
   & ~ t ~ t \quad\quad &function~application\\
 v \quad:=\quad& ~ \ldots &\\
-  & ~ \lambda~x \highlight{{:} T} . t \quad\quad &abstraction\\
+  & ~ \lambda~x \highlight[hlcol1]{{:} T} . t \quad\quad &abstraction\\
 T \quad:=\quad& ~ \ldots &\\
-  & ~ \highlight{T \rightarrow T} \quad\quad &function~arrow\\
+  & ~ \highlight[hlcol1]{T \rightarrow T} \quad\quad &function~arrow\\
     \end{aligned}
 \end{displaymath}
 \end{mdframed}
@@ -28,7 +28,7 @@ T \quad:=\quad& ~ \ldots &\\
 \end{frame}
 
 \begin{frame}
-  \begin{mdframed}[frametitle={Small-step semantics}]
+  \begin{mdframed}[frametitle={Small-step semantics (eager)}]
   \infrule[E-App1]
   {t_1 \longrightarrow {t_1}^{\prime}}
   {t_1~t_2 \longrightarrow {t_1}^{\prime}~t_2}
@@ -37,10 +37,10 @@ T \quad:=\quad& ~ \ldots &\\
   {v_1~t_2 \longrightarrow v_1~{t_2}^{\prime}}
   \infrule[E-AppLam]
   {}
-  {(\lambda~x \highlight{{:} T} . t_1) t_2 \longrightarrow \left[x \mapsto t_2 \right]t_1}
+  {(\lambda~x \highlight[hlcol1]{{:} T} . t_1) t_2 \longrightarrow \left[x \mapsto t_2 \right]t_1}
 \end{mdframed}
 \medskip
-Unsurprisingly, the small-step semantics don't change.
+Unsurprisingly, the small-step semantics don't change (except we now have type annotations).
 \end{frame}
 
 \begin{frame}
@@ -49,57 +49,57 @@ Unsurprisingly, the small-step semantics don't change.
   \onslide<1,4,5,7,8>
 
   \infrule[T-Var]
-  {\highlight[white]{x {:} T} \in \highlight[white]{\Gamma}}
-  {\highlight[white]{\Gamma} \vdash x {:} T}
+  {}
+  {\highlight[white]{\Gamma},\highlight[white]{x {:} T} \vdash x {:} T}
 
   \infrule[T-App]
   {\highlight[white]{\Gamma} \vdash t_1 {:} T_1 \rightarrow T_2 \andalso \highlight[white]{\Gamma} \vdash t_2 {:} T_1}
   {\highlight[white]{\Gamma} \vdash t_1~t_2 {:} T_2}
 
   \infrule[T-Abs]
-  {\highlight[white]{\Gamma , x {:} T_1} \vdash t {:} T_2}
+  {\highlight[white]{\highlight[white]{\Gamma} , x {:} T_1} \vdash t {:} T_2}
   {\highlight[white]{\Gamma} \vdash \left( \lambda~x {:} T_1 . t \right) {:} T_1 \rightarrow T_2}
 
   \onslide<2>
 
   \infrule[T-Var]
-  {\highlight[white]{x {:} T} \in \highlight{\Gamma}}
-  {\highlight{\Gamma} \vdash x {:} T}
+  {}
+  {\highlight[hlcol1]{\Gamma},\highlight[white]{x {:} T} \vdash x {:} T}
 
   \infrule[T-App]
-  {\highlight{\Gamma} \vdash t_1 {:} T_1 \rightarrow T_2 \andalso \highlight{\Gamma} \vdash t_2 {:} T_1}
-  {\highlight{\Gamma} \vdash t_1~t_2 {:} T_2}
+  {\highlight[hlcol1]{\Gamma} \vdash t_1 {:} T_1 \rightarrow T_2 \andalso \highlight[hlcol1]{\Gamma} \vdash t_2 {:} T_1}
+  {\highlight[hlcol1]{\Gamma} \vdash t_1~t_2 {:} T_2}
 
   \infrule[T-Abs]
-  {\highlight{\Gamma , x {:} T_1} \vdash t {:} T_2}
-  {\highlight{\Gamma} \vdash \left( \lambda~x {:} T_1 . t \right) {:} T_1 \rightarrow T_2}
+  {\highlight[white]{\highlight[hlcol1]{\Gamma} , x {:} T_1} \vdash t {:} T_2}
+  {\highlight[hlcol1]{\Gamma} \vdash \left( \lambda~x {:} T_1 . t \right) {:} T_1 \rightarrow T_2}
 
   \onslide<3>
 
   \infrule[T-Var]
-  {\highlight{x {:} T} \in \highlight[white]{\Gamma}}
-  {\highlight[white]{\Gamma} \vdash x {:} T}
+  {}
+  {\highlight[white]{\Gamma},\highlight[hlcol1]{x {:} T} \vdash x {:} T}
 
   \infrule[T-App]
   {\highlight[white]{\Gamma} \vdash t_1 {:} T_1 \rightarrow T_2 \andalso \highlight[white]{\Gamma} \vdash t_2 {:} T_1}
   {\highlight[white]{\Gamma} \vdash t_1~t_2 {:} T_2}
 
   \infrule[T-Abs]
-  {\highlight[white]{\Gamma , x {:} T_1} \vdash t {:} T_2}
+  {\highlight[white]{\highlight[white]{\Gamma} , x {:} T_1} \vdash t {:} T_2}
   {\highlight[white]{\Gamma} \vdash \left( \lambda~x {:} T_1 . t \right) {:} T_1 \rightarrow T_2}
 
   \onslide<6>
 
   \infrule[T-Var]
-  {\highlight[white]{x {:} T} \in \highlight[white]{\Gamma}}
-  {\highlight[white]{\Gamma} \vdash x {:} T}
+  {}
+  {\highlight[white]{\Gamma},\highlight[white]{x {:} T} \vdash x {:} T}
 
   \infrule[T-App]
   {\highlight[white]{\Gamma} \vdash t_1 {:} T_1 \rightarrow T_2 \andalso \highlight[white]{\Gamma} \vdash t_2 {:} T_1}
   {\highlight[white]{\Gamma} \vdash t_1~t_2 {:} T_2}
 
   \infrule[T-Abs]
-  {\highlight{\Gamma , x {:} T_1} \vdash t {:} T_2}
+  {\highlight[hlcol1]{\highlight[hlcol1]{\Gamma} , x {:} T_1} \vdash t {:} T_2}
   {\highlight[white]{\Gamma} \vdash \left( \lambda~x {:} T_1 . t \right) {:} T_1 \rightarrow T_2}
 
 \end{overprint}
@@ -1056,7 +1056,44 @@ Unsurprisingly, the small-step semantics don't change.
   If we're happy to give that up, we can add fix back in.
 \end{frame}
 
-\input{fix}
+\begin{frame}
+  \begin{mdframed}[frametitle={Terms}]
+\begin{displaymath}
+    \begin{aligned}
+t \quad:=\quad& \ldots &\\
+  & ~ fix~t \quad\quad &fixed~point\\
+    \end{aligned}
+\end{displaymath}
+  \end{mdframed}
+\end{frame}
+
+\begin{frame}
+  \begin{mdframed}[frametitle={Small-step semantics}]
+
+  \infrule[E-Fix1]
+  {t \longrightarrow t^{\prime}}
+  {fix~t \longrightarrow fix~t^{\prime}}
+
+  \infrule[E-FixBeta]
+  {}
+  {fix
+    \left(\lambda~x {:} T . t\right)
+    \longrightarrow \left[x \mapsto
+    fix \left(\lambda~x {:} T . t\right)
+    \right]t}
+
+  \end{mdframed}
+\end{frame}
+
+\begin{frame}
+  \begin{mdframed}[frametitle={Typing rules}]
+
+  \infrule[T-Fix]
+  {\vdash t {:} T \rightarrow T}
+  {\vdash fix~t {:} T}
+
+  \end{mdframed}
+\end{frame}
 
 \begin{frame}
  We can add all kinds of other things to STLC. 
@@ -1066,15 +1103,63 @@ Unsurprisingly, the small-step semantics don't change.
 For example: pairs are straightforward to add.
 \end{frame}
 
-\input{pairs}
-
 \begin{frame}
-  Tuples, records, variants and lists are similar.
+  \begin{mdframed}[frametitle={Terms, values and types}]
+\begin{displaymath}
+    \begin{aligned}
+t \quad:=\quad& \ldots &\\
+  & ~ \left(t, t\right) \quad\quad &pair~introduction\\
+  & ~ fst~t \quad\quad &pair~elimination\\
+  & ~ snd~t \quad\quad &pair~elimination\\
+v \quad:=\quad& \ldots &\\
+  & ~ \left(v, v\right) \quad\quad &pair~value\\
+T \quad:=\quad& \ldots &\\
+  & ~ T \times T \quad\quad &pair~type\\
+    \end{aligned}
+\end{displaymath}
+  \end{mdframed}
 \end{frame}
 
 \begin{frame}
-  Recursive types require a bit more work - and we'd need to get into pattern
-  matching, which we don't have time for.
+  \begin{mdframed}[frametitle={Small-step semantics}]
+  \infrule[E-Pair1]
+  {t_1 \longrightarrow {t_1}^{\prime}}
+  {\left(t_1, t_2\right) \longrightarrow \left({t_1}^{\prime}, t_2\right)}
+
+  \infrule[E-Pair2]
+  {t_2 \longrightarrow {t_2}^{\prime}}
+  {\left(v_1,t_2\right) \longrightarrow \left(v_1, {t_2}^{\prime}\right)}
+
+  \infrule[E-FstPair]
+  {}
+  {fst \left(v_1, v_2\right) \longrightarrow v_1}
+
+  \infrule[E-SndPair]
+  {}
+  {snd \left(v_1, v_2\right) \longrightarrow v_2}
+  \end{mdframed}
+\end{frame}
+
+\begin{frame}
+  \begin{mdframed}[frametitle={Typing rules}]
+
+  \infrule[T-Pair]
+  {\vdash t_1 {:} T_1 \andalso \vdash t_2 {:} T_2}
+  {\vdash \left(t_1, t_2\right) {:} T_1 \times T_2}
+
+  \infrule[T-PairFst]
+  {\vdash (t_1, t_2) {:} T_1 \times T_2}
+  {\vdash fst~(t_1, t_2) {:} T_1}
+
+  \infrule[T-PairSnd]
+  {\vdash (t_1, t_2) {:} T_1 \times T_2}
+  {\vdash snd~(t_1, t_2) {:} T_2}
+
+  \end{mdframed}
+\end{frame}
+
+\begin{frame}
+  Tuples, records, variants and lists are similar.
 \end{frame}
 
 \begin{frame}
@@ -1103,5 +1188,5 @@ For example: pairs are straightforward to add.
 \end{frame}
 
 \begin{frame}
-  We will address this soon.
+  We will address this soon...
 \end{frame}
