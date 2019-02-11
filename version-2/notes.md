@@ -8,8 +8,7 @@
 ## Booleans and Naturals
 
 ## LC
-- clean up
-  - mostly adding more steps to the free variable / substitution animations
+- show that we have the bools in LC via if-then-else
 - add Haskell code for the interpreter
 - probably add a small bound tutorial into the mix
 
@@ -18,15 +17,13 @@
   - update T-Var so that it is an axiom
   - improve the animation of the typing derivation to match the bools-and-nats version
 - add Haskell code for the checking and inference
-
-## Extras
-- add pairs / tuples / other standard additions
+- rip out the pairs etc...
 
 ## Conclusion
 - write a lead in to Part 2
 
 # Part 2
-
+- review part 1, show that we can add pairs and tuples and things
 - HM / System F / System Fw
 - user defined data types, recursive types
 

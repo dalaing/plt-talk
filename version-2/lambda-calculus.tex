@@ -523,96 +523,305 @@ We are now equipped to deal with substitution.
 \begin{frame}
   \begin{mdframed}[frametitle={Substitution rules}]
   \begin{overprint}
-    \onslide<1>
+  \onslide<1-2>
   \begin{tabular}{L L L}
-    \highlight[white]{\left[ x \mapsto s \right] x} &= s & \\
-    \highlight[white]{\left[ x \mapsto s \right] y} &= y & \text{if}~y\neq x \\
-    \highlight[white]{\left[ x \mapsto s \right] \left( \lambda x . t_1 \right)} &= & \lambda x . t_1 \\
-    \highlight[white]{\left[ x \mapsto s \right] \left( \lambda y . t_1 \right)} &= \lambda y . \left( \left[ x \mapsto s \right] t_1 \right) & \text{if}~y\neq x \wedge y \notin FV(s) \\
-    \highlight[white]{\left[ x \mapsto s \right] \left(t_1~t_2\right)} &= \left(\left[x \mapsto s  \right] t_1 \right)~\left(\left[x \mapsto s \right] t_2 \right) & \\
+    \left[ x \mapsto s \right] \highlight[white]{x}
+      &= \highlight[white]{s} & \\
+    \left[ x \mapsto s \right] \highlight[white]{y}
+      &= \highlight[white]{y}
+      & \highlight[white]{\text{if}~y\neq x} \\
+    \left[ x \mapsto s \right] \highlight[white]{\left( \lambda x . t_1 \right)}
+      &= \highlight[white]{\lambda x . t_1 } & \\
+    \left[ x \mapsto s \right] \highlight[white]{\left( \lambda y . t_1 \right)}
+      &= \highlight[white]{\lambda y . \left( \left[ x \mapsto s \right] t_1 \right)}
+      & \highlight[white]{\text{if}~y\neq x \wedge y \notin FV(s)} \\
+    \left[ x \mapsto s \right] \highlight[white]{\left(t_1~t_2\right)}
+      &= \highlight[white]{\left(\left[x \mapsto s  \right] t_1 \right)~\left(\left[x \mapsto s \right] t_2 \right)} & \\
     \\
-    \highlight[white]{\left[x \mapsto s\right]\left<int\right>} &= \left<int\right>& \\
-    \highlight[white]{\left[ x \mapsto s \right] \left(t_1 + t_2\right)} &= \left(\left[x \mapsto s  \right] t_1 \right) + \left(\left[x \mapsto s \right] t_2 \right) &
+    \left[x \mapsto s\right] \highlight[white]{\left<int\right>}
+      &= \highlight[white]{\left<int\right>} & \\
+    \left[x \mapsto s\right] \highlight[white]{\left(t_1 + t_2\right)}
+      &= \highlight[white]{\left(\left[x \mapsto s  \right] t_1 \right) + \left(\left[x \mapsto s \right] t_2 \right)} &
   \end{tabular}
-    \onslide<2-3>
+  \onslide<3>
   \begin{tabular}{L L L}
-    \highlight[white]{\left[ x \mapsto s \right] x} &= s & \\
-    \highlight[white]{\left[ x \mapsto s \right] y} &= y & \text{if}~y\neq x \\
-    \highlight[white]{\left[ x \mapsto s \right] \left( \lambda y . t_1 \right)} &= \lambda y . \left( \left[ x \mapsto s \right] t_1 \right) & \text{if}~y\neq x \wedge y \notin FV(s) \\
-    \highlight[violet]{\left[ x \mapsto s \right] \left(t_1~t_2\right)} &= \left(\left[x \mapsto s  \right] t_1 \right)~\left(\left[x \mapsto s \right] t_2 \right) & \\
+    \left[ x \mapsto s \right] \highlight[white]{x}
+      &= \highlight[white]{s} & \\
+    \left[ x \mapsto s \right] \highlight[white]{y}
+      &= \highlight[white]{y}
+      & \highlight[white]{\text{if}~y\neq x} \\
+    \left[ x \mapsto s \right] \highlight[white]{\left( \lambda x . t_1 \right)}
+      &= \highlight[white]{\lambda x . t_1 } & \\
+    \left[ x \mapsto s \right] \highlight[white]{\left( \lambda y . t_1 \right)}
+      &= \highlight[white]{\lambda y . \left( \left[ x \mapsto s \right] t_1 \right)}
+      & \highlight[white]{\text{if}~y\neq x \wedge y \notin FV(s)} \\
+    \left[ x \mapsto s \right] \highlight[hlcol1]{\left(t_1~t_2\right)}
+      &= \highlight[white]{\left(\left[x \mapsto s  \right] t_1 \right)~\left(\left[x \mapsto s \right] t_2 \right)} & \\
     \\
-    \highlight[white]{\left[x \mapsto s\right]\left<int\right>} &= \left<int\right>& \\
-    \highlight[white]{\left[ x \mapsto s \right] \left(t_1 + t_2\right)} &= \left(\left[x \mapsto s  \right] t_1 \right) + \left(\left[x \mapsto s \right] t_2 \right) &
+    \left[x \mapsto s\right] \highlight[white]{\left<int\right>}
+      &= \highlight[white]{\left<int\right>} & \\
+    \left[x \mapsto s\right] \highlight[white]{\left(t_1 + t_2\right)}
+      &= \highlight[white]{\left(\left[x \mapsto s  \right] t_1 \right) + \left(\left[x \mapsto s \right] t_2 \right)} &
   \end{tabular}
-    \onslide<4-6>
+  \onslide<4-5>
   \begin{tabular}{L L L}
-    \highlight[white]{\left[ x \mapsto s \right] x} &= s & \\
-    \highlight[white]{\left[ x \mapsto s \right] y} &= y & \text{if}~y\neq x \\
-    \highlight[violet]{\left[ x \mapsto s \right] \left( \lambda y . t_1 \right)} &= \lambda y . \left( \left[ x \mapsto s \right] t_1 \right) & \text{if}~y\neq x \wedge y \notin FV(s) \\
-    \highlight[white]{\left[ x \mapsto s \right] \left(t_1~t_2\right)} &= \left(\left[x \mapsto s  \right] t_1 \right)~\left(\left[x \mapsto s \right] t_2 \right) & \\
+    \left[ x \mapsto s \right] \highlight[white]{x}
+      &= \highlight[white]{s} & \\
+    \left[ x \mapsto s \right] \highlight[white]{y}
+      &= \highlight[white]{y}
+      & \highlight[white]{\text{if}~y\neq x} \\
+    \left[ x \mapsto s \right] \highlight[white]{\left( \lambda x . t_1 \right)}
+      &= \highlight[white]{\lambda x . t_1 } & \\
+    \left[ x \mapsto s \right] \highlight[white]{\left( \lambda y . t_1 \right)}
+      &= \highlight[white]{\lambda y . \left( \left[ x \mapsto s \right] t_1 \right)}
+      & \highlight[white]{\text{if}~y\neq x \wedge y \notin FV(s)} \\
+    \left[ x \mapsto s \right] \highlight[hlcol1]{\left(t_1~t_2\right)}
+      &= \highlight[hlcol2]{\left(\left[x \mapsto s  \right] t_1 \right)~\left(\left[x \mapsto s \right] t_2 \right)} & \\
     \\
-    \highlight[white]{\left[x \mapsto s\right]\left<int\right>} &= \left<int\right>& \\
-    \highlight[white]{\left[ x \mapsto s \right] \left(t_1 + t_2\right)} &= \left(\left[x \mapsto s  \right] t_1 \right) + \left(\left[x \mapsto s \right] t_2 \right) &
+    \left[x \mapsto s\right] \highlight[white]{\left<int\right>}
+      &= \highlight[white]{\left<int\right>} & \\
+    \left[x \mapsto s\right] \highlight[white]{\left(t_1 + t_2\right)}
+      &= \highlight[white]{\left(\left[x \mapsto s  \right] t_1 \right) + \left(\left[x \mapsto s \right] t_2 \right)} &
   \end{tabular}
-    \onslide<7-8>
+  \onslide<6-7>
   \begin{tabular}{L L L}
-    \highlight[white]{\left[ x \mapsto s \right] x} &= s & \\
-    \highlight[white]{\left[ x \mapsto s \right] y} &= y & \text{if}~y\neq x \\
-    \highlight[white]{\left[ x \mapsto s \right] \left( \lambda y . t_1 \right)} &= \lambda y . \left( \left[ x \mapsto s \right] t_1 \right) & \text{if}~y\neq x \wedge y \notin FV(s) \\
-    \highlight[white]{\left[ x \mapsto s \right] \left(t_1~t_2\right)} &= \left(\left[x \mapsto s  \right] t_1 \right)~\left(\left[x \mapsto s \right] t_2 \right) & \\
+    \left[ x \mapsto s \right] \highlight[white]{x}
+      &= \highlight[white]{s} & \\
+    \left[ x \mapsto s \right] \highlight[white]{y}
+      &= \highlight[white]{y}
+      & \highlight[white]{\text{if}~y\neq x} \\
+    \left[ x \mapsto s \right] \highlight[white]{\left( \lambda x . t_1 \right)}
+      &= \highlight[white]{\lambda x . t_1 } & \\
+    \left[ x \mapsto s \right] \highlight[white]{\left( \lambda y . t_1 \right)}
+      &= \highlight[white]{\lambda y . \left( \left[ x \mapsto s \right] t_1 \right)}
+      & \highlight[white]{\text{if}~y\neq x \wedge y \notin FV(s)} \\
+    \left[ x \mapsto s \right] \highlight[white]{\left(t_1~t_2\right)}
+      &= \highlight[white]{\left(\left[x \mapsto s  \right] t_1 \right)~\left(\left[x \mapsto s \right] t_2 \right)} & \\
     \\
-    \highlight[white]{\left[x \mapsto s\right]\left<int\right>} &= \left<int\right>& \\
-    \highlight[violet]{\left[ x \mapsto s \right] \left(t_1 + t_2\right)} &= \left(\left[x \mapsto s  \right] t_1 \right) + \left(\left[x \mapsto s \right] t_2 \right) &
+    \left[x \mapsto s\right] \highlight[white]{\left<int\right>}
+      &= \highlight[white]{\left<int\right>} & \\
+    \left[x \mapsto s\right] \highlight[white]{\left(t_1 + t_2\right)}
+      &= \highlight[white]{\left(\left[x \mapsto s  \right] t_1 \right) + \left(\left[x \mapsto s \right] t_2 \right)} &
   \end{tabular}
-    \onslide<9-10>
+  \onslide<8>
   \begin{tabular}{L L L}
-    \highlight[white]{\left[ x \mapsto s \right] x} &= s & \\
-    \highlight[violet]{\left[ x \mapsto s \right] y} &= y & \text{if}~y\neq x \\
-    \highlight[white]{\left[ x \mapsto s \right] \left( \lambda y . t_1 \right)} &= \lambda y . \left( \left[ x \mapsto s \right] t_1 \right) & \text{if}~y\neq x \wedge y \notin FV(s) \\
-    \highlight[white]{\left[ x \mapsto s \right] \left(t_1~t_2\right)} &= \left(\left[x \mapsto s  \right] t_1 \right)~\left(\left[x \mapsto s \right] t_2 \right) & \\
+    \left[ x \mapsto s \right] \highlight[white]{x}
+      &= \highlight[white]{s} & \\
+    \left[ x \mapsto s \right] \highlight[white]{y}
+      &= \highlight[white]{y}
+      & \highlight[white]{\text{if}~y\neq x} \\
+    \left[ x \mapsto s \right] \highlight[hlcol1]{\left( \lambda x . t_1 \right)}
+      &= \highlight[white]{\lambda x . t_1 } & \\
+    \left[ x \mapsto s \right] \highlight[white]{\left( \lambda y . t_1 \right)}
+      &= \highlight[white]{\lambda y . \left( \left[ x \mapsto s \right] t_1 \right)}
+      & \highlight[white]{\text{if}~y\neq x \wedge y \notin FV(s)} \\
+    \left[ x \mapsto s \right] \highlight[white]{\left(t_1~t_2\right)}
+      &= \highlight[white]{\left(\left[x \mapsto s  \right] t_1 \right)~\left(\left[x \mapsto s \right] t_2 \right)} & \\
     \\
-    \highlight[white]{\left[x \mapsto s\right]\left<int\right>} &= \left<int\right>& \\
-    \highlight[white]{\left[ x \mapsto s \right] \left(t_1 + t_2\right)} &= \left(\left[x \mapsto s  \right] t_1 \right) + \left(\left[x \mapsto s \right] t_2 \right) &
+    \left[x \mapsto s\right] \highlight[white]{\left<int\right>}
+      &= \highlight[white]{\left<int\right>} & \\
+    \left[x \mapsto s\right] \highlight[white]{\left(t_1 + t_2\right)}
+      &= \highlight[white]{\left(\left[x \mapsto s  \right] t_1 \right) + \left(\left[x \mapsto s \right] t_2 \right)} &
   \end{tabular}
-    \onslide<11-12>
+  \onslide<9-10>
   \begin{tabular}{L L L}
-    \highlight[white]{\left[ x \mapsto s \right] x} &= s & \\
-    \highlight[white]{\left[ x \mapsto s \right] y} &= y & \text{if}~y\neq x \\
-    \highlight[white]{\left[ x \mapsto s \right] \left( \lambda y . t_1 \right)} &= \lambda y . \left( \left[ x \mapsto s \right] t_1 \right) & \text{if}~y\neq x \wedge y \notin FV(s) \\
-    \highlight[white]{\left[ x \mapsto s \right] \left(t_1~t_2\right)} &= \left(\left[x \mapsto s  \right] t_1 \right)~\left(\left[x \mapsto s \right] t_2 \right) & \\
+    \left[ x \mapsto s \right] \highlight[white]{x}
+      &= \highlight[white]{s} & \\
+    \left[ x \mapsto s \right] \highlight[white]{y}
+      &= \highlight[white]{y}
+      & \highlight[white]{\text{if}~y\neq x} \\
+    \left[ x \mapsto s \right] \highlight[hlcol1]{\left( \lambda x . t_1 \right)}
+      &= \highlight[hlcol2]{\lambda x . t_1 } & \\
+    \left[ x \mapsto s \right] \highlight[white]{\left( \lambda y . t_1 \right)}
+      &= \highlight[white]{\lambda y . \left( \left[ x \mapsto s \right] t_1 \right)}
+      & \highlight[white]{\text{if}~y\neq x \wedge y \notin FV(s)} \\
+    \left[ x \mapsto s \right] \highlight[white]{\left(t_1~t_2\right)}
+      &= \highlight[white]{\left(\left[x \mapsto s  \right] t_1 \right)~\left(\left[x \mapsto s \right] t_2 \right)} & \\
     \\
-    \highlight[violet]{\left[x \mapsto s\right]\left<int\right>} &= \left<int\right>& \\
-    \highlight[white]{\left[ x \mapsto s \right] \left(t_1 + t_2\right)} &= \left(\left[x \mapsto s  \right] t_1 \right) + \left(\left[x \mapsto s \right] t_2 \right) &
+    \left[x \mapsto s\right] \highlight[white]{\left<int\right>}
+      &= \highlight[white]{\left<int\right>} & \\
+    \left[x \mapsto s\right] \highlight[white]{\left(t_1 + t_2\right)}
+      &= \highlight[white]{\left(\left[x \mapsto s  \right] t_1 \right) + \left(\left[x \mapsto s \right] t_2 \right)} &
   \end{tabular}
-    \onslide<13-14>
+  \onslide<11-13>
   \begin{tabular}{L L L}
-    \highlight[white]{\left[ x \mapsto s \right] x} &= s & \\
-    \highlight[white]{\left[ x \mapsto s \right] y} &= y & \text{if}~y\neq x \\
-    \highlight[white]{\left[ x \mapsto s \right] \left( \lambda y . t_1 \right)} &= \lambda y . \left( \left[ x \mapsto s \right] t_1 \right) & \text{if}~y\neq x \wedge y \notin FV(s) \\
-    \highlight[white]{\left[ x \mapsto s \right] \left(t_1~t_2\right)} &= \left(\left[x \mapsto s  \right] t_1 \right)~\left(\left[x \mapsto s \right] t_2 \right) & \\
+    \left[ x \mapsto s \right] \highlight[white]{x}
+      &= \highlight[white]{s} & \\
+    \left[ x \mapsto s \right] \highlight[white]{y}
+      &= \highlight[white]{y}
+      & \highlight[white]{\text{if}~y\neq x} \\
+    \left[ x \mapsto s \right] \highlight[white]{\left( \lambda x . t_1 \right)}
+      &= \highlight[white]{\lambda x . t_1 } & \\
+    \left[ x \mapsto s \right] \highlight[white]{\left( \lambda y . t_1 \right)}
+      &= \highlight[white]{\lambda y . \left( \left[ x \mapsto s \right] t_1 \right)}
+      & \highlight[white]{\text{if}~y\neq x \wedge y \notin FV(s)} \\
+    \left[ x \mapsto s \right] \highlight[white]{\left(t_1~t_2\right)}
+      &= \highlight[white]{\left(\left[x \mapsto s  \right] t_1 \right)~\left(\left[x \mapsto s \right] t_2 \right)} & \\
     \\
-    \highlight[white]{\left[x \mapsto s\right]\left<int\right>} &= \left<int\right>& \\
-    \highlight[violet]{\left[ x \mapsto s \right] \left(t_1 + t_2\right)} &= \left(\left[x \mapsto s  \right] t_1 \right) + \left(\left[x \mapsto s \right] t_2 \right) &
+    \left[x \mapsto s\right] \highlight[white]{\left<int\right>}
+      &= \highlight[white]{\left<int\right>} & \\
+    \left[x \mapsto s\right] \highlight[white]{\left(t_1 + t_2\right)}
+      &= \highlight[white]{\left(\left[x \mapsto s  \right] t_1 \right) + \left(\left[x \mapsto s \right] t_2 \right)} &
   \end{tabular}
-    \onslide<15-16>
+  \onslide<14>
   \begin{tabular}{L L L}
-    \highlight[violet]{\left[ x \mapsto s \right] x} &= s & \\
-    \highlight[white]{\left[ x \mapsto s \right] y} &= y & \text{if}~y\neq x \\
-    \highlight[white]{\left[ x \mapsto s \right] \left( \lambda y . t_1 \right)} &= \lambda y . \left( \left[ x \mapsto s \right] t_1 \right) & \text{if}~y\neq x \wedge y \notin FV(s) \\
-    \highlight[white]{\left[ x \mapsto s \right] \left(t_1~t_2\right)} &= \left(\left[x \mapsto s  \right] t_1 \right)~\left(\left[x \mapsto s \right] t_2 \right) & \\
+    \left[ x \mapsto s \right] \highlight[white]{x}
+      &= \highlight[white]{s} & \\
+    \left[ x \mapsto s \right] \highlight[white]{y}
+      &= \highlight[white]{y}
+      & \highlight[white]{\text{if}~y\neq x} \\
+    \left[ x \mapsto s \right] \highlight[white]{\left( \lambda x . t_1 \right)}
+      &= \highlight[white]{\lambda x . t_1 } & \\
+    \left[ x \mapsto s \right] \highlight[white]{\left( \lambda y . t_1 \right)}
+      &= \highlight[white]{\lambda y . \left( \left[ x \mapsto s \right] t_1 \right)}
+      & \highlight[white]{\text{if}~y\neq x \wedge y \notin FV(s)} \\
+    \left[ x \mapsto s \right] \highlight[white]{\left(t_1~t_2\right)}
+      &= \highlight[white]{\left(\left[x \mapsto s  \right] t_1 \right)~\left(\left[x \mapsto s \right] t_2 \right)} & \\
     \\
-    \highlight[white]{\left[x \mapsto s\right]\left<int\right>} &= \left<int\right>& \\
-    \highlight[white]{\left[ x \mapsto s \right] \left(t_1 + t_2\right)} &= \left(\left[x \mapsto s  \right] t_1 \right) + \left(\left[x \mapsto s \right] t_2 \right) &
+    \left[x \mapsto s\right] \highlight[white]{\left<int\right>}
+      &= \highlight[white]{\left<int\right>} & \\
+    \left[x \mapsto s\right] \highlight[hlcol1]{\left(t_1 + t_2\right)}
+      &= \highlight[white]{\left(\left[x \mapsto s  \right] t_1 \right) + \left(\left[x \mapsto s \right] t_2 \right)} &
   \end{tabular}
-    \onslide<17-18>
+  \onslide<15-16>
   \begin{tabular}{L L L}
-    \highlight[white]{\left[ x \mapsto s \right] x} &= s & \\
-    \highlight[white]{\left[ x \mapsto s \right] y} &= y & \text{if}~y\neq x \\
-    \highlight[white]{\left[ x \mapsto s \right] \left( \lambda y . t_1 \right)} &= \lambda y . \left( \left[ x \mapsto s \right] t_1 \right) & \text{if}~y\neq x \wedge y \notin FV(s) \\
-    \highlight[white]{\left[ x \mapsto s \right] \left(t_1~t_2\right)} &= \left(\left[x \mapsto s  \right] t_1 \right)~\left(\left[x \mapsto s \right] t_2 \right) & \\
+    \left[ x \mapsto s \right] \highlight[white]{x}
+      &= \highlight[white]{s} & \\
+    \left[ x \mapsto s \right] \highlight[white]{y}
+      &= \highlight[white]{y}
+      & \highlight[white]{\text{if}~y\neq x} \\
+    \left[ x \mapsto s \right] \highlight[white]{\left( \lambda x . t_1 \right)}
+      &= \highlight[white]{\lambda x . t_1 } & \\
+    \left[ x \mapsto s \right] \highlight[white]{\left( \lambda y . t_1 \right)}
+      &= \highlight[white]{\lambda y . \left( \left[ x \mapsto s \right] t_1 \right)}
+      & \highlight[white]{\text{if}~y\neq x \wedge y \notin FV(s)} \\
+    \left[ x \mapsto s \right] \highlight[white]{\left(t_1~t_2\right)}
+      &= \highlight[white]{\left(\left[x \mapsto s  \right] t_1 \right)~\left(\left[x \mapsto s \right] t_2 \right)} & \\
     \\
-    \highlight[violet]{\left[x \mapsto s\right]\left<int\right>} &= \left<int\right>& \\
-    \highlight[white]{\left[ x \mapsto s \right] \left(t_1 + t_2\right)} &= \left(\left[x \mapsto s  \right] t_1 \right) + \left(\left[x \mapsto s \right] t_2 \right) &
+    \left[x \mapsto s\right] \highlight[white]{\left<int\right>}
+      &= \highlight[white]{\left<int\right>} & \\
+    \left[x \mapsto s\right] \highlight[hlcol1]{\left(t_1 + t_2\right)}
+      &= \highlight[hlcol2]{\left(\left[x \mapsto s  \right] t_1 \right) + \left(\left[x \mapsto s \right] t_2 \right)} &
+  \end{tabular}
+  \onslide<17-19>
+  \begin{tabular}{L L L}
+    \left[ x \mapsto s \right] \highlight[white]{x}
+      &= \highlight[white]{s} & \\
+    \left[ x \mapsto s \right] \highlight[white]{y}
+      &= \highlight[white]{y}
+      & \highlight[white]{\text{if}~y\neq x} \\
+    \left[ x \mapsto s \right] \highlight[white]{\left( \lambda x . t_1 \right)}
+      &= \highlight[white]{\lambda x . t_1 } & \\
+    \left[ x \mapsto s \right] \highlight[white]{\left( \lambda y . t_1 \right)}
+      &= \highlight[white]{\lambda y . \left( \left[ x \mapsto s \right] t_1 \right)}
+      & \highlight[white]{\text{if}~y\neq x \wedge y \notin FV(s)} \\
+    \left[ x \mapsto s \right] \highlight[white]{\left(t_1~t_2\right)}
+      &= \highlight[white]{\left(\left[x \mapsto s  \right] t_1 \right)~\left(\left[x \mapsto s \right] t_2 \right)} & \\
+    \\
+    \left[x \mapsto s\right] \highlight[white]{\left<int\right>}
+      &= \highlight[white]{\left<int\right>} & \\
+    \left[x \mapsto s\right] \highlight[white]{\left(t_1 + t_2\right)}
+      &= \highlight[white]{\left(\left[x \mapsto s  \right] t_1 \right) + \left(\left[x \mapsto s \right] t_2 \right)} &
+  \end{tabular}
+  \onslide<20>
+  \begin{tabular}{L L L}
+    \left[ x \mapsto s \right] \highlight[hlcol1]{x}
+      &= \highlight[white]{s} & \\
+    \left[ x \mapsto s \right] \highlight[white]{y}
+      &= \highlight[white]{y}
+      & \highlight[white]{\text{if}~y\neq x} \\
+    \left[ x \mapsto s \right] \highlight[white]{\left( \lambda x . t_1 \right)}
+      &= \highlight[white]{\lambda x . t_1 } & \\
+    \left[ x \mapsto s \right] \highlight[white]{\left( \lambda y . t_1 \right)}
+      &= \highlight[white]{\lambda y . \left( \left[ x \mapsto s \right] t_1 \right)}
+      & \highlight[white]{\text{if}~y\neq x \wedge y \notin FV(s)} \\
+    \left[ x \mapsto s \right] \highlight[white]{\left(t_1~t_2\right)}
+      &= \highlight[white]{\left(\left[x \mapsto s  \right] t_1 \right)~\left(\left[x \mapsto s \right] t_2 \right)} & \\
+    \\
+    \left[x \mapsto s\right] \highlight[white]{\left<int\right>}
+      &= \highlight[white]{\left<int\right>} & \\
+    \left[x \mapsto s\right] \highlight[white]{\left(t_1 + t_2\right)}
+      &= \highlight[white]{\left(\left[x \mapsto s  \right] t_1 \right) + \left(\left[x \mapsto s \right] t_2 \right)} &
+  \end{tabular}
+  \onslide<21-22>
+  \begin{tabular}{L L L}
+    \left[ x \mapsto s \right] \highlight[hlcol1]{x}
+      &= \highlight[hlcol2]{s} & \\
+    \left[ x \mapsto s \right] \highlight[white]{y}
+      &= \highlight[white]{y}
+      & \highlight[white]{\text{if}~y\neq x} \\
+    \left[ x \mapsto s \right] \highlight[white]{\left( \lambda x . t_1 \right)}
+      &= \highlight[white]{\lambda x . t_1 } & \\
+    \left[ x \mapsto s \right] \highlight[white]{\left( \lambda y . t_1 \right)}
+      &= \highlight[white]{\lambda y . \left( \left[ x \mapsto s \right] t_1 \right)}
+      & \highlight[white]{\text{if}~y\neq x \wedge y \notin FV(s)} \\
+    \left[ x \mapsto s \right] \highlight[white]{\left(t_1~t_2\right)}
+      &= \highlight[white]{\left(\left[x \mapsto s  \right] t_1 \right)~\left(\left[x \mapsto s \right] t_2 \right)} & \\
+    \\
+    \left[x \mapsto s\right] \highlight[white]{\left<int\right>}
+      &= \highlight[white]{\left<int\right>} & \\
+    \left[x \mapsto s\right] \highlight[white]{\left(t_1 + t_2\right)}
+      &= \highlight[white]{\left(\left[x \mapsto s  \right] t_1 \right) + \left(\left[x \mapsto s \right] t_2 \right)} &
+  \end{tabular}
+  \onslide<23-25>
+  \begin{tabular}{L L L}
+    \left[ x \mapsto s \right] \highlight[white]{x}
+      &= \highlight[white]{s} & \\
+    \left[ x \mapsto s \right] \highlight[white]{y}
+      &= \highlight[white]{y}
+      & \highlight[white]{\text{if}~y\neq x} \\
+    \left[ x \mapsto s \right] \highlight[white]{\left( \lambda x . t_1 \right)}
+      &= \highlight[white]{\lambda x . t_1 } & \\
+    \left[ x \mapsto s \right] \highlight[white]{\left( \lambda y . t_1 \right)}
+      &= \highlight[white]{\lambda y . \left( \left[ x \mapsto s \right] t_1 \right)}
+      & \highlight[white]{\text{if}~y\neq x \wedge y \notin FV(s)} \\
+    \left[ x \mapsto s \right] \highlight[white]{\left(t_1~t_2\right)}
+      &= \highlight[white]{\left(\left[x \mapsto s  \right] t_1 \right)~\left(\left[x \mapsto s \right] t_2 \right)} & \\
+    \\
+    \left[x \mapsto s\right] \highlight[white]{\left<int\right>}
+      &= \highlight[white]{\left<int\right>} & \\
+    \left[x \mapsto s\right] \highlight[white]{\left(t_1 + t_2\right)}
+      &= \highlight[white]{\left(\left[x \mapsto s  \right] t_1 \right) + \left(\left[x \mapsto s \right] t_2 \right)} &
+  \end{tabular}
+  \onslide<26>
+  \begin{tabular}{L L L}
+    \left[ x \mapsto s \right] \highlight[white]{x}
+      &= \highlight[white]{s} & \\
+    \left[ x \mapsto s \right] \highlight[white]{y}
+      &= \highlight[white]{y}
+      & \highlight[white]{\text{if}~y\neq x} \\
+    \left[ x \mapsto s \right] \highlight[white]{\left( \lambda x . t_1 \right)}
+      &= \highlight[white]{\lambda x . t_1 } & \\
+    \left[ x \mapsto s \right] \highlight[white]{\left( \lambda y . t_1 \right)}
+      &= \highlight[white]{\lambda y . \left( \left[ x \mapsto s \right] t_1 \right)}
+      & \highlight[white]{\text{if}~y\neq x \wedge y \notin FV(s)} \\
+    \left[ x \mapsto s \right] \highlight[white]{\left(t_1~t_2\right)}
+      &= \highlight[white]{\left(\left[x \mapsto s  \right] t_1 \right)~\left(\left[x \mapsto s \right] t_2 \right)} & \\
+    \\
+    \left[x \mapsto s\right] \highlight[hlcol1]{\left<int\right>}
+      &= \highlight[white]{\left<int\right>} & \\
+    \left[x \mapsto s\right] \highlight[white]{\left(t_1 + t_2\right)}
+      &= \highlight[white]{\left(\left[x \mapsto s  \right] t_1 \right) + \left(\left[x \mapsto s \right] t_2 \right)} &
+  \end{tabular}
+  \onslide<27-30>
+  \begin{tabular}{L L L}
+    \left[ x \mapsto s \right] \highlight[white]{x}
+      &= \highlight[white]{s} & \\
+    \left[ x \mapsto s \right] \highlight[white]{y}
+      &= \highlight[white]{y}
+      & \highlight[white]{\text{if}~y\neq x} \\
+    \left[ x \mapsto s \right] \highlight[white]{\left( \lambda x . t_1 \right)}
+      &= \highlight[white]{\lambda x . t_1 } & \\
+    \left[ x \mapsto s \right] \highlight[white]{\left( \lambda y . t_1 \right)}
+      &= \highlight[white]{\lambda y . \left( \left[ x \mapsto s \right] t_1 \right)}
+      & \highlight[white]{\text{if}~y\neq x \wedge y \notin FV(s)} \\
+    \left[ x \mapsto s \right] \highlight[white]{\left(t_1~t_2\right)}
+      &= \highlight[white]{\left(\left[x \mapsto s  \right] t_1 \right)~\left(\left[x \mapsto s \right] t_2 \right)} & \\
+    \\
+    \left[x \mapsto s\right] \highlight[hlcol1]{\left<int\right>}
+      &= \highlight[hlcol2]{\left<int\right>} & \\
+    \left[x \mapsto s\right] \highlight[white]{\left(t_1 + t_2\right)}
+      &= \highlight[white]{\left(\left[x \mapsto s  \right] t_1 \right) + \left(\left[x \mapsto s \right] t_2 \right)} &
   \end{tabular}
   \end{overprint}
   \end{mdframed}
@@ -620,58 +829,302 @@ We are now equipped to deal with substitution.
   \medskip
 
   \begin{overprint}
-    \onslide<1-2>
-  \begin{tabular}{L}
-    \left[ x \mapsto 3 \right] \left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right) =
-     ?
+  \onslide<1>
+  \begin{tabular}{L L}
+    \left[ x \mapsto 3 \right] \highlight[white]{\left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right)} &= ?
   \end{tabular}
-    \onslide<3-4>
-  \begin{tabular}{L}
-    \left[ x \mapsto 3 \right] \left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right) =
-    \left( \left[ x \mapsto 3 \right]\left(\lambda x . x + 1\right)\right)~\left(\left[ x \mapsto 3 \right]\left(x + 1\right)\right)
+  \onslide<2-4>
+  \begin{tabular}{L L}
+    \left[ x \mapsto 3 \right] \highlight[hlcol1]{\left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right)} &= ?
   \end{tabular}
-    \onslide<5>
-  \begin{tabular}{L}
-    \left[ x \mapsto 3 \right] \left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right) =
-    \left( \left[ x \mapsto 3 \right]\left(\lambda z . z + 1\right)\right)~\left(\left[ x \mapsto 3 \right]\left(x + 1\right)\right)
+  \onslide<5>
+  \begin{tabular}{L L}
+    \left[ x \mapsto 3 \right] \highlight[hlcol1]{\left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right)}
+      &= \highlight[hlcol2]{\left(\left[x \mapsto 3  \right] \left( \highlight[hlcol2]{\lambda~x . x +  1} \right) \right)}
+      \highlight[hlcol2]{\left(\left[x \mapsto 3 \right] \left( \highlight[hlcol2]{x + 1} \right) \right)}
   \end{tabular}
-    \onslide<6-7>
-  \begin{tabular}{L}
-    \left[ x \mapsto 3 \right] \left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right) =
-    \left(\lambda z . \left[x \mapsto 3 \right]\left(z + 1\right)\right)~\left(\left[ x \mapsto 3 \right]\left(x + 1\right)\right)
+  \onslide<6>
+  \begin{tabular}{L L}
+    \left[ x \mapsto 3 \right] \highlight[white]{\left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right)}
+      &= \highlight[white]{\left(\left[x \mapsto 3  \right] \left( \highlight[white]{\lambda~x . x +  1} \right) \right)}
+      ~ \highlight[white]{\left(\left[x \mapsto 3 \right] \left( \highlight[white]{x + 1} \right) \right)}
   \end{tabular}
-    \onslide<8-9>
-  \begin{tabular}{L}
-    \left[ x \mapsto 3 \right] \left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right) =
-    \left(\lambda z . \left(\left[x \mapsto 3 \right]z + \left[x \mapsto 3 \right]1\right)\right)~\left(\left[ x \mapsto 3 \right]\left(x + 1\right)\right)
+  \onslide<7-9>
+  \begin{tabular}{L L}
+    \left[ x \mapsto 3 \right] \highlight[white]{\left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right)}
+      &= \highlight[white]{\left(\left[x \mapsto 3  \right] \left( \highlight[hlcol1]{\lambda~x . x +  1} \right) \right)}
+      ~ \highlight[white]{\left(\left[x \mapsto 3 \right] \left( \highlight[white]{x + 1} \right) \right)}
   \end{tabular}
-    \onslide<10-11>
-  \begin{tabular}{L}
-    \left[ x \mapsto 3 \right] \left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right) =
-    \left(\lambda z . \left(z + \left[x \mapsto 3 \right]1\right)\right)~\left(\left[ x \mapsto 3 \right]\left(x + 1\right)\right)
+  \onslide<10>
+  \begin{tabular}{L L}
+    \left[ x \mapsto 3 \right] \highlight[white]{\left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right)}
+      &= \highlight[white]{\left(\left[x \mapsto 3  \right] \left( \highlight[hlcol1]{\lambda~x . x +  1} \right) \right)}
+      ~ \highlight[white]{\left(\left[x \mapsto 3 \right] \left( \highlight[white]{x + 1} \right) \right)} \\
+      &= \highlight[white]{\left( \highlight[hlcol2]{\lambda~x . x +  1} \right)}
+      ~ \highlight[white]{\left(\left[x \mapsto 3 \right] \left( \highlight[white]{x + 1} \right) \right)}
   \end{tabular}
-    \onslide<12-13>
-  \begin{tabular}{L}
-    \left[ x \mapsto 3 \right] \left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right) =
-    \left(\lambda z . z + 1\right)~\left(\left[ x \mapsto 3 \right]\left(x + 1\right)\right)
+  \onslide<11>
+  \begin{tabular}{L L}
+    \left[ x \mapsto 3 \right] \highlight[white]{\left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right)}
+      &= \highlight[white]{\left(\left[x \mapsto 3  \right] \left( \highlight[white]{\lambda~x . x +  1} \right) \right)}
+      ~ \highlight[white]{\left(\left[x \mapsto 3 \right] \left( \highlight[white]{x + 1} \right) \right)} \\
+      &= \highlight[white]{\left( \highlight[white]{\lambda~x . x +  1} \right)}
+      ~ \highlight[white]{\left(\left[x \mapsto 3 \right] \left( \highlight[white]{x + 1} \right) \right)}
   \end{tabular}
-    \onslide<14-15>
-  \begin{tabular}{L}
-    \left[ x \mapsto 3 \right] \left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right) =
-    \left(\lambda z . z + 1\right)~\left(\left[ x \mapsto 3 \right]x + \left[x \mapsto 3\right]1\right)
+  \onslide<12>
+  \begin{tabular}{L L}
+    \left[ x \mapsto 3 \right] \highlight[white]{\left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right)}
+      &= \highlight[white]{\left( \highlight[white]{\lambda~x . x +  1} \right)}
+      ~ \highlight[white]{\left(\left[x \mapsto 3 \right] \left( \highlight[white]{x + 1} \right) \right)}
   \end{tabular}
-    \onslide<16-17>
-  \begin{tabular}{L}
-    \left[ x \mapsto 3 \right] \left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right) =
-    \left(\lambda z . z + 1\right)~\left(3 + \left[x \mapsto 3\right]1\right)
+  \onslide<13-15>
+  \begin{tabular}{L L}
+    \left[ x \mapsto 3 \right] \highlight[white]{\left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right)}
+      &= \highlight[white]{\left( \highlight[white]{\lambda~x . x +  1} \right)}
+      ~ \highlight[white]{\left(\left[x \mapsto 3 \right] \left( \highlight[hlcol1]{x + 1} \right) \right)}
   \end{tabular}
-    \onslide<18>
-  \begin{tabular}{L}
-    \left[ x \mapsto 3 \right] \left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right) =
-    \left(\lambda z . z + 1\right)~\left(3 + 1\right)
+  \onslide<16>
+  \begin{tabular}{L L}
+    \left[ x \mapsto 3 \right] \highlight[white]{\left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right)}
+      &= \highlight[white]{\left( \highlight[white]{\lambda~x . x +  1} \right)}
+      ~ \highlight[white]{\left(\left[x \mapsto 3 \right] \left( \highlight[hlcol1]{x + 1} \right) \right)} \\
+      &= \highlight[white]{\left( \highlight[white]{\lambda~x . x +  1} \right)}
+      ~ \highlight[hlcol2]{\left(\left[x \mapsto 3 \right] \highlight[hlcol2]{x} + \left[ x \mapsto 3 \right] \highlight[hlcol2]{1} \right)}
+  \end{tabular}
+  \onslide<17>
+  \begin{tabular}{L L}
+    \left[ x \mapsto 3 \right] \highlight[white]{\left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right)}
+      &= \highlight[white]{\left( \highlight[white]{\lambda~x . x +  1} \right)}
+      ~ \highlight[white]{\left(\left[x \mapsto 3 \right] \left( \highlight[white]{x + 1} \right) \right)} \\
+      &= \highlight[white]{\left( \highlight[white]{\lambda~x . x +  1} \right)}
+      ~ \highlight[white]{\left(\left[x \mapsto 3 \right] \highlight[white]{x} + \left[ x \mapsto 3 \right] \highlight[white]{1} \right)}
+  \end{tabular}
+  \onslide<18>
+  \begin{tabular}{L L}
+    \left[ x \mapsto 3 \right] \highlight[white]{\left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right)}
+      &= \highlight[white]{\left( \highlight[white]{\lambda~x . x +  1} \right)}
+      ~ \highlight[white]{\left(\left[x \mapsto 3 \right] \highlight[white]{x} + \left[ x \mapsto 3 \right] \highlight[white]{1} \right)}
+  \end{tabular}
+  \onslide<19-21>
+  \begin{tabular}{L L}
+    \left[ x \mapsto 3 \right] \highlight[white]{\left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right)}
+      &= \highlight[white]{\left( \highlight[white]{\lambda~x . x +  1} \right)}
+      ~ \highlight[white]{\left(\left[x \mapsto 3 \right] \highlight[hlcol1]{x} + \left[ x \mapsto 3 \right] \highlight[white]{1} \right)}
+  \end{tabular}
+  \onslide<22>
+  \begin{tabular}{L L}
+    \left[ x \mapsto 3 \right] \highlight[white]{\left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right)}
+      &= \highlight[white]{\left( \highlight[white]{\lambda~x . x +  1} \right)}
+      ~ \highlight[white]{\left(\left[x \mapsto 3 \right] \highlight[hlcol1]{x} + \left[ x \mapsto 3 \right] \highlight[white]{1} \right)} \\
+      &= \highlight[white]{\left( \highlight[white]{\lambda~x . x +  1} \right)}
+      ~ \highlight[white]{\left(\highlight[hlcol2]{3} + \left[ x \mapsto 3 \right] \highlight[white]{1} \right)}
+  \end{tabular}
+  \onslide<23>
+  \begin{tabular}{L L}
+    \left[ x \mapsto 3 \right] \highlight[white]{\left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right)}
+      &= \highlight[white]{\left( \highlight[white]{\lambda~x . x +  1} \right)}
+      ~ \highlight[white]{\left(\left[x \mapsto 3 \right] \highlight[white]{x} + \left[ x \mapsto 3 \right] \highlight[white]{1} \right)} \\
+      &= \highlight[white]{\left( \highlight[white]{\lambda~x . x +  1} \right)}
+      ~ \highlight[white]{\left(\highlight[white]{3} + \left[ x \mapsto 3 \right] \highlight[white]{1} \right)}
+  \end{tabular}
+  \onslide<24>
+  \begin{tabular}{L L}
+    \left[ x \mapsto 3 \right] \highlight[white]{\left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right)}
+      &= \highlight[white]{\left( \highlight[white]{\lambda~x . x +  1} \right)}
+      ~ \highlight[white]{\left(\highlight[white]{3} + \left[ x \mapsto 3 \right] \highlight[white]{1} \right)}
+  \end{tabular}
+  \onslide<25-27>
+  \begin{tabular}{L L}
+    \left[ x \mapsto 3 \right] \highlight[white]{\left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right)}
+      &= \highlight[white]{\left( \highlight[white]{\lambda~x . x +  1} \right)}
+      ~ \highlight[white]{\left(\highlight[white]{3} + \left[ x \mapsto 3 \right] \highlight[hlcol1]{1} \right)}
+  \end{tabular}
+  \onslide<28>
+  \begin{tabular}{L L}
+    \left[ x \mapsto 3 \right] \highlight[white]{\left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right)}
+      &= \highlight[white]{\left( \highlight[white]{\lambda~x . x +  1} \right)}
+      ~ \highlight[white]{\left(\highlight[white]{3} + \left[ x \mapsto 3 \right] \highlight[hlcol1]{1} \right)} \\
+      &= \highlight[white]{\left( \highlight[white]{\lambda~x . x +  1} \right)}
+      ~ \highlight[white]{\left(\highlight[white]{3} + \highlight[hlcol2]{1} \right)}
+  \end{tabular}
+  \onslide<29>
+  \begin{tabular}{L L}
+    \left[ x \mapsto 3 \right] \highlight[white]{\left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right)}
+      &= \highlight[white]{\left( \highlight[white]{\lambda~x . x +  1} \right)}
+      ~ \highlight[white]{\left(\highlight[white]{3} + \left[ x \mapsto 3 \right] \highlight[white]{1} \right)} \\
+      &= \highlight[white]{\left( \highlight[white]{\lambda~x . x +  1} \right)}
+      ~ \highlight[white]{\left(\highlight[white]{3} + \highlight[white]{1} \right)}
+  \end{tabular}
+  \onslide<30>
+  \begin{tabular}{L L}
+    \left[ x \mapsto 3 \right] \highlight[white]{\left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right)}
+      &= \highlight[white]{\left( \highlight[white]{\lambda~x . x +  1} \right)}
+      ~ \highlight[white]{\left(\highlight[white]{3} + \highlight[white]{1} \right)}
   \end{tabular}
   \end{overprint}
 \end{frame}
+
+%% \begin{frame}
+%%   \begin{mdframed}[frametitle={Substitution rules}]
+%%   \begin{overprint}
+%%     \onslide<1>
+%%   \begin{tabular}{L L L}
+%%     \highlight[white]{\left[ x \mapsto s \right] x}
+%%       &= \highlight[white]{s} & \\
+%%     \highlight[white]{\left[ x \mapsto s \right] y}
+%%       &= \highlight[white]{y}
+%%       & \highlight[white]{\text{if}~y\neq x} \\
+%%     \highlight[white]{\left[ x \mapsto s \right] \left( \lambda x . t_1 \right)}
+%%       &= \highlight[white]{\lambda x . t_1 } & \\
+%%     \highlight[white]{\left[ x \mapsto s \right] \left( \lambda y . t_1 \right)}
+%%       &= \highlight[white]{\lambda y . \left( \left[ x \mapsto s \right] t_1 \right)}
+%%       & \highlight[white]{\text{if}~y\neq x \wedge y \notin FV(s)} \\
+%%     \highlight[white]{\left[ x \mapsto s \right] \left(t_1~t_2\right)}
+%%       &= \highlight[white]{\left(\left[x \mapsto s  \right] t_1 \right)~\left(\left[x \mapsto s \right] t_2 \right)} & \\
+%%     \\
+%%     \highlight[white]{\left[x \mapsto s\right]\left<int\right>}
+%%       &= \highlight[white]{\left<int\right>} & \\
+%%     \highlight[white]{\left[ x \mapsto s \right] \left(t_1 + t_2\right)}
+%%       &= \highlight[white]{\left(\left[x \mapsto s  \right] t_1 \right) + \left(\left[x \mapsto s \right] t_2 \right)} &
+%%   \end{tabular}
+%%     \onslide<2-3>
+%%   \begin{tabular}{L L L}
+%%     \highlight[white]{\left[ x \mapsto s \right] x} &= s & \\
+%%     \highlight[white]{\left[ x \mapsto s \right] y} &= y & \text{if}~y\neq x \\
+%%     \highlight[white]{\left[ x \mapsto s \right] \left( \lambda y . t_1 \right)} &= \lambda y . \left( \left[ x \mapsto s \right] t_1 \right) & \text{if}~y\neq x \wedge y \notin FV(s) \\
+%%     \highlight[violet]{\left[ x \mapsto s \right] \left(t_1~t_2\right)} &= \left(\left[x \mapsto s  \right] t_1 \right)~\left(\left[x \mapsto s \right] t_2 \right) & \\
+%%     \\
+%%     \highlight[white]{\left[x \mapsto s\right]\left<int\right>} &= \left<int\right>& \\
+%%     \highlight[white]{\left[ x \mapsto s \right] \left(t_1 + t_2\right)} &= \left(\left[x \mapsto s  \right] t_1 \right) + \left(\left[x \mapsto s \right] t_2 \right) &
+%%   \end{tabular}
+%%     \onslide<4-6>
+%%   \begin{tabular}{L L L}
+%%     \highlight[white]{\left[ x \mapsto s \right] x} &= s & \\
+%%     \highlight[white]{\left[ x \mapsto s \right] y} &= y & \text{if}~y\neq x \\
+%%     \highlight[violet]{\left[ x \mapsto s \right] \left( \lambda y . t_1 \right)} &= \lambda y . \left( \left[ x \mapsto s \right] t_1 \right) & \text{if}~y\neq x \wedge y \notin FV(s) \\
+%%     \highlight[white]{\left[ x \mapsto s \right] \left(t_1~t_2\right)} &= \left(\left[x \mapsto s  \right] t_1 \right)~\left(\left[x \mapsto s \right] t_2 \right) & \\
+%%     \\
+%%     \highlight[white]{\left[x \mapsto s\right]\left<int\right>} &= \left<int\right>& \\
+%%     \highlight[white]{\left[ x \mapsto s \right] \left(t_1 + t_2\right)} &= \left(\left[x \mapsto s  \right] t_1 \right) + \left(\left[x \mapsto s \right] t_2 \right) &
+%%   \end{tabular}
+%%     \onslide<7-8>
+%%   \begin{tabular}{L L L}
+%%     \highlight[white]{\left[ x \mapsto s \right] x} &= s & \\
+%%     \highlight[white]{\left[ x \mapsto s \right] y} &= y & \text{if}~y\neq x \\
+%%     \highlight[white]{\left[ x \mapsto s \right] \left( \lambda y . t_1 \right)} &= \lambda y . \left( \left[ x \mapsto s \right] t_1 \right) & \text{if}~y\neq x \wedge y \notin FV(s) \\
+%%     \highlight[white]{\left[ x \mapsto s \right] \left(t_1~t_2\right)} &= \left(\left[x \mapsto s  \right] t_1 \right)~\left(\left[x \mapsto s \right] t_2 \right) & \\
+%%     \\
+%%     \highlight[white]{\left[x \mapsto s\right]\left<int\right>} &= \left<int\right>& \\
+%%     \highlight[violet]{\left[ x \mapsto s \right] \left(t_1 + t_2\right)} &= \left(\left[x \mapsto s  \right] t_1 \right) + \left(\left[x \mapsto s \right] t_2 \right) &
+%%   \end{tabular}
+%%     \onslide<9-10>
+%%   \begin{tabular}{L L L}
+%%     \highlight[white]{\left[ x \mapsto s \right] x} &= s & \\
+%%     \highlight[violet]{\left[ x \mapsto s \right] y} &= y & \text{if}~y\neq x \\
+%%     \highlight[white]{\left[ x \mapsto s \right] \left( \lambda y . t_1 \right)} &= \lambda y . \left( \left[ x \mapsto s \right] t_1 \right) & \text{if}~y\neq x \wedge y \notin FV(s) \\
+%%     \highlight[white]{\left[ x \mapsto s \right] \left(t_1~t_2\right)} &= \left(\left[x \mapsto s  \right] t_1 \right)~\left(\left[x \mapsto s \right] t_2 \right) & \\
+%%     \\
+%%     \highlight[white]{\left[x \mapsto s\right]\left<int\right>} &= \left<int\right>& \\
+%%     \highlight[white]{\left[ x \mapsto s \right] \left(t_1 + t_2\right)} &= \left(\left[x \mapsto s  \right] t_1 \right) + \left(\left[x \mapsto s \right] t_2 \right) &
+%%   \end{tabular}
+%%     \onslide<11-12>
+%%   \begin{tabular}{L L L}
+%%     \highlight[white]{\left[ x \mapsto s \right] x} &= s & \\
+%%     \highlight[white]{\left[ x \mapsto s \right] y} &= y & \text{if}~y\neq x \\
+%%     \highlight[white]{\left[ x \mapsto s \right] \left( \lambda y . t_1 \right)} &= \lambda y . \left( \left[ x \mapsto s \right] t_1 \right) & \text{if}~y\neq x \wedge y \notin FV(s) \\
+%%     \highlight[white]{\left[ x \mapsto s \right] \left(t_1~t_2\right)} &= \left(\left[x \mapsto s  \right] t_1 \right)~\left(\left[x \mapsto s \right] t_2 \right) & \\
+%%     \\
+%%     \highlight[violet]{\left[x \mapsto s\right]\left<int\right>} &= \left<int\right>& \\
+%%     \highlight[white]{\left[ x \mapsto s \right] \left(t_1 + t_2\right)} &= \left(\left[x \mapsto s  \right] t_1 \right) + \left(\left[x \mapsto s \right] t_2 \right) &
+%%   \end{tabular}
+%%     \onslide<13-14>
+%%   \begin{tabular}{L L L}
+%%     \highlight[white]{\left[ x \mapsto s \right] x} &= s & \\
+%%     \highlight[white]{\left[ x \mapsto s \right] y} &= y & \text{if}~y\neq x \\
+%%     \highlight[white]{\left[ x \mapsto s \right] \left( \lambda y . t_1 \right)} &= \lambda y . \left( \left[ x \mapsto s \right] t_1 \right) & \text{if}~y\neq x \wedge y \notin FV(s) \\
+%%     \highlight[white]{\left[ x \mapsto s \right] \left(t_1~t_2\right)} &= \left(\left[x \mapsto s  \right] t_1 \right)~\left(\left[x \mapsto s \right] t_2 \right) & \\
+%%     \\
+%%     \highlight[white]{\left[x \mapsto s\right]\left<int\right>} &= \left<int\right>& \\
+%%     \highlight[violet]{\left[ x \mapsto s \right] \left(t_1 + t_2\right)} &= \left(\left[x \mapsto s  \right] t_1 \right) + \left(\left[x \mapsto s \right] t_2 \right) &
+%%   \end{tabular}
+%%     \onslide<15-16>
+%%   \begin{tabular}{L L L}
+%%     \highlight[violet]{\left[ x \mapsto s \right] x} &= s & \\
+%%     \highlight[white]{\left[ x \mapsto s \right] y} &= y & \text{if}~y\neq x \\
+%%     \highlight[white]{\left[ x \mapsto s \right] \left( \lambda y . t_1 \right)} &= \lambda y . \left( \left[ x \mapsto s \right] t_1 \right) & \text{if}~y\neq x \wedge y \notin FV(s) \\
+%%     \highlight[white]{\left[ x \mapsto s \right] \left(t_1~t_2\right)} &= \left(\left[x \mapsto s  \right] t_1 \right)~\left(\left[x \mapsto s \right] t_2 \right) & \\
+%%     \\
+%%     \highlight[white]{\left[x \mapsto s\right]\left<int\right>} &= \left<int\right>& \\
+%%     \highlight[white]{\left[ x \mapsto s \right] \left(t_1 + t_2\right)} &= \left(\left[x \mapsto s  \right] t_1 \right) + \left(\left[x \mapsto s \right] t_2 \right) &
+%%   \end{tabular}
+%%     \onslide<17-18>
+%%   \begin{tabular}{L L L}
+%%     \highlight[white]{\left[ x \mapsto s \right] x} &= s & \\
+%%     \highlight[white]{\left[ x \mapsto s \right] y} &= y & \text{if}~y\neq x \\
+%%     \highlight[white]{\left[ x \mapsto s \right] \left( \lambda y . t_1 \right)} &= \lambda y . \left( \left[ x \mapsto s \right] t_1 \right) & \text{if}~y\neq x \wedge y \notin FV(s) \\
+%%     \highlight[white]{\left[ x \mapsto s \right] \left(t_1~t_2\right)} &= \left(\left[x \mapsto s  \right] t_1 \right)~\left(\left[x \mapsto s \right] t_2 \right) & \\
+%%     \\
+%%     \highlight[violet]{\left[x \mapsto s\right]\left<int\right>} &= \left<int\right>& \\
+%%     \highlight[white]{\left[ x \mapsto s \right] \left(t_1 + t_2\right)} &= \left(\left[x \mapsto s  \right] t_1 \right) + \left(\left[x \mapsto s \right] t_2 \right) &
+%%   \end{tabular}
+%%   \end{overprint}
+%%   \end{mdframed}
+
+%%   \medskip
+
+%%   \begin{overprint}
+%%     \onslide<1-2>
+%%   \begin{tabular}{L}
+%%     \left[ x \mapsto 3 \right] \left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right) =
+%%      ?
+%%   \end{tabular}
+%%     \onslide<3-4>
+%%   \begin{tabular}{L}
+%%     \left[ x \mapsto 3 \right] \left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right) =
+%%     \left( \left[ x \mapsto 3 \right]\left(\lambda x . x + 1\right)\right)~\left(\left[ x \mapsto 3 \right]\left(x + 1\right)\right)
+%%   \end{tabular}
+%%     \onslide<5>
+%%   \begin{tabular}{L}
+%%     \left[ x \mapsto 3 \right] \left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right) =
+%%     \left( \left[ x \mapsto 3 \right]\left(\lambda z . z + 1\right)\right)~\left(\left[ x \mapsto 3 \right]\left(x + 1\right)\right)
+%%   \end{tabular}
+%%     \onslide<6-7>
+%%   \begin{tabular}{L}
+%%     \left[ x \mapsto 3 \right] \left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right) =
+%%     \left(\lambda z . \left[x \mapsto 3 \right]\left(z + 1\right)\right)~\left(\left[ x \mapsto 3 \right]\left(x + 1\right)\right)
+%%   \end{tabular}
+%%     \onslide<8-9>
+%%   \begin{tabular}{L}
+%%     \left[ x \mapsto 3 \right] \left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right) =
+%%     \left(\lambda z . \left(\left[x \mapsto 3 \right]z + \left[x \mapsto 3 \right]1\right)\right)~\left(\left[ x \mapsto 3 \right]\left(x + 1\right)\right)
+%%   \end{tabular}
+%%     \onslide<10-11>
+%%   \begin{tabular}{L}
+%%     \left[ x \mapsto 3 \right] \left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right) =
+%%     \left(\lambda z . \left(z + \left[x \mapsto 3 \right]1\right)\right)~\left(\left[ x \mapsto 3 \right]\left(x + 1\right)\right)
+%%   \end{tabular}
+%%     \onslide<12-13>
+%%   \begin{tabular}{L}
+%%     \left[ x \mapsto 3 \right] \left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right) =
+%%     \left(\lambda z . z + 1\right)~\left(\left[ x \mapsto 3 \right]\left(x + 1\right)\right)
+%%   \end{tabular}
+%%     \onslide<14-15>
+%%   \begin{tabular}{L}
+%%     \left[ x \mapsto 3 \right] \left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right) =
+%%     \left(\lambda z . z + 1\right)~\left(\left[ x \mapsto 3 \right]x + \left[x \mapsto 3\right]1\right)
+%%   \end{tabular}
+%%     \onslide<16-17>
+%%   \begin{tabular}{L}
+%%     \left[ x \mapsto 3 \right] \left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right) =
+%%     \left(\lambda z . z + 1\right)~\left(3 + \left[x \mapsto 3\right]1\right)
+%%   \end{tabular}
+%%     \onslide<18>
+%%   \begin{tabular}{L}
+%%     \left[ x \mapsto 3 \right] \left( \left( \lambda~x . x + 1 \right)~\left(x + 1\right) \right) =
+%%     \left(\lambda z . z + 1\right)~\left(3 + 1\right)
+%%   \end{tabular}
+%%   \end{overprint}
+%% \end{frame}
 
 \begin{frame}
   \begin{mdframed}[frametitle={Small-step semantics (eager)}]
