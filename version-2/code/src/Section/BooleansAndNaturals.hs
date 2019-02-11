@@ -388,12 +388,12 @@ boolNatRulesLazyDeterminstic :: Property
 boolNatRulesLazyDeterminstic =
   deterministic genTerm evalRulesLazy
 
-boolNatRulesEagerExactlyOne :: Property
-boolNatRulesEagerExactlyOne =
+boolNatRulesEagerValueOrStep :: Property
+boolNatRulesEagerValueOrStep =
   exactlyOne genTerm valueEagerR stepEagerR
 
-boolNatRulesLazyExactlyOne :: Property
-boolNatRulesLazyExactlyOne =
+boolNatRulesLazyValueOrStep :: Property
+boolNatRulesLazyValueOrStep =
   exactlyOne genTerm valueLazyR stepLazyR
 
 genType :: Gen Type
@@ -426,7 +426,7 @@ genWellTypedTerm =
 progress :: RuleSet Term () -> RuleSet Term Term -> Property
 progress value step = property $ do
   tm <- forAll genWellTypedTerm
-  (isJust (value tm) || isJust (step tm)) === True
+  isJust (value tm) /== isJust (step tm)
 
 preservation :: RuleSet Term Term -> Property
 preservation step = property $ do

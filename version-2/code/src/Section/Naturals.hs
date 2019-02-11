@@ -110,10 +110,10 @@ natRulesLazyDeterminstic :: Property
 natRulesLazyDeterminstic =
   deterministic genTerm evalRulesLazy
 
-natRulesEagerExactlyOne :: Property
-natRulesEagerExactlyOne =
+natRulesEagerValueOrStep :: Property
+natRulesEagerValueOrStep =
   exactlyOne genTerm valueEagerR stepEagerR
 
-natRulesLazyExactlyOne :: Property
-natRulesLazyExactlyOne =
+natRulesLazyValueOrStep :: Property
+natRulesLazyValueOrStep =
   exactlyOne genTerm valueLazyR stepLazyR

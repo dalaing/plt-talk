@@ -302,3 +302,254 @@ Just TmTrue
 Nothing
   \end{minted}
 \end{frame}
+
+
+\begin{frame}[c]
+
+  {\bf The step rules are deterministic}
+
+  \bigskip
+
+  \begin{overprint}
+    \onslide<1>
+    $
+    \highlight[white]{\forall}
+    \highlight[white]{t}
+    \left (
+    \highlight[white]{\exists t^{\prime} \left( t \longrightarrow t^{\prime} \right)}
+    \highlight[white]{\longrightarrow}
+    \left (
+    \highlight[white]{\exists t^{\prime\prime} \left( t \longrightarrow t^{\prime\prime} \right)}
+    \highlight[white]{\longrightarrow}
+    \highlight[white]{t^{\prime} = t^{\prime\prime}}
+    \right )
+    \right )
+    $
+    \onslide<2>
+    $
+    \highlight[hlcol1]{\forall}
+    \highlight[white]{t}
+    \left (
+    \highlight[white]{\exists t^{\prime} \left( t \longrightarrow t^{\prime} \right)}
+    \highlight[white]{\longrightarrow}
+    \left (
+    \highlight[white]{\exists t^{\prime\prime} \left( t \longrightarrow t^{\prime\prime} \right)}
+    \highlight[white]{\longrightarrow}
+    \highlight[white]{t^{\prime} = t^{\prime\prime}}
+    \right )
+    \right )
+    $
+    \onslide<3>
+    $
+    \highlight[white]{\forall}
+    \highlight[hlcol1]{t}
+    \left (
+    \highlight[white]{\exists t^{\prime} \left( t \longrightarrow t^{\prime} \right)}
+    \highlight[white]{\longrightarrow}
+    \left (
+    \highlight[white]{\exists t^{\prime\prime} \left( t \longrightarrow t^{\prime\prime} \right)}
+    \highlight[white]{\longrightarrow}
+    \highlight[white]{t^{\prime} = t^{\prime\prime}}
+    \right )
+    \right )
+    $
+    \onslide<4>
+    $
+    \highlight[white]{\forall}
+    \highlight[white]{t}
+    \left (
+    \highlight[hlcol1]{\exists t^{\prime} \left( t \longrightarrow t^{\prime} \right)}
+    \highlight[white]{\longrightarrow}
+    \left (
+    \highlight[white]{\exists t^{\prime\prime} \left( t \longrightarrow t^{\prime\prime} \right)}
+    \highlight[white]{\longrightarrow}
+    \highlight[white]{t^{\prime} = t^{\prime\prime}}
+    \right )
+    \right )
+    $
+    \onslide<5>
+    $
+    \highlight[white]{\forall}
+    \highlight[white]{t}
+    \left (
+    \highlight[white]{\exists t^{\prime} \left( t \longrightarrow t^{\prime} \right)}
+    \highlight[hlcol1]{\longrightarrow}
+    \left (
+    \highlight[white]{\exists t^{\prime\prime} \left( t \longrightarrow t^{\prime\prime} \right)}
+    \highlight[white]{\longrightarrow}
+    \highlight[white]{t^{\prime} = t^{\prime\prime}}
+    \right )
+    \right )
+    $
+    \onslide<6>
+    $
+    \highlight[white]{\forall}
+    \highlight[white]{t}
+    \left (
+    \highlight[white]{\exists t^{\prime} \left( t \longrightarrow t^{\prime} \right)}
+    \highlight[white]{\longrightarrow}
+    \left (
+    \highlight[hlcol1]{\exists t^{\prime\prime} \left( t \longrightarrow t^{\prime\prime} \right)}
+    \highlight[white]{\longrightarrow}
+    \highlight[white]{t^{\prime} = t^{\prime\prime}}
+    \right )
+    \right )
+    $
+    \onslide<7>
+    $
+    \highlight[white]{\forall}
+    \highlight[white]{t}
+    \left (
+    \highlight[white]{\exists t^{\prime} \left( t \longrightarrow t^{\prime} \right)}
+    \highlight[white]{\longrightarrow}
+    \left (
+    \highlight[white]{\exists t^{\prime\prime} \left( t \longrightarrow t^{\prime\prime} \right)}
+    \highlight[white]{\longrightarrow}
+    \highlight[hlcol1]{t^{\prime} = t^{\prime\prime}}
+    \right )
+    \right )
+    $
+  \end{overprint}
+
+  \bigskip
+
+  \begin{overprint}
+    \onslide<1>
+    $
+    \highlight[white]{\text{For all}}
+    \highlight[white]{\text{terms,}}
+    \highlight[white]{\text{if}} \\
+    \highlight[white]{\text{the term can take a step}} \\
+    \highlight[white]{\text{then}} \\
+    \highlight[white]{\text{any other step we could take from that same initial term}}
+    \highlight[white]{\text{will have the same result}}
+    \text{.}
+    $
+    \onslide<2>
+    $
+    \highlight[hlcol1]{\text{For all}}
+    \highlight[white]{\text{terms,}}
+    \highlight[white]{\text{if}} \\
+    \highlight[white]{\text{the term can take a step}} \\
+    \highlight[white]{\text{then}} \\
+    \highlight[white]{\text{any other step we could take from that same initial term}}
+    \highlight[white]{\text{will have the same result}}
+    \text{.}
+    $
+    \onslide<3>
+    $
+    \highlight[white]{\text{For all}}
+    \highlight[hlcol1]{\text{terms,}}
+    \highlight[white]{\text{if}} \\
+    \highlight[white]{\text{the term can take a step}} \\
+    \highlight[white]{\text{then}} \\
+    \highlight[white]{\text{any other step we could take from that same initial term}}
+    \highlight[white]{\text{will have the same result}}
+    \text{.}
+    $
+    \onslide<4>
+    $
+    \highlight[white]{\text{For all}}
+    \highlight[white]{\text{terms,}}
+    \highlight[white]{\text{if}} \\
+    \highlight[hlcol1]{\text{the term can take a step}} \\
+    \highlight[white]{\text{then}} \\
+    \highlight[white]{\text{any other step we could take from that same initial term}}
+    \highlight[white]{\text{will have the same result}}
+    \text{.}
+    $
+    \onslide<5>
+    $
+    \highlight[white]{\text{For all}}
+    \highlight[white]{\text{terms,}}
+    \highlight[white]{\text{if}} \\
+    \highlight[white]{\text{the term can take a step}} \\
+    \highlight[hlcol1]{\text{then}} \\
+    \highlight[white]{\text{any other step we could take from that same initial term}}
+    \highlight[white]{\text{will have the same result}}
+    \text{.}
+    $
+    \onslide<6>
+    $
+    \highlight[white]{\text{For all}}
+    \highlight[white]{\text{terms,}}
+    \highlight[white]{\text{if}} \\
+    \highlight[white]{\text{the term can take a step}} \\
+    \highlight[white]{\text{then}} \\
+    \highlight[hlcol1]{\text{any other step we could take from that same initial term}}
+    \highlight[white]{\text{will have the same result}}
+    \text{.}
+    $
+    \onslide<7>
+    $
+    \highlight[white]{\text{For all}}
+    \highlight[white]{\text{terms,}}
+    \highlight[white]{\text{if}} \\
+    \highlight[white]{\text{the term can take a step}} \\
+    \highlight[white]{\text{then}} \\
+    \highlight[white]{\text{any other step we could take from that same initial term}}
+    \highlight[hlcol1]{\text{will have the same result}}
+    \text{.}
+    $
+  \end{overprint}
+
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{minted}{haskell}
+genTerm :: Gen Term
+genTerm =
+  Gen.recursive Gen.choice
+    [ pure TmFalse, pure TmTrue ]
+    [ Gen.subterm2 genTerm genTerm TmOr ]
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{minted}{haskell}
+deterministic :: (Show a, Show b, Eq b)
+              => Gen a
+              -> [Rule a b]
+              -> Property
+deterministic ga rs = property $ do
+  (a', a1, a2) <- forAll $ do
+    a <- ga
+    rs1 <- Gen.shuffle rs
+    rs2 <- Gen.shuffle rs
+    pure (a, mkRuleSet rs1 a, mkRuleSet rs2 a)
+  a1 === a2
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{minted}{haskell}
+boolRulesEagerDeterminstic :: Property
+boolRulesEagerDeterminstic =
+  deterministic genTerm evalRulesEager
+
+boolRulesLazyDeterminstic :: Property
+boolRulesLazyDeterminstic =
+  deterministic genTerm evalRulesLazy
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \onslide<+->
+  \begin{minted}{haskell}
+> check $ boolRulesEagerDeterminstic
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+  <interactive> passed 100 tests.
+True
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> check $ boolRulesLazyDeterminstic
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+  <interactive> passed 100 tests.
+True
+  \end{minted}
+\end{frame}

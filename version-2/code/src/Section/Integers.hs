@@ -71,6 +71,6 @@ intRulesDeterminstic :: Property
 intRulesDeterminstic =
   deterministic genTerm evalRules
 
-intRulesExactlyOne :: Property
-intRulesExactlyOne =
+intRulesValueOrStep :: Property
+intRulesValueOrStep =
   exactlyOne genTerm valueR stepR

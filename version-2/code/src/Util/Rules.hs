@@ -32,7 +32,10 @@ iterR r x = case r x of
   Nothing -> x
   Just x' -> iterR r x'
 
-deterministic :: (Show a, Show b, Eq b) => Gen a -> [Rule a b] -> Property
+deterministic :: (Show a, Show b, Eq b)
+              => Gen a
+              -> [Rule a b]
+              -> Property
 deterministic ga rs = property $ do
   (a', a1, a2) <- forAll $ do
     a <- ga
@@ -41,7 +44,11 @@ deterministic ga rs = property $ do
     pure (a, mkRuleSet rs1 a, mkRuleSet rs2 a)
   a1 === a2
 
-exactlyOne :: (Show a) => Gen a -> RuleSet a b -> RuleSet a c -> Property
+exactlyOne :: (Show a)
+           => Gen a
+           -> RuleSet a b
+           -> RuleSet a c
+           -> Property
 exactlyOne ga r1 r2 = property $ do
   a <- forAll ga
   isJust (r1 a) /== isJust (r2 a)

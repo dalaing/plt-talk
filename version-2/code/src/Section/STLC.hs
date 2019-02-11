@@ -610,12 +610,12 @@ stlcRulesLazyDeterminstic :: Property
 stlcRulesLazyDeterminstic =
   deterministic genTerm evalRulesLazy
 
-stlcRulesEagerExactlyOne :: Property
-stlcRulesEagerExactlyOne =
+stlcRulesEagerValueOrStep :: Property
+stlcRulesEagerValueOrStep =
   exactlyOne genTerm valueEagerR stepEagerR
 
-stlcRulesLazyExactlyOne :: Property
-stlcRulesLazyExactlyOne =
+stlcRulesLazyValueOrStep :: Property
+stlcRulesLazyValueOrStep =
   exactlyOne genTerm valueLazyR stepLazyR
 
 genType :: Gen Type
@@ -666,7 +666,7 @@ genWellTypedTerm =
 progress :: RuleSet (Term String) () -> RuleSet (Term String) (Term String) -> Property
 progress value step = property $ do
   tm <- forAll genWellTypedTerm
-  (isJust (value tm) || isJust (step tm)) === True
+  isJust (value tm) /== isJust (step tm)
 
 preservation :: RuleSet (Term String) (Term String) -> Property
 preservation step = property $ do

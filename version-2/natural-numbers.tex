@@ -19,7 +19,7 @@ t \quad:=\quad& ~ &\\
   & ~ \text{pred}~t \quad\quad &predecessor \\
 v \quad:=\quad& ~ &\\
   & ~ \text{O} \quad\quad &zero~value \\
-  & ~ \text{succ}~\highlight{v} \quad\quad &successor~value \\
+  & ~ \text{succ}~\highlight[hlcol1]{v} \quad\quad &successor~value \\
     \end{aligned}
   \end{displaymath}
   \end{mdframed}
@@ -35,7 +35,7 @@ t \quad:=\quad& ~ &\\
   & ~ \text{pred}~t \quad\quad &predecessor \\
 v \quad:=\quad& ~ &\\
   & ~ \text{O} \quad\quad &zero~value \\
-  & ~ \text{succ}~\highlight{t} \quad\quad &successor~value \\
+  & ~ \text{succ}~\highlight[hlcol1]{t} \quad\quad &successor~value \\
     \end{aligned}
   \end{displaymath}
   \end{mdframed}
@@ -57,8 +57,8 @@ v \quad:=\quad& ~ &\\
   \begin{mdframed}[frametitle={Small-step semantics (eager)}]
 
   \infrule[E-Succ]
-         {\highlight{t_1 \longrightarrow {t_1}^{\prime}}}
-        {\highlight{\text{succ}~t_1 \longrightarrow \text{succ}~{t_1}^{\prime}}}
+         {\highlight[hlcol1]{t_1 \longrightarrow {t_1}^{\prime}}}
+        {\highlight[hlcol1]{\text{succ}~t_1 \longrightarrow \text{succ}~{t_1}^{\prime}}}
   \infrule[E-Pred]
           {t_1 \longrightarrow {t_1}^{\prime}}
           {\text{pred}~t_1 \longrightarrow \text{pred}~{t_1}^{\prime}}
@@ -67,7 +67,7 @@ v \quad:=\quad& ~ &\\
           {\text{pred}~\text{O} \longrightarrow \text{O}}
   \infrule[E-PredSucc]
           {}
-          {\text{pred} ~ \left( \text{succ}~\highlight{v} \right) \longrightarrow \highlight{v}}
+          {\text{pred} ~ \left( \text{succ}~\highlight[hlcol1]{v} \right) \longrightarrow \highlight[hlcol1]{v}}
   \end{mdframed}
 \end{frame}
 
@@ -85,7 +85,7 @@ v \quad:=\quad& ~ &\\
           {\text{pred}~\text{O} \longrightarrow \text{O}}
   \infrule[E-PredSucc]
           {}
-          {\text{pred} ~ \left( \text{succ}~\highlight{t} \right) \longrightarrow \highlight{t}}
+          {\text{pred} ~ \left( \text{succ}~\highlight[hlcol1]{t} \right) \longrightarrow \highlight[hlcol1]{t}}
   \end{mdframed}
 \end{frame}
 

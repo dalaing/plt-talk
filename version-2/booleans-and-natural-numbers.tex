@@ -16,8 +16,8 @@ t \quad:=\quad& ~ &\\
   & ~ \text{O} \quad\quad &constant~zero \\
   & ~ \text{succ}~t \quad\quad &successor \\
   & ~ \text{pred}~t \quad\quad &predecessor \\
-  & ~ \highlight{\text{iszero}~t} \quad\quad &iszero \\
-  & ~ \highlight{\text{if}~t~\text{then}~t~\text{else}~t} \quad\quad &if \\
+  & ~ \highlight[hlcol1]{\text{iszero}~t} \quad\quad &iszero \\
+  & ~ \highlight[hlcol1]{\text{if}~t~\text{then}~t~\text{else}~t} \quad\quad &if \\
     \end{aligned}
   \end{displaymath}
   \end{mdframed}
@@ -33,7 +33,7 @@ t \quad:=\quad& ~ &\\
          {\text{iszero}~\text{O} \longrightarrow \text{true}}
   \infrule[E-IsZeroSucc]
         {}
-        {\text{iszero}~\left( \text{succ}~v \right) \longrightarrow \text{false}}
+        {\text{iszero}~\left( \text{succ}~\highlight[hlcol1]{v} \right) \longrightarrow \text{false}}
   \end{mdframed}
   \medskip
 \end{frame}
@@ -48,7 +48,7 @@ t \quad:=\quad& ~ &\\
          {\text{iszero}~\text{O} \longrightarrow \text{true}}
   \infrule[E-IsZeroSucc]
         {}
-        {\text{iszero}~\left( \text{succ}~t \right) \longrightarrow \text{false}}
+        {\text{iszero}~\left( \text{succ}~\highlight[hlcol1]{t} \right) \longrightarrow \text{false}}
   \end{mdframed}
   \medskip
 \end{frame}
@@ -116,7 +116,7 @@ v \quad:=\quad& ~ \qquad\qquad &\\
   \begin{mdframed}[frametitle={Small-step semantics}]
   \infrule[E-IsZeroSucc]
         {}
-        {\text{iszero}~ \left( \text{succ}~\highlight{nv} \right) \longrightarrow \text{false}}
+        {\text{iszero}~ \left( \text{succ}~\highlight[hlcol1]{nv} \right) \longrightarrow \text{false}}
   \end{mdframed}
 \end{frame}
 
@@ -136,6 +136,52 @@ v \quad:=\quad& ~ \qquad\qquad &\\
 
 \begin{frame}[c]
   The more detailed break down of values may effect {\it when} a term gets stuck, but not whether a term will get stuck.
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{minted}{haskell}
+> check boolNatRulesLazyValueOrStep
+  <interactive> failed after 14 tests and 5 shrinks.
+  
+       src/Util/Rules.hs
+    47  exactlyOne :: (Show a)
+    48             => Gen a
+    49             -> RuleSet a b
+    50             -> RuleSet a c
+    51             -> Property
+    52  exactlyOne ga r1 r2 = property $ do
+    53    a <- forAll ga
+          | TmOr TmZero TmZero
+    54    isJust (r1 a) /== isJust (r2 a)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+          | Both equal to
+          | False
+  
+False
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{minted}{haskell}
+> check boolNatRulesEagerValueOrStep
+  <interactive> failed after 4 tests and 2 shrinks.
+  
+       src/Util/Rules.hs
+    47  exactlyOne :: (Show a)
+    48             => Gen a
+    49             -> RuleSet a b
+    50             -> RuleSet a c
+    51             -> Property
+    52  exactlyOne ga r1 r2 = property $ do
+    53    a <- forAll ga
+          | TmPred TmFalse
+    54    isJust (r1 a) /== isJust (r2 a)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+          | Both equal to
+          | False
+  
+False
+  \end{minted}
 \end{frame}
 
 \begin{frame}[c]
@@ -334,13 +380,13 @@ v \quad:=\quad& ~ \qquad\qquad &\\
     }
     {\vdash \highlight[white]{\highlight[white]{\text{true}}~\text{or}~\highlight[white]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
   }
-  {\vdash \highlight[violet]{
+  {\vdash \highlight[hlcol1]{
     \text{if}~
-    \left(\highlight[violet]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \left(\highlight[hlcol1]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
     \text{then}~
-    \highlight[violet]{\text{false}}~
+    \highlight[hlcol1]{\text{false}}~
     \text{else}~
-    \left(\highlight[violet]{\text{true}~\text{or}~\text{false}}\right)} ~
+    \left(\highlight[hlcol1]{\text{true}~\text{or}~\text{false}}\right)} ~
     {:}~
     \highlight[white]{\text{Bool}}}\]
 
@@ -373,7 +419,7 @@ v \quad:=\quad& ~ \qquad\qquad &\\
   }
   {\vdash \highlight[white]{
     \text{if}~
-    \left(\highlight[violet]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \left(\highlight[hlcol1]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
     \text{then}~
     \highlight[white]{\text{false}}~
     \text{else}~
@@ -391,7 +437,7 @@ v \quad:=\quad& ~ \qquad\qquad &\\
       }
       {\vdash \highlight[white]{\text{succ}~\highlight[white]{\text{O}}} ~{:}~ \highlight[white]{\text{Nat}}}
     }
-    {\vdash \highlight[violet]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[white]{\text{Bool}}}
+    {\vdash \highlight[hlcol1]{\text{iszero} \left( \highlight[hlcol1]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[white]{\text{Bool}}}
   }
   {\prftree[r]{T-False}
     {}
@@ -410,7 +456,7 @@ v \quad:=\quad& ~ \qquad\qquad &\\
   }
   {\vdash \highlight[white]{
     \text{if}~
-    \left(\highlight[violet]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \left(\highlight[hlcol1]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
     \text{then}~
     \highlight[white]{\text{false}}~
     \text{else}~
@@ -428,7 +474,7 @@ v \quad:=\quad& ~ \qquad\qquad &\\
       }
       {\vdash \highlight[white]{\text{succ}~\highlight[white]{\text{O}}} ~{:}~ \highlight[white]{\text{Nat}}}
     }
-    {\vdash \highlight[white]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[white]{\text{Bool}}}
+    {\vdash \highlight[white]{\text{iszero} \left( \highlight[hlcol1]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[white]{\text{Bool}}}
   }
   {\prftree[r]{T-False}
     {}
@@ -447,7 +493,7 @@ v \quad:=\quad& ~ \qquad\qquad &\\
   }
   {\vdash \highlight[white]{
     \text{if}~
-    \left(\highlight[violet]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \left(\highlight[hlcol1]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
     \text{then}~
     \highlight[white]{\text{false}}~
     \text{else}~
@@ -463,9 +509,9 @@ v \quad:=\quad& ~ \qquad\qquad &\\
         {}
         {\vdash \highlight[white]{\text{O}} ~{:}~ \highlight[white]{\text{Nat}}}
       }
-      {\vdash \highlight[violet]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[white]{\text{Nat}}}
+      {\vdash \highlight[hlcol1]{\text{succ}~\highlight[hlcol1]{\text{O}}} ~{:}~ \highlight[white]{\text{Nat}}}
     }
-    {\vdash \highlight[white]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[white]{\text{Bool}}}
+    {\vdash \highlight[white]{\text{iszero} \left( \highlight[hlcol1]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[white]{\text{Bool}}}
   }
   {\prftree[r]{T-False}
     {}
@@ -484,7 +530,7 @@ v \quad:=\quad& ~ \qquad\qquad &\\
   }
   {\vdash \highlight[white]{
     \text{if}~
-    \left(\highlight[violet]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \left(\highlight[hlcol1]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
     \text{then}~
     \highlight[white]{\text{false}}~
     \text{else}~
@@ -500,9 +546,9 @@ v \quad:=\quad& ~ \qquad\qquad &\\
         {}
         {\vdash \highlight[white]{\text{O}} ~{:}~ \highlight[white]{\text{Nat}}}
       }
-      {\vdash \highlight[white]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[white]{\text{Nat}}}
+      {\vdash \highlight[white]{\text{succ}~\highlight[hlcol1]{\text{O}}} ~{:}~ \highlight[white]{\text{Nat}}}
     }
-    {\vdash \highlight[white]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[white]{\text{Bool}}}
+    {\vdash \highlight[white]{\text{iszero} \left( \highlight[hlcol1]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[white]{\text{Bool}}}
   }
   {\prftree[r]{T-False}
     {}
@@ -521,7 +567,7 @@ v \quad:=\quad& ~ \qquad\qquad &\\
   }
   {\vdash \highlight[white]{
     \text{if}~
-    \left(\highlight[violet]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \left(\highlight[hlcol1]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
     \text{then}~
     \highlight[white]{\text{false}}~
     \text{else}~
@@ -535,11 +581,11 @@ v \quad:=\quad& ~ \qquad\qquad &\\
     {\prftree[r]{T-Succ}
       {\prftree[r]{T-Zero}
         {}
-        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[white]{\text{Nat}}}
+        {\vdash \highlight[hlcol1]{\text{O}} ~{:}~ \highlight[white]{\text{Nat}}}
       }
-      {\vdash \highlight[white]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[white]{\text{Nat}}}
+      {\vdash \highlight[white]{\text{succ}~\highlight[hlcol1]{\text{O}}} ~{:}~ \highlight[white]{\text{Nat}}}
     }
-    {\vdash \highlight[white]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[white]{\text{Bool}}}
+    {\vdash \highlight[white]{\text{iszero} \left( \highlight[hlcol1]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[white]{\text{Bool}}}
   }
   {\prftree[r]{T-False}
     {}
@@ -558,7 +604,7 @@ v \quad:=\quad& ~ \qquad\qquad &\\
   }
   {\vdash \highlight[white]{
     \text{if}~
-    \left(\highlight[violet]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \left(\highlight[hlcol1]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
     \text{then}~
     \highlight[white]{\text{false}}~
     \text{else}~
@@ -572,11 +618,11 @@ v \quad:=\quad& ~ \qquad\qquad &\\
     {\prftree[r]{T-Succ}
       {\prftree[r]{T-Zero}
         {}
-        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[blue]{\text{Nat}}}
+        {\vdash \highlight[hlcol1]{\text{O}} ~{:}~ \highlight[hlcol2]{\text{Nat}}}
       }
-      {\vdash \highlight[white]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[white]{\text{Nat}}}
+      {\vdash \highlight[white]{\text{succ}~\highlight[hlcol1]{\text{O}}} ~{:}~ \highlight[white]{\text{Nat}}}
     }
-    {\vdash \highlight[white]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[white]{\text{Bool}}}
+    {\vdash \highlight[white]{\text{iszero} \left( \highlight[hlcol1]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[white]{\text{Bool}}}
   }
   {\prftree[r]{T-False}
     {}
@@ -595,7 +641,7 @@ v \quad:=\quad& ~ \qquad\qquad &\\
   }
   {\vdash \highlight[white]{
     \text{if}~
-    \left(\highlight[violet]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \left(\highlight[hlcol1]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
     \text{then}~
     \highlight[white]{\text{false}}~
     \text{else}~
@@ -609,11 +655,11 @@ v \quad:=\quad& ~ \qquad\qquad &\\
     {\prftree[r]{T-Succ}
       {\prftree[r]{T-Zero}
         {}
-        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[blue]{\text{Nat}}}
+        {\vdash \highlight[hlcol1]{\text{O}} ~{:}~ \highlight[hlcol2]{\text{Nat}}}
       }
-      {\vdash \highlight[violet]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[white]{\text{Nat}}}
+      {\vdash \highlight[hlcol1]{\text{succ}~\highlight[hlcol1]{\text{O}}} ~{:}~ \highlight[white]{\text{Nat}}}
     }
-    {\vdash \highlight[white]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[white]{\text{Bool}}}
+    {\vdash \highlight[white]{\text{iszero} \left( \highlight[hlcol1]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[white]{\text{Bool}}}
   }
   {\prftree[r]{T-False}
     {}
@@ -632,7 +678,7 @@ v \quad:=\quad& ~ \qquad\qquad &\\
   }
   {\vdash \highlight[white]{
     \text{if}~
-    \left(\highlight[violet]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \left(\highlight[hlcol1]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
     \text{then}~
     \highlight[white]{\text{false}}~
     \text{else}~
@@ -646,11 +692,11 @@ v \quad:=\quad& ~ \qquad\qquad &\\
     {\prftree[r]{T-Succ}
       {\prftree[r]{T-Zero}
         {}
-        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[blue]{\text{Nat}}}
+        {\vdash \highlight[hlcol1]{\text{O}} ~{:}~ \highlight[hlcol2]{\text{Nat}}}
       }
-      {\vdash \highlight[violet]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[blue]{\text{Nat}}}
+      {\vdash \highlight[hlcol1]{\text{succ}~\highlight[hlcol1]{\text{O}}} ~{:}~ \highlight[hlcol2]{\text{Nat}}}
     }
-    {\vdash \highlight[white]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[white]{\text{Bool}}}
+    {\vdash \highlight[white]{\text{iszero} \left( \highlight[hlcol1]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[white]{\text{Bool}}}
   }
   {\prftree[r]{T-False}
     {}
@@ -669,7 +715,7 @@ v \quad:=\quad& ~ \qquad\qquad &\\
   }
   {\vdash \highlight[white]{
     \text{if}~
-    \left(\highlight[violet]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \left(\highlight[hlcol1]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
     \text{then}~
     \highlight[white]{\text{false}}~
     \text{else}~
@@ -683,11 +729,11 @@ v \quad:=\quad& ~ \qquad\qquad &\\
     {\prftree[r]{T-Succ}
       {\prftree[r]{T-Zero}
         {}
-        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[blue]{\text{Nat}}}
+        {\vdash \highlight[hlcol1]{\text{O}} ~{:}~ \highlight[hlcol2]{\text{Nat}}}
       }
-      {\vdash \highlight[violet]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[blue]{\text{Nat}}}
+      {\vdash \highlight[hlcol1]{\text{succ}~\highlight[hlcol1]{\text{O}}} ~{:}~ \highlight[hlcol2]{\text{Nat}}}
     }
-    {\vdash \highlight[violet]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[white]{\text{Bool}}}
+    {\vdash \highlight[hlcol1]{\text{iszero} \left( \highlight[hlcol1]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[white]{\text{Bool}}}
   }
   {\prftree[r]{T-False}
     {}
@@ -706,7 +752,7 @@ v \quad:=\quad& ~ \qquad\qquad &\\
   }
   {\vdash \highlight[white]{
     \text{if}~
-    \left(\highlight[violet]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \left(\highlight[hlcol1]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
     \text{then}~
     \highlight[white]{\text{false}}~
     \text{else}~
@@ -720,11 +766,11 @@ v \quad:=\quad& ~ \qquad\qquad &\\
     {\prftree[r]{T-Succ}
       {\prftree[r]{T-Zero}
         {}
-        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[blue]{\text{Nat}}}
+        {\vdash \highlight[hlcol1]{\text{O}} ~{:}~ \highlight[hlcol2]{\text{Nat}}}
       }
-      {\vdash \highlight[violet]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[blue]{\text{Nat}}}
+      {\vdash \highlight[hlcol1]{\text{succ}~\highlight[hlcol1]{\text{O}}} ~{:}~ \highlight[hlcol2]{\text{Nat}}}
     }
-    {\vdash \highlight[violet]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[blue]{\text{Bool}}}
+    {\vdash \highlight[hlcol1]{\text{iszero} \left( \highlight[hlcol1]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
   }
   {\prftree[r]{T-False}
     {}
@@ -743,7 +789,7 @@ v \quad:=\quad& ~ \qquad\qquad &\\
   }
   {\vdash \highlight[white]{
     \text{if}~
-    \left(\highlight[violet]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \left(\highlight[hlcol1]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
     \text{then}~
     \highlight[white]{\text{false}}~
     \text{else}~
@@ -757,11 +803,11 @@ v \quad:=\quad& ~ \qquad\qquad &\\
     {\prftree[r]{T-Succ}
       {\prftree[r]{T-Zero}
         {}
-        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[blue]{\text{Nat}}}
+        {\vdash \highlight[hlcol1]{\text{O}} ~{:}~ \highlight[hlcol2]{\text{Nat}}}
       }
-      {\vdash \highlight[violet]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[blue]{\text{Nat}}}
+      {\vdash \highlight[hlcol1]{\text{succ}~\highlight[hlcol1]{\text{O}}} ~{:}~ \highlight[hlcol2]{\text{Nat}}}
     }
-    {\vdash \highlight[violet]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[blue]{\text{Bool}}}
+    {\vdash \highlight[hlcol1]{\text{iszero} \left( \highlight[hlcol1]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
   }
   {\prftree[r]{T-False}
     {}
@@ -782,7 +828,7 @@ v \quad:=\quad& ~ \qquad\qquad &\\
     \text{if}~
     \left(\highlight[white]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
     \text{then}~
-    \highlight[violet]{\text{false}}~
+    \highlight[hlcol1]{\text{false}}~
     \text{else}~
     \left(\highlight[white]{\text{true}~\text{or}~\text{false}}\right)} ~
     {:}~
@@ -794,15 +840,15 @@ v \quad:=\quad& ~ \qquad\qquad &\\
     {\prftree[r]{T-Succ}
       {\prftree[r]{T-Zero}
         {}
-        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[blue]{\text{Nat}}}
+        {\vdash \highlight[hlcol1]{\text{O}} ~{:}~ \highlight[hlcol2]{\text{Nat}}}
       }
-      {\vdash \highlight[violet]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[blue]{\text{Nat}}}
+      {\vdash \highlight[hlcol1]{\text{succ}~\highlight[hlcol1]{\text{O}}} ~{:}~ \highlight[hlcol2]{\text{Nat}}}
     }
-    {\vdash \highlight[violet]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[blue]{\text{Bool}}}
+    {\vdash \highlight[hlcol1]{\text{iszero} \left( \highlight[hlcol1]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
   }
   {\prftree[r]{T-False}
     {}
-    {\vdash \highlight[violet]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
+    {\vdash \highlight[hlcol1]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
   }
   {\prftree[r]{T-Or}
     {\prftree[r]{T-True}
@@ -819,7 +865,7 @@ v \quad:=\quad& ~ \qquad\qquad &\\
     \text{if}~
     \left(\highlight[white]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
     \text{then}~
-    \highlight[violet]{\text{false}}~
+    \highlight[hlcol1]{\text{false}}~
     \text{else}~
     \left(\highlight[white]{\text{true}~\text{or}~\text{false}}\right)} ~
     {:}~
@@ -831,15 +877,15 @@ v \quad:=\quad& ~ \qquad\qquad &\\
     {\prftree[r]{T-Succ}
       {\prftree[r]{T-Zero}
         {}
-        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[blue]{\text{Nat}}}
+        {\vdash \highlight[hlcol1]{\text{O}} ~{:}~ \highlight[hlcol2]{\text{Nat}}}
       }
-      {\vdash \highlight[violet]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[blue]{\text{Nat}}}
+      {\vdash \highlight[hlcol1]{\text{succ}~\highlight[hlcol1]{\text{O}}} ~{:}~ \highlight[hlcol2]{\text{Nat}}}
     }
-    {\vdash \highlight[violet]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[blue]{\text{Bool}}}
+    {\vdash \highlight[hlcol1]{\text{iszero} \left( \highlight[hlcol1]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
   }
   {\prftree[r]{T-False}
     {}
-    {\vdash \highlight[violet]{\text{false}} ~{:}~ \highlight[blue]{\text{Bool}}}
+    {\vdash \highlight[hlcol1]{\text{false}} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
   }
   {\prftree[r]{T-Or}
     {\prftree[r]{T-True}
@@ -856,7 +902,7 @@ v \quad:=\quad& ~ \qquad\qquad &\\
     \text{if}~
     \left(\highlight[white]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
     \text{then}~
-    \highlight[violet]{\text{false}}~
+    \highlight[hlcol1]{\text{false}}~
     \text{else}~
     \left(\highlight[white]{\text{true}~\text{or}~\text{false}}\right)} ~
     {:}~
@@ -868,15 +914,15 @@ v \quad:=\quad& ~ \qquad\qquad &\\
     {\prftree[r]{T-Succ}
       {\prftree[r]{T-Zero}
         {}
-        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[blue]{\text{Nat}}}
+        {\vdash \highlight[hlcol1]{\text{O}} ~{:}~ \highlight[hlcol2]{\text{Nat}}}
       }
-      {\vdash \highlight[violet]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[blue]{\text{Nat}}}
+      {\vdash \highlight[hlcol1]{\text{succ}~\highlight[hlcol1]{\text{O}}} ~{:}~ \highlight[hlcol2]{\text{Nat}}}
     }
-    {\vdash \highlight[violet]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[blue]{\text{Bool}}}
+    {\vdash \highlight[hlcol1]{\text{iszero} \left( \highlight[hlcol1]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
   }
   {\prftree[r]{T-False}
     {}
-    {\vdash \highlight[violet]{\text{false}} ~{:}~ \highlight[blue]{\text{Bool}}}
+    {\vdash \highlight[hlcol1]{\text{false}} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
   }
   {\prftree[r]{T-Or}
     {\prftree[r]{T-True}
@@ -895,7 +941,7 @@ v \quad:=\quad& ~ \qquad\qquad &\\
     \text{then}~
     \highlight[white]{\text{false}}~
     \text{else}~
-    \left(\highlight[violet]{\text{true}~\text{or}~\text{false}}\right)} ~
+    \left(\highlight[hlcol1]{\text{true}~\text{or}~\text{false}}\right)} ~
     {:}~
     \highlight[white]{\text{Bool}}}\]
 
@@ -905,15 +951,15 @@ v \quad:=\quad& ~ \qquad\qquad &\\
     {\prftree[r]{T-Succ}
       {\prftree[r]{T-Zero}
         {}
-        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[blue]{\text{Nat}}}
+        {\vdash \highlight[hlcol1]{\text{O}} ~{:}~ \highlight[hlcol2]{\text{Nat}}}
       }
-      {\vdash \highlight[violet]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[blue]{\text{Nat}}}
+      {\vdash \highlight[hlcol1]{\text{succ}~\highlight[hlcol1]{\text{O}}} ~{:}~ \highlight[hlcol2]{\text{Nat}}}
     }
-    {\vdash \highlight[violet]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[blue]{\text{Bool}}}
+    {\vdash \highlight[hlcol1]{\text{iszero} \left( \highlight[hlcol1]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
   }
   {\prftree[r]{T-False}
     {}
-    {\vdash \highlight[violet]{\text{false}} ~{:}~ \highlight[blue]{\text{Bool}}}
+    {\vdash \highlight[hlcol1]{\text{false}} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
   }
   {\prftree[r]{T-Or}
     {\prftree[r]{T-True}
@@ -924,7 +970,7 @@ v \quad:=\quad& ~ \qquad\qquad &\\
       {}
       {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
     }
-    {\vdash \highlight[violet]{\highlight[violet]{\text{true}}~\text{or}~\highlight[violet]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
+    {\vdash \highlight[hlcol1]{\highlight[hlcol1]{\text{true}}~\text{or}~\highlight[hlcol1]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
   }
   {\vdash \highlight[white]{
     \text{if}~
@@ -932,7 +978,7 @@ v \quad:=\quad& ~ \qquad\qquad &\\
     \text{then}~
     \highlight[white]{\text{false}}~
     \text{else}~
-    \left(\highlight[violet]{\text{true}~\text{or}~\text{false}}\right)} ~
+    \left(\highlight[hlcol1]{\text{true}~\text{or}~\text{false}}\right)} ~
     {:}~
     \highlight[white]{\text{Bool}}}\]
 
@@ -942,15 +988,15 @@ v \quad:=\quad& ~ \qquad\qquad &\\
     {\prftree[r]{T-Succ}
       {\prftree[r]{T-Zero}
         {}
-        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[blue]{\text{Nat}}}
+        {\vdash \highlight[hlcol1]{\text{O}} ~{:}~ \highlight[hlcol2]{\text{Nat}}}
       }
-      {\vdash \highlight[violet]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[blue]{\text{Nat}}}
+      {\vdash \highlight[hlcol1]{\text{succ}~\highlight[hlcol1]{\text{O}}} ~{:}~ \highlight[hlcol2]{\text{Nat}}}
     }
-    {\vdash \highlight[violet]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[blue]{\text{Bool}}}
+    {\vdash \highlight[hlcol1]{\text{iszero} \left( \highlight[hlcol1]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
   }
   {\prftree[r]{T-False}
     {}
-    {\vdash \highlight[violet]{\text{false}} ~{:}~ \highlight[blue]{\text{Bool}}}
+    {\vdash \highlight[hlcol1]{\text{false}} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
   }
   {\prftree[r]{T-Or}
     {\prftree[r]{T-True}
@@ -961,7 +1007,7 @@ v \quad:=\quad& ~ \qquad\qquad &\\
       {}
       {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
     }
-    {\vdash \highlight[white]{\highlight[violet]{\text{true}}~\text{or}~\highlight[white]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
+    {\vdash \highlight[white]{\highlight[hlcol1]{\text{true}}~\text{or}~\highlight[white]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
   }
   {\vdash \highlight[white]{
     \text{if}~
@@ -969,7 +1015,7 @@ v \quad:=\quad& ~ \qquad\qquad &\\
     \text{then}~
     \highlight[white]{\text{false}}~
     \text{else}~
-    \left(\highlight[violet]{\text{true}~\text{or}~\text{false}}\right)} ~
+    \left(\highlight[hlcol1]{\text{true}~\text{or}~\text{false}}\right)} ~
     {:}~
     \highlight[white]{\text{Bool}}}\]
 
@@ -979,26 +1025,26 @@ v \quad:=\quad& ~ \qquad\qquad &\\
     {\prftree[r]{T-Succ}
       {\prftree[r]{T-Zero}
         {}
-        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[blue]{\text{Nat}}}
+        {\vdash \highlight[hlcol1]{\text{O}} ~{:}~ \highlight[hlcol2]{\text{Nat}}}
       }
-      {\vdash \highlight[violet]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[blue]{\text{Nat}}}
+      {\vdash \highlight[hlcol1]{\text{succ}~\highlight[hlcol1]{\text{O}}} ~{:}~ \highlight[hlcol2]{\text{Nat}}}
     }
-    {\vdash \highlight[violet]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[blue]{\text{Bool}}}
+    {\vdash \highlight[hlcol1]{\text{iszero} \left( \highlight[hlcol1]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
   }
   {\prftree[r]{T-False}
     {}
-    {\vdash \highlight[violet]{\text{false}} ~{:}~ \highlight[blue]{\text{Bool}}}
+    {\vdash \highlight[hlcol1]{\text{false}} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
   }
   {\prftree[r]{T-Or}
     {\prftree[r]{T-True}
       {}
-      {\vdash \highlight[violet]{\text{true}} ~{:}~ \highlight[white]{\text{Bool}}}
+      {\vdash \highlight[hlcol1]{\text{true}} ~{:}~ \highlight[white]{\text{Bool}}}
     }
     {\prftree[r]{T-False}
       {}
       {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
     }
-    {\vdash \highlight[white]{\highlight[violet]{\text{true}}~\text{or}~\highlight[white]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
+    {\vdash \highlight[white]{\highlight[hlcol1]{\text{true}}~\text{or}~\highlight[white]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
   }
   {\vdash \highlight[white]{
     \text{if}~
@@ -1006,7 +1052,7 @@ v \quad:=\quad& ~ \qquad\qquad &\\
     \text{then}~
     \highlight[white]{\text{false}}~
     \text{else}~
-    \left(\highlight[violet]{\text{true}~\text{or}~\text{false}}\right)} ~
+    \left(\highlight[hlcol1]{\text{true}~\text{or}~\text{false}}\right)} ~
     {:}~
     \highlight[white]{\text{Bool}}}\]
 
@@ -1016,26 +1062,26 @@ v \quad:=\quad& ~ \qquad\qquad &\\
     {\prftree[r]{T-Succ}
       {\prftree[r]{T-Zero}
         {}
-        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[blue]{\text{Nat}}}
+        {\vdash \highlight[hlcol1]{\text{O}} ~{:}~ \highlight[hlcol2]{\text{Nat}}}
       }
-      {\vdash \highlight[violet]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[blue]{\text{Nat}}}
+      {\vdash \highlight[hlcol1]{\text{succ}~\highlight[hlcol1]{\text{O}}} ~{:}~ \highlight[hlcol2]{\text{Nat}}}
     }
-    {\vdash \highlight[violet]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[blue]{\text{Bool}}}
+    {\vdash \highlight[hlcol1]{\text{iszero} \left( \highlight[hlcol1]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
   }
   {\prftree[r]{T-False}
     {}
-    {\vdash \highlight[violet]{\text{false}} ~{:}~ \highlight[blue]{\text{Bool}}}
+    {\vdash \highlight[hlcol1]{\text{false}} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
   }
   {\prftree[r]{T-Or}
     {\prftree[r]{T-True}
       {}
-      {\vdash \highlight[violet]{\text{true}} ~{:}~ \highlight[blue]{\text{Bool}}}
+      {\vdash \highlight[hlcol1]{\text{true}} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
     }
     {\prftree[r]{T-False}
       {}
       {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
     }
-    {\vdash \highlight[white]{\highlight[violet]{\text{true}}~\text{or}~\highlight[white]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
+    {\vdash \highlight[white]{\highlight[hlcol1]{\text{true}}~\text{or}~\highlight[white]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
   }
   {\vdash \highlight[white]{
     \text{if}~
@@ -1043,7 +1089,7 @@ v \quad:=\quad& ~ \qquad\qquad &\\
     \text{then}~
     \highlight[white]{\text{false}}~
     \text{else}~
-    \left(\highlight[violet]{\text{true}~\text{or}~\text{false}}\right)} ~
+    \left(\highlight[hlcol1]{\text{true}~\text{or}~\text{false}}\right)} ~
     {:}~
     \highlight[white]{\text{Bool}}}\]
 
@@ -1053,26 +1099,26 @@ v \quad:=\quad& ~ \qquad\qquad &\\
     {\prftree[r]{T-Succ}
       {\prftree[r]{T-Zero}
         {}
-        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[blue]{\text{Nat}}}
+        {\vdash \highlight[hlcol1]{\text{O}} ~{:}~ \highlight[hlcol2]{\text{Nat}}}
       }
-      {\vdash \highlight[violet]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[blue]{\text{Nat}}}
+      {\vdash \highlight[hlcol1]{\text{succ}~\highlight[hlcol1]{\text{O}}} ~{:}~ \highlight[hlcol2]{\text{Nat}}}
     }
-    {\vdash \highlight[violet]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[blue]{\text{Bool}}}
+    {\vdash \highlight[hlcol1]{\text{iszero} \left( \highlight[hlcol1]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
   }
   {\prftree[r]{T-False}
     {}
-    {\vdash \highlight[violet]{\text{false}} ~{:}~ \highlight[blue]{\text{Bool}}}
+    {\vdash \highlight[hlcol1]{\text{false}} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
   }
   {\prftree[r]{T-Or}
     {\prftree[r]{T-True}
       {}
-      {\vdash \highlight[violet]{\text{true}} ~{:}~ \highlight[blue]{\text{Bool}}}
+      {\vdash \highlight[hlcol1]{\text{true}} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
     }
     {\prftree[r]{T-False}
       {}
       {\vdash \highlight[white]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
     }
-    {\vdash \highlight[white]{\highlight[white]{\text{true}}~\text{or}~\highlight[violet]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
+    {\vdash \highlight[white]{\highlight[white]{\text{true}}~\text{or}~\highlight[hlcol1]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
   }
   {\vdash \highlight[white]{
     \text{if}~
@@ -1080,7 +1126,7 @@ v \quad:=\quad& ~ \qquad\qquad &\\
     \text{then}~
     \highlight[white]{\text{false}}~
     \text{else}~
-    \left(\highlight[violet]{\text{true}~\text{or}~\text{false}}\right)} ~
+    \left(\highlight[hlcol1]{\text{true}~\text{or}~\text{false}}\right)} ~
     {:}~
     \highlight[white]{\text{Bool}}}\]
 
@@ -1090,26 +1136,26 @@ v \quad:=\quad& ~ \qquad\qquad &\\
     {\prftree[r]{T-Succ}
       {\prftree[r]{T-Zero}
         {}
-        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[blue]{\text{Nat}}}
+        {\vdash \highlight[hlcol1]{\text{O}} ~{:}~ \highlight[hlcol2]{\text{Nat}}}
       }
-      {\vdash \highlight[violet]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[blue]{\text{Nat}}}
+      {\vdash \highlight[hlcol1]{\text{succ}~\highlight[hlcol1]{\text{O}}} ~{:}~ \highlight[hlcol2]{\text{Nat}}}
     }
-    {\vdash \highlight[violet]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[blue]{\text{Bool}}}
+    {\vdash \highlight[hlcol1]{\text{iszero} \left( \highlight[hlcol1]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
   }
   {\prftree[r]{T-False}
     {}
-    {\vdash \highlight[violet]{\text{false}} ~{:}~ \highlight[blue]{\text{Bool}}}
+    {\vdash \highlight[hlcol1]{\text{false}} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
   }
   {\prftree[r]{T-Or}
     {\prftree[r]{T-True}
       {}
-      {\vdash \highlight[violet]{\text{true}} ~{:}~ \highlight[blue]{\text{Bool}}}
+      {\vdash \highlight[hlcol1]{\text{true}} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
     }
     {\prftree[r]{T-False}
       {}
-      {\vdash \highlight[violet]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
+      {\vdash \highlight[hlcol1]{\text{false}} ~{:}~ \highlight[white]{\text{Bool}}}
     }
-    {\vdash \highlight[white]{\highlight[white]{\text{true}}~\text{or}~\highlight[violet]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
+    {\vdash \highlight[white]{\highlight[white]{\text{true}}~\text{or}~\highlight[hlcol1]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
   }
   {\vdash \highlight[white]{
     \text{if}~
@@ -1117,7 +1163,7 @@ v \quad:=\quad& ~ \qquad\qquad &\\
     \text{then}~
     \highlight[white]{\text{false}}~
     \text{else}~
-    \left(\highlight[violet]{\text{true}~\text{or}~\text{false}}\right)} ~
+    \left(\highlight[hlcol1]{\text{true}~\text{or}~\text{false}}\right)} ~
     {:}~
     \highlight[white]{\text{Bool}}}\]
 
@@ -1127,26 +1173,26 @@ v \quad:=\quad& ~ \qquad\qquad &\\
     {\prftree[r]{T-Succ}
       {\prftree[r]{T-Zero}
         {}
-        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[blue]{\text{Nat}}}
+        {\vdash \highlight[hlcol1]{\text{O}} ~{:}~ \highlight[hlcol2]{\text{Nat}}}
       }
-      {\vdash \highlight[violet]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[blue]{\text{Nat}}}
+      {\vdash \highlight[hlcol1]{\text{succ}~\highlight[hlcol1]{\text{O}}} ~{:}~ \highlight[hlcol2]{\text{Nat}}}
     }
-    {\vdash \highlight[violet]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[blue]{\text{Bool}}}
+    {\vdash \highlight[hlcol1]{\text{iszero} \left( \highlight[hlcol1]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
   }
   {\prftree[r]{T-False}
     {}
-    {\vdash \highlight[violet]{\text{false}} ~{:}~ \highlight[blue]{\text{Bool}}}
+    {\vdash \highlight[hlcol1]{\text{false}} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
   }
   {\prftree[r]{T-Or}
     {\prftree[r]{T-True}
       {}
-      {\vdash \highlight[violet]{\text{true}} ~{:}~ \highlight[blue]{\text{Bool}}}
+      {\vdash \highlight[hlcol1]{\text{true}} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
     }
     {\prftree[r]{T-False}
       {}
-      {\vdash \highlight[violet]{\text{false}} ~{:}~ \highlight[blue]{\text{Bool}}}
+      {\vdash \highlight[hlcol1]{\text{false}} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
     }
-    {\vdash \highlight[white]{\highlight[white]{\text{true}}~\text{or}~\highlight[violet]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
+    {\vdash \highlight[white]{\highlight[white]{\text{true}}~\text{or}~\highlight[hlcol1]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
   }
   {\vdash \highlight[white]{
     \text{if}~
@@ -1154,7 +1200,7 @@ v \quad:=\quad& ~ \qquad\qquad &\\
     \text{then}~
     \highlight[white]{\text{false}}~
     \text{else}~
-    \left(\highlight[violet]{\text{true}~\text{or}~\text{false}}\right)} ~
+    \left(\highlight[hlcol1]{\text{true}~\text{or}~\text{false}}\right)} ~
     {:}~
     \highlight[white]{\text{Bool}}}\]
 
@@ -1164,26 +1210,26 @@ v \quad:=\quad& ~ \qquad\qquad &\\
     {\prftree[r]{T-Succ}
       {\prftree[r]{T-Zero}
         {}
-        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[blue]{\text{Nat}}}
+        {\vdash \highlight[hlcol1]{\text{O}} ~{:}~ \highlight[hlcol2]{\text{Nat}}}
       }
-      {\vdash \highlight[violet]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[blue]{\text{Nat}}}
+      {\vdash \highlight[hlcol1]{\text{succ}~\highlight[hlcol1]{\text{O}}} ~{:}~ \highlight[hlcol2]{\text{Nat}}}
     }
-    {\vdash \highlight[violet]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[blue]{\text{Bool}}}
+    {\vdash \highlight[hlcol1]{\text{iszero} \left( \highlight[hlcol1]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
   }
   {\prftree[r]{T-False}
     {}
-    {\vdash \highlight[violet]{\text{false}} ~{:}~ \highlight[blue]{\text{Bool}}}
+    {\vdash \highlight[hlcol1]{\text{false}} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
   }
   {\prftree[r]{T-Or}
     {\prftree[r]{T-True}
       {}
-      {\vdash \highlight[violet]{\text{true}} ~{:}~ \highlight[blue]{\text{Bool}}}
+      {\vdash \highlight[hlcol1]{\text{true}} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
     }
     {\prftree[r]{T-False}
       {}
-      {\vdash \highlight[violet]{\text{false}} ~{:}~ \highlight[blue]{\text{Bool}}}
+      {\vdash \highlight[hlcol1]{\text{false}} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
     }
-    {\vdash \highlight[violet]{\highlight[violet]{\text{true}}~\text{or}~\highlight[violet]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
+    {\vdash \highlight[hlcol1]{\highlight[hlcol1]{\text{true}}~\text{or}~\highlight[hlcol1]{\text{false}}} ~{:}~ \highlight[white]{\text{Bool}}}
   }
   {\vdash \highlight[white]{
     \text{if}~
@@ -1191,7 +1237,7 @@ v \quad:=\quad& ~ \qquad\qquad &\\
     \text{then}~
     \highlight[white]{\text{false}}~
     \text{else}~
-    \left(\highlight[violet]{\text{true}~\text{or}~\text{false}}\right)} ~
+    \left(\highlight[hlcol1]{\text{true}~\text{or}~\text{false}}\right)} ~
     {:}~
     \highlight[white]{\text{Bool}}}\]
 
@@ -1201,26 +1247,26 @@ v \quad:=\quad& ~ \qquad\qquad &\\
     {\prftree[r]{T-Succ}
       {\prftree[r]{T-Zero}
         {}
-        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[blue]{\text{Nat}}}
+        {\vdash \highlight[hlcol1]{\text{O}} ~{:}~ \highlight[hlcol2]{\text{Nat}}}
       }
-      {\vdash \highlight[violet]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[blue]{\text{Nat}}}
+      {\vdash \highlight[hlcol1]{\text{succ}~\highlight[hlcol1]{\text{O}}} ~{:}~ \highlight[hlcol2]{\text{Nat}}}
     }
-    {\vdash \highlight[violet]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[blue]{\text{Bool}}}
+    {\vdash \highlight[hlcol1]{\text{iszero} \left( \highlight[hlcol1]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
   }
   {\prftree[r]{T-False}
     {}
-    {\vdash \highlight[violet]{\text{false}} ~{:}~ \highlight[blue]{\text{Bool}}}
+    {\vdash \highlight[hlcol1]{\text{false}} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
   }
   {\prftree[r]{T-Or}
     {\prftree[r]{T-True}
       {}
-      {\vdash \highlight[violet]{\text{true}} ~{:}~ \highlight[blue]{\text{Bool}}}
+      {\vdash \highlight[hlcol1]{\text{true}} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
     }
     {\prftree[r]{T-False}
       {}
-      {\vdash \highlight[violet]{\text{false}} ~{:}~ \highlight[blue]{\text{Bool}}}
+      {\vdash \highlight[hlcol1]{\text{false}} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
     }
-    {\vdash \highlight[violet]{\highlight[violet]{\text{true}}~\text{or}~\highlight[violet]{\text{false}}} ~{:}~ \highlight[blue]{\text{Bool}}}
+    {\vdash \highlight[hlcol1]{\highlight[hlcol1]{\text{true}}~\text{or}~\highlight[hlcol1]{\text{false}}} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
   }
   {\vdash \highlight[white]{
     \text{if}~
@@ -1228,7 +1274,7 @@ v \quad:=\quad& ~ \qquad\qquad &\\
     \text{then}~
     \highlight[white]{\text{false}}~
     \text{else}~
-    \left(\highlight[violet]{\text{true}~\text{or}~\text{false}}\right)} ~
+    \left(\highlight[hlcol1]{\text{true}~\text{or}~\text{false}}\right)} ~
     {:}~
     \highlight[white]{\text{Bool}}}\]
 
@@ -1238,34 +1284,34 @@ v \quad:=\quad& ~ \qquad\qquad &\\
     {\prftree[r]{T-Succ}
       {\prftree[r]{T-Zero}
         {}
-        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[blue]{\text{Nat}}}
+        {\vdash \highlight[hlcol1]{\text{O}} ~{:}~ \highlight[hlcol2]{\text{Nat}}}
       }
-      {\vdash \highlight[violet]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[blue]{\text{Nat}}}
+      {\vdash \highlight[hlcol1]{\text{succ}~\highlight[hlcol1]{\text{O}}} ~{:}~ \highlight[hlcol2]{\text{Nat}}}
     }
-    {\vdash \highlight[violet]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[blue]{\text{Bool}}}
+    {\vdash \highlight[hlcol1]{\text{iszero} \left( \highlight[hlcol1]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
   }
   {\prftree[r]{T-False}
     {}
-    {\vdash \highlight[violet]{\text{false}} ~{:}~ \highlight[blue]{\text{Bool}}}
+    {\vdash \highlight[hlcol1]{\text{false}} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
   }
   {\prftree[r]{T-Or}
     {\prftree[r]{T-True}
       {}
-      {\vdash \highlight[violet]{\text{true}} ~{:}~ \highlight[blue]{\text{Bool}}}
+      {\vdash \highlight[hlcol1]{\text{true}} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
     }
     {\prftree[r]{T-False}
       {}
-      {\vdash \highlight[violet]{\text{false}} ~{:}~ \highlight[blue]{\text{Bool}}}
+      {\vdash \highlight[hlcol1]{\text{false}} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
     }
-    {\vdash \highlight[violet]{\highlight[violet]{\text{true}}~\text{or}~\highlight[violet]{\text{false}}} ~{:}~ \highlight[blue]{\text{Bool}}}
+    {\vdash \highlight[hlcol1]{\highlight[hlcol1]{\text{true}}~\text{or}~\highlight[hlcol1]{\text{false}}} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
   }
-  {\vdash \highlight[violet]{
+  {\vdash \highlight[hlcol1]{
     \text{if}~
-    \left(\highlight[violet]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \left(\highlight[hlcol1]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
     \text{then}~
-    \highlight[violet]{\text{false}}~
+    \highlight[hlcol1]{\text{false}}~
     \text{else}~
-    \left(\highlight[violet]{\text{true}~\text{or}~\text{false}}\right)} ~
+    \left(\highlight[hlcol1]{\text{true}~\text{or}~\text{false}}\right)} ~
     {:}~
     \highlight[white]{\text{Bool}}}\]
 
@@ -1275,36 +1321,36 @@ v \quad:=\quad& ~ \qquad\qquad &\\
     {\prftree[r]{T-Succ}
       {\prftree[r]{T-Zero}
         {}
-        {\vdash \highlight[violet]{\text{O}} ~{:}~ \highlight[blue]{\text{Nat}}}
+        {\vdash \highlight[hlcol1]{\text{O}} ~{:}~ \highlight[hlcol2]{\text{Nat}}}
       }
-      {\vdash \highlight[violet]{\text{succ}~\highlight[violet]{\text{O}}} ~{:}~ \highlight[blue]{\text{Nat}}}
+      {\vdash \highlight[hlcol1]{\text{succ}~\highlight[hlcol1]{\text{O}}} ~{:}~ \highlight[hlcol2]{\text{Nat}}}
     }
-    {\vdash \highlight[violet]{\text{iszero} \left( \highlight[violet]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[blue]{\text{Bool}}}
+    {\vdash \highlight[hlcol1]{\text{iszero} \left( \highlight[hlcol1]{\text{succ} ~ \text{O}} \right)} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
   }
   {\prftree[r]{T-False}
     {}
-    {\vdash \highlight[violet]{\text{false}} ~{:}~ \highlight[blue]{\text{Bool}}}
+    {\vdash \highlight[hlcol1]{\text{false}} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
   }
   {\prftree[r]{T-Or}
     {\prftree[r]{T-True}
       {}
-      {\vdash \highlight[violet]{\text{true}} ~{:}~ \highlight[blue]{\text{Bool}}}
+      {\vdash \highlight[hlcol1]{\text{true}} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
     }
     {\prftree[r]{T-False}
       {}
-      {\vdash \highlight[violet]{\text{false}} ~{:}~ \highlight[blue]{\text{Bool}}}
+      {\vdash \highlight[hlcol1]{\text{false}} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
     }
-    {\vdash \highlight[violet]{\highlight[violet]{\text{true}}~\text{or}~\highlight[violet]{\text{false}}} ~{:}~ \highlight[blue]{\text{Bool}}}
+    {\vdash \highlight[hlcol1]{\highlight[hlcol1]{\text{true}}~\text{or}~\highlight[hlcol1]{\text{false}}} ~{:}~ \highlight[hlcol2]{\text{Bool}}}
   }
-  {\vdash \highlight[violet]{
+  {\vdash \highlight[hlcol1]{
     \text{if}~
-    \left(\highlight[violet]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
+    \left(\highlight[hlcol1]{\text{iszero}~\left(\text{succ}~\text{O}\right)}\right)~
     \text{then}~
-    \highlight[violet]{\text{false}}~
+    \highlight[hlcol1]{\text{false}}~
     \text{else}~
-    \left(\highlight[violet]{\text{true}~\text{or}~\text{false}}\right)} ~
+    \left(\highlight[hlcol1]{\text{true}~\text{or}~\text{false}}\right)} ~
     {:}~
-    \highlight[blue]{\text{Bool}}}\]
+    \highlight[hlcol2]{\text{Bool}}}\]
 
 \end{overprint}
 
@@ -1366,7 +1412,7 @@ checkIf _ _ =
   \end{minted}
   \onslide<+->
   \begin{minted}{haskell}
-> check (tmBad, TyBool)
+> checkType (tmBad, TyBool)
   \end{minted}
   \onslide<+->
   \begin{minted}{haskell}
@@ -1378,7 +1424,7 @@ Nothing
   \end{minted}
   \onslide<+->
   \begin{minted}{haskell}
-> check (tmGood, TyBool)
+> checkType (tmGood, TyBool)
   \end{minted}
   \onslide<+->
   \begin{minted}{haskell}
@@ -1386,7 +1432,7 @@ Just ()
   \end{minted}
   \onslide<+->
   \begin{minted}{haskell}
-> check (tmGood, TyNat)
+> checkType (tmGood, TyNat)
   \end{minted}
   \onslide<+->
   \begin{minted}{haskell}
@@ -1480,6 +1526,61 @@ Just TyBool
   \end{minted}
 \end{frame}
 
+\begin{frame}[fragile]
+  \begin{minted}{haskell}
+genType          :: Gen Type
+genType = ...
+genTypedTerm     :: Type -> Gen Term
+genTypedTerm = ...
+
+genWellTypedTerm :: Gen Term
+genWellTypedTerm =
+  genType >>= genTypedTerm
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{minted}{haskell}
+checkTypeCorrect :: Property
+checkTypeCorrect = property $ do
+  (ty, tm) <- forAll $ do
+    ty' <- genType
+    tm' <- genTypedTerm ty'
+    pure (ty', tm')
+  checkType (tm, ty) === Just ()
+  \end{minted}
+
+  \begin{minted}{haskell}
+inferCorrect :: Property
+inferCorrect = property $ do
+  (ty, tm) <- forAll $ do
+    ty' <- genType
+    tm' <- genTypedTerm ty'
+    pure (ty', tm')
+  infer tm === Just ty
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \onslide<+->
+  \begin{minted}{haskell}
+> check $ checkTypeCorrect
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+  <interactive> passed 100 tests.
+True
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> check $ inferCorrect
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+  <interactive> passed 100 tests.
+True
+  \end{minted}
+\end{frame}
 
 \begin{frame}[c]
   There are two main properties which relate the type system of a language and
@@ -1505,7 +1606,7 @@ Just TyBool
     $
     \onslide<2>
     $
-    \highlight{\forall}
+    \highlight[hlcol1]{\forall}
     \highlight[white]{\vdash t {:} T}
     \left (
     \highlight[white]{\text{value}~t}
@@ -1516,7 +1617,7 @@ Just TyBool
     \onslide<3>
     $
     \highlight[white]{\forall}
-    \highlight{\vdash t {:} T}
+    \highlight[hlcol1]{\vdash t {:} T}
     \left (
     \highlight[white]{\text{value}~t}
     \highlight[white]{\vee}
@@ -1529,7 +1630,7 @@ Just TyBool
     \highlight[white]{\vdash t {:} T}
     \left (
     \highlight[white]{\text{value}~t}
-    \highlight{\vee}
+    \highlight[hlcol1]{\vee}
     \highlight[white]{\exists t^{\prime} \left( t \longrightarrow t^{\prime} \right)}
     \right)
     $
@@ -1538,7 +1639,7 @@ Just TyBool
     \highlight[white]{\forall}
     \highlight[white]{\vdash t {:} T}
     \left (
-    \highlight{\text{value}~t}
+    \highlight[hlcol1]{\text{value}~t}
     \highlight[white]{\vee}
     \highlight[white]{\exists t^{\prime} \left( t \longrightarrow t^{\prime} \right)}
     \right)
@@ -1550,7 +1651,7 @@ Just TyBool
     \left (
     \highlight[white]{\text{value}~t}
     \highlight[white]{\vee}
-    \highlight{\exists t^{\prime} \left( t \longrightarrow t^{\prime} \right)}
+    \highlight[hlcol1]{\exists t^{\prime} \left( t \longrightarrow t^{\prime} \right)}
     \right)
     $
   \end{overprint}
@@ -1572,7 +1673,7 @@ Just TyBool
     $
     \onslide<+>
     $
-    \highlight{\text{For all}}
+    \highlight[hlcol1]{\text{For all}}
     \highlight[white]{\text{well-typed terms,}} \\
     \highlight[white]{\text{the term is}}
     \highlight[white]{\text{either}}
@@ -1585,7 +1686,7 @@ Just TyBool
     \onslide<+>
     $
     \highlight[white]{\text{For all}}
-    \highlight{\text{well-typed terms,}} \\
+    \highlight[hlcol1]{\text{well-typed terms,}} \\
     \highlight[white]{\text{the term is}}
     \highlight[white]{\text{either}}
     \text{a}
@@ -1599,7 +1700,7 @@ Just TyBool
     \highlight[white]{\text{For all}}
     \highlight[white]{\text{well-typed terms,}} \\
     \highlight[white]{\text{the term is}}
-    \highlight{\text{either}}
+    \highlight[hlcol1]{\text{either}}
     \text{a}
     \highlight[white]{\text{value}}
     \text{or} \\
@@ -1613,7 +1714,7 @@ Just TyBool
     \highlight[white]{\text{the term is}}
     \highlight[white]{\text{either}}
     \text{a}
-    \highlight{\text{value}}
+    \highlight[hlcol1]{\text{value}}
     \text{or} \\
     \highlight[white]{\text{is able to step}}
     \text{.}
@@ -1627,7 +1728,7 @@ Just TyBool
     \text{a}
     \highlight[white]{\text{value}}
     \text{or} \\
-    \highlight{\text{is able to step}}
+    \highlight[hlcol1]{\text{is able to step}}
     \text{.}
     $
   \end{overprint}
@@ -1652,7 +1753,7 @@ Just TyBool
     $
     \onslide<2>
     $
-    \highlight{\forall}
+    \highlight[hlcol1]{\forall}
     \highlight[white]{\vdash t {:} T}
     \left(
       \highlight[white]{\exists t^{\prime} \left(t \longrightarrow t^{\prime}\right)}
@@ -1663,7 +1764,7 @@ Just TyBool
     \onslide<3>
     $
     \highlight[white]{\forall}
-    \highlight{\vdash t {:} T}
+    \highlight[hlcol1]{\vdash t {:} T}
     \left(
       \highlight[white]{\exists t^{\prime} \left(t \longrightarrow t^{\prime}\right)}
       \highlight[white]{\implies}
@@ -1676,7 +1777,7 @@ Just TyBool
     \highlight[white]{\vdash t {:} T}
     \left(
       \highlight[white]{\exists t^{\prime} \left(t \longrightarrow t^{\prime}\right)}
-      \highlight{\implies}
+      \highlight[hlcol1]{\implies}
       \highlight[white]{\vdash t^{\prime} {:} T}
     \right)
     $
@@ -1685,7 +1786,7 @@ Just TyBool
     \highlight[white]{\forall}
     \highlight[white]{\vdash t {:} T}
     \left(
-      \highlight{\exists t^{\prime} \left(t \longrightarrow t^{\prime}\right)}
+      \highlight[hlcol1]{\exists t^{\prime} \left(t \longrightarrow t^{\prime}\right)}
       \highlight[white]{\implies}
       \highlight[white]{\vdash t^{\prime} {:} T}
     \right)
@@ -1693,11 +1794,11 @@ Just TyBool
     \onslide<6>
     $
     \highlight[white]{\forall}
-    \highlight{\vdash t {:} T}
+    \highlight[white]{\vdash t {:} T}
     \left(
       \highlight[white]{\exists t^{\prime} \left(t \longrightarrow t^{\prime}\right)}
       \highlight[white]{\implies}
-      \highlight{\vdash t^{\prime} {:} T}
+      \highlight[hlcol1]{\vdash t^{\prime} {:} T}
     \right)
     $
   \end{overprint}
@@ -1717,7 +1818,7 @@ Just TyBool
     $
     \onslide<+>
     $
-    \highlight{\text{For all}}
+    \highlight[hlcol1]{\text{For all}}
     \highlight[white]{\text{well-typed terms}}
     \text{,} \\
     \highlight[white]{\text{if}}
@@ -1728,7 +1829,7 @@ Just TyBool
     \onslide<+>
     $
     \highlight[white]{\text{For all}}
-    \highlight{\text{well-typed terms}}
+    \highlight[hlcol1]{\text{well-typed terms}}
     \text{,} \\
     \highlight[white]{\text{if}}
     \highlight[white]{\text{the term can take a step}} \\
@@ -1740,7 +1841,7 @@ Just TyBool
     \highlight[white]{\text{For all}}
     \highlight[white]{\text{well-typed terms}}
     \text{,} \\
-    \highlight{\text{if}}
+    \highlight[hlcol1]{\text{if}}
     \highlight[white]{\text{the term can take a step}} \\
     \highlight[white]{\text{the type is unchanged}}
     \text{.}
@@ -1751,7 +1852,7 @@ Just TyBool
     \highlight[white]{\text{well-typed terms}}
     \text{,} \\
     \highlight[white]{\text{if}}
-    \highlight{\text{the term can take a step}} \\
+    \highlight[hlcol1]{\text{the term can take a step}} \\
     \highlight[white]{\text{the type is unchanged}}
     \text{.}
     $
@@ -1762,7 +1863,7 @@ Just TyBool
     \text{,} \\
     \highlight[white]{\text{if}}
     \highlight[white]{\text{the term can take a step}} \\
-    \highlight{\text{the type is unchanged}}
+    \highlight[hlcol1]{\text{the type is unchanged}}
     \text{.}
     $
   \end{overprint}
@@ -1787,3 +1888,45 @@ Just TyBool
 \begin{frame}[c]
   Together they mean we can use type systems to (approximately) classify which terms will or will not get stuck.
 \end{frame}
+
+\begin{frame}[fragile]
+  \begin{minted}{haskell}
+progress :: RuleSet Term () -> RuleSet Term Term -> Property
+progress value step = property $ do
+  tm <- forAll genWellTypedTerm
+  isJust (value tm) /== isJust (step tm)
+  \end{minted}
+
+  \begin{minted}{haskell}
+preservation :: RuleSet Term Term -> Property
+preservation step = property $ do
+  (ty, tm) <- forAll $ do
+    ty' <- genType
+    tm' <- Gen.filter (isJust . step) (genTypedTerm ty')
+    pure (ty', tm')
+  Just ty === (step tm >>= infer)
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \onslide<+->
+  \begin{minted}{haskell}
+> check $ progress valueEagerR stepEagerR
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+  <interactive> passed 100 tests.
+True
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> check $ preservation stepEagerR
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+  <interactive> passed 100 tests.
+True
+  \end{minted}
+
+\end{frame}
+

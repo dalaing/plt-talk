@@ -106,10 +106,10 @@ boolRulesLazyDeterminstic :: Property
 boolRulesLazyDeterminstic =
   deterministic genTerm evalRulesLazy
 
-boolRulesEagerExactlyOne :: Property
-boolRulesEagerExactlyOne =
+boolRulesEagerValueOrStep :: Property
+boolRulesEagerValueOrStep =
   exactlyOne genTerm valueR stepEagerR
 
-boolRulesLazyExactlyOne :: Property
-boolRulesLazyExactlyOne =
+boolRulesLazyValueOrStep :: Property
+boolRulesLazyValueOrStep =
   exactlyOne genTerm valueR stepLazyR

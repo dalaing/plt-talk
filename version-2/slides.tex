@@ -8,6 +8,7 @@
 \usepackage{amsmath}
 \usepackage{array}
 \usepackage{color}
+\usepackage{xcolor}
 \usepackage{minted}
 \usepackage{mdframed}
 \usepackage{prftree}
@@ -15,6 +16,10 @@
 
 \newcolumntype{L}{>{$}l<{$}}
 \newcolumntype{R}{>{$}r<{$}}
+
+\definecolor{hlcol1}{HTML}{8DC7EB}
+\definecolor{hlcol2}{HTML}{C7EB8D}
+\definecolor{hlcol3}{HTML}{EB8DC7}
 
 % \highlight[<colour>]{<stuff>}
 \newcommand{\highlight}[2][lightgray]{\mathchoice%
@@ -41,17 +46,17 @@
 \maketitle
 \end{frame}
 
-%\include{introduction}
+\include{introduction}
 
-%\include{natural-deduction-rules}
+\include{natural-deduction-rules}
 
-%\include{integers}
+\include{integers}
 
-%\include{booleans}
+\include{booleans}
 
-%\include{natural-numbers}
+\include{natural-numbers}
 
-%\include{booleans-and-natural-numbers}
+\include{booleans-and-natural-numbers}
 
 \include{lambda-calculus}
 
