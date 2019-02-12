@@ -833,6 +833,146 @@ Unsurprisingly, the small-step semantics don't change (except we now have type a
   \end{overprint}
 \end{frame}
 
+\begin{frame}[fragile]
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{minted}{haskell}
+inferVar :: Ord a => Rule (Context a, Term a) Type
+inferVar _ (ctx, TmVar a) =
+  fetchFromContext a ctx
+inferVar _ _ =
+  Nothing
+      \end{minted}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+  \infrule[T-Var]
+  {}
+  {\highlight[white]{\Gamma},\highlight[white]{x {:} T} \vdash x {:} T}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{minted}{haskell}
+inferApp :: Rule (Context a, Term a) Type
+inferApp step (ctx, TmApp tm1 tm2) = do
+  ty1 <- step (ctx, tm1)
+  ty2 <- step (ctx, tm2)
+  case ty1 of
+    TyArr tyF tyT ->
+      if ty2 == tyF
+      then pure tyT
+      else Nothing
+    _ -> Nothing
+inferApp _ _ =
+  Nothing
+      \end{minted}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+  \infrule[T-App]
+  {\highlight[white]{\Gamma} \vdash t_1 {:} T_1 \rightarrow T_2 \andalso \highlight[white]{\Gamma} \vdash t_2 {:} T_1}
+  {\highlight[white]{\Gamma} \vdash t_1~t_2 {:} T_2}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{minted}{haskell}
+inferLam :: Rule (Context String, Term String) Type
+inferLam step (ctx, TmLam v ty s) = do
+  tyT <- step ( addToContext v ty ctx
+              , instantiate1 (TmVar v) s
+              )
+  pure $ TyArr ty tyT
+inferLam _ _ =
+  Nothing
+      \end{minted}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+  \infrule[T-Abs]
+  {\highlight[white]{\highlight[white]{\Gamma} , x {:} T_1} \vdash t {:} T_2}
+  {\highlight[white]{\Gamma} \vdash \left( \lambda~x {:} T_1 . t \right) {:} T_1 \rightarrow T_2}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{minted}{haskell}
+checkVar :: Ord a => Rule (Context a, Term a, Type) ()
+checkVar _ (ctx, TmVar v, ty) = do
+  tyC <- fetchFromContext v ctx
+  if tyC == ty then pure () else Nothing
+checkVar _ _ =
+  Nothing
+      \end{minted}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+  \infrule[T-Var]
+  {}
+  {\highlight[white]{\Gamma},\highlight[white]{x {:} T} \vdash x {:} T}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{minted}{haskell}
+checkApp :: RuleSet (Context String, Term String) Type
+         -> Rule (Context String, Term String, Type) ()
+checkApp infer step (ctx, TmApp tm1 tm2, ty) = do
+  ty1 <- infer (ctx, tm1)
+  case ty1 of
+    TyArr tyF tyT -> do
+      if tyT == ty
+      then step (ctx, tm2, tyF)
+      else Nothing
+    _ ->
+      Nothing
+checkApp _ _ =
+  Nothing
+      \end{minted}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+  \infrule[T-App]
+  {\highlight[white]{\Gamma} \vdash t_1 {:} T_1 \rightarrow T_2 \andalso \highlight[white]{\Gamma} \vdash t_2 {:} T_1}
+  {\highlight[white]{\Gamma} \vdash t_1~t_2 {:} T_2}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{minted}{haskell}
+checkLam :: Rule (Context String, Term String, Type) ()
+checkLam step (ctx, TmLam v ty s, TyArr tyF tyT) = do
+  if ty == tyF
+  then do
+    step ( addToContext v ty ctx
+         , instantiate1 (TmVar v) s
+         , tyT
+         )
+  else Nothing
+checkLam _ _ =
+  Nothing
+      \end{minted}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+  \infrule[T-Abs]
+  {\highlight[white]{\highlight[white]{\Gamma} , x {:} T_1} \vdash t {:} T_2}
+  {\highlight[white]{\Gamma} \vdash \left( \lambda~x {:} T_1 . t \right) {:} T_1 \rightarrow T_2}
+    \end{column}
+  \end{columns}
+\end{frame}
+
 \begin{frame}
   The typing relation rules out problematic terms like $\text{omega}$.
 \end{frame}
