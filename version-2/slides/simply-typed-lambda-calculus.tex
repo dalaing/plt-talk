@@ -3,6 +3,21 @@
 
 \begin{frame}
   \begin{mdframed}[frametitle={Terms, values and types}]
+\begin{overprint}
+\onslide<1>
+\begin{displaymath}
+    \begin{aligned}
+t \quad:=\quad& ~ \ldots &\\
+  & ~ x \quad\quad &variable\\
+  & ~ \lambda~x \highlight[white]{{:} T} . t \quad\quad &abstraction\\
+  & ~ t ~ t \quad\quad &function~application\\
+v \quad:=\quad& ~ \ldots &\\
+  & ~ \lambda~x \highlight[white]{{:} T} . t \quad\quad &abstraction\\
+T \quad:=\quad& ~ \ldots &\\
+  & ~ \highlight[white]{T \rightarrow T} \quad\quad &function~arrow\\
+    \end{aligned}
+\end{displaymath}
+\onslide<2>
 \begin{displaymath}
     \begin{aligned}
 t \quad:=\quad& ~ \ldots &\\
@@ -12,9 +27,23 @@ t \quad:=\quad& ~ \ldots &\\
 v \quad:=\quad& ~ \ldots &\\
   & ~ \lambda~x \highlight[hlcol1]{{:} T} . t \quad\quad &abstraction\\
 T \quad:=\quad& ~ \ldots &\\
+  & ~ \highlight[white]{T \rightarrow T} \quad\quad &function~arrow\\
+    \end{aligned}
+\end{displaymath}
+\onslide<3>
+\begin{displaymath}
+    \begin{aligned}
+t \quad:=\quad& ~ \ldots &\\
+  & ~ x \quad\quad &variable\\
+  & ~ \lambda~x \highlight[white]{{:} T} . t \quad\quad &abstraction\\
+  & ~ t ~ t \quad\quad &function~application\\
+v \quad:=\quad& ~ \ldots &\\
+  & ~ \lambda~x \highlight[white]{{:} T} . t \quad\quad &abstraction\\
+T \quad:=\quad& ~ \ldots &\\
   & ~ \highlight[hlcol1]{T \rightarrow T} \quad\quad &function~arrow\\
     \end{aligned}
 \end{displaymath}
+\end{overprint}
 \end{mdframed}
 \medskip
 \begin{overprint}
