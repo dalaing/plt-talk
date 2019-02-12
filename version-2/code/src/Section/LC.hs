@@ -31,6 +31,8 @@ data Term a =
   | TmPred (Term a)
   | TmIsZero (Term a)
   | TmIf (Term a) (Term a) (Term a)
+  | TmAdd (Term a) (Term a)
+  | TmInt Int
 
 deriveEq1 ''Term
 deriveOrd1 ''Term
@@ -52,6 +54,8 @@ instance Functor Term where
   fmap f (TmPred tm) = TmPred (fmap f tm)
   fmap f (TmIsZero tm) = TmIsZero (fmap f tm)
   fmap f (TmIf tm1 tm2 tm3) = TmIf (fmap f tm1) (fmap f tm2) (fmap f tm3)
+  fmap f (TmAdd tm1 tm2) = TmAdd (fmap f tm1) (fmap f tm2)
+  fmap _ (TmInt i) = TmInt i
 
 instance Foldable Term where
   foldMap f (TmVar x) = f x
@@ -65,6 +69,8 @@ instance Foldable Term where
   foldMap f (TmPred tm) = foldMap f tm
   foldMap f (TmIsZero tm) = foldMap f tm
   foldMap f (TmIf tm1 tm2 tm3) = foldMap f tm1 <> foldMap f tm2 <> foldMap f tm3
+  foldMap f (TmAdd tm1 tm2) = foldMap f tm1 <> foldMap f tm2
+  foldMap _ (TmInt _) = mempty
 
 instance Traversable Term where
   traverse f (TmVar x) = TmVar <$> f x
@@ -78,6 +84,8 @@ instance Traversable Term where
   traverse f (TmPred tm) = TmPred <$> traverse f tm
   traverse f (TmIsZero tm) = TmIsZero <$> traverse f tm
   traverse f (TmIf tm1 tm2 tm3) = TmIf <$> traverse f tm1 <*> traverse f tm2 <*> traverse f tm3
+  traverse f (TmAdd tm1 tm2) = TmAdd <$> traverse f tm1 <*> traverse f tm2
+  traverse _ (TmInt i) = pure (TmInt i)
 
 instance Applicative Term where
   pure = return
@@ -96,9 +104,15 @@ instance Monad Term where
   TmPred tm >>= f = TmPred (tm >>= f)
   TmIsZero tm >>= f = TmIsZero (tm >>= f)
   TmIf tm1 tm2 tm3 >>= f = TmIf (tm1 >>= f) (tm2 >>= f) (tm3 >>= f)
+  TmAdd tm1 tm2 >>= f = TmAdd (tm1 >>= f) (tm2 >>= f)
+  TmInt i >>= _ = TmInt i
 
 lam :: String -> Term String -> Term String
-lam s tm = TmLam s (abstract1 s tm)
+lam v tm = TmLam v (abstract1 v tm)
+
+unLam :: Term String -> Term String
+unLam (TmLam v s) = instantiate1 (TmVar v) s
+unLam tm = tm
 
 vFalse :: Rule (Term a) ()
 vFalse _ TmFalse = Just ()
@@ -112,6 +126,12 @@ vZero :: Rule (Term a) ()
 vZero _ TmZero =
   Just ()
 vZero _ _ =
+  Nothing
+
+vInt :: Rule (Term a) ()
+vInt _ (TmInt _) =
+  Just ()
+vInt _ _ =
   Nothing
 
 vLam :: Rule (Term a) ()
@@ -129,7 +149,7 @@ vSuccEager _ _ =
 
 valueEagerR :: RuleSet (Term a) ()
 valueEagerR =
-  mkRuleSet [vTrue, vFalse, vZero, vLam, vSuccEager]
+  mkRuleSet [vTrue, vFalse, vZero, vInt, vLam, vSuccEager]
 
 vSuccLazy :: Rule (Term a) ()
 vSuccLazy _ (TmSucc tm) =
@@ -139,7 +159,7 @@ vSuccLazy _ _ =
 
 valueLazyR :: RuleSet (Term a) ()
 valueLazyR =
-  mkRuleSet [vTrue, vFalse, vZero, vLam, vSuccLazy]
+  mkRuleSet [vTrue, vFalse, vZero, vInt, vLam, vSuccLazy]
 
 eOr1 :: Rule (Term a) (Term a)
 eOr1 step (TmOr tm1 tm2) = do
@@ -291,6 +311,26 @@ eAppLam _ (TmApp (TmLam _ s) tm) =
 eAppLam _ _ =
   Nothing
 
+eAdd1 :: Rule (Term a) (Term a)
+eAdd1 step (TmAdd tm1 tm2) = do
+  tm1' <- step tm1
+  pure $ TmAdd tm1' tm2
+eAdd1 _ _ =
+  Nothing
+
+eAdd2 :: Rule (Term a) (Term a)
+eAdd2 step (TmAdd tm1@(TmInt _) tm2) = do
+  tm2' <- step tm2
+  pure $ TmAdd tm1 tm2'
+eAdd2 _ _ =
+  Nothing
+
+eAddIntInt :: Rule (Term a) (Term a)
+eAddIntInt _ (TmAdd (TmInt i1) (TmInt i2)) =
+  Just (TmInt (i1 + i2))
+eAddIntInt _ _ =
+  Nothing
+
 stepEagerR :: RuleSet (Term a) (Term a)
 stepEagerR =
   mkRuleSet [ eOr1
@@ -312,6 +352,9 @@ stepEagerR =
             , eApp1
             , eApp2Eager valueEagerR
             , eAppLam
+            , eAdd1
+            , eAdd2
+            , eAddIntInt
             ]
 
 stepLazyR :: RuleSet (Term a) (Term a)
@@ -330,4 +373,7 @@ stepLazyR =
             , eIfFalse
             , eApp1
             , eAppLam
+            , eAdd1
+            , eAdd2
+            , eAddIntInt
             ]

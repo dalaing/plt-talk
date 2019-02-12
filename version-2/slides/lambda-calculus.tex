@@ -992,6 +992,192 @@ We are now equipped to deal with substitution.
   \end{mdframed}
 \end{frame}
 
+\begin{frame}[fragile]
+  \begin{minted}{haskell}
+data Term a =
+    TmVar a
+  | TmApp (Term a) (Term a)
+  | TmLam String (Scope () Term a)
+  ...
+  deriving (Eq, Ord, Show, Functor, Foldable, Traversable)
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{minted}{haskell}
+instance Monad Term where
+  return = TmVar
+
+  TmVar x >>= f = f x
+  TmApp tm1 tm2 >>= f = TmApp (tm1 >>= f) (tm2 >>= f)
+  TmLam v s >>= f = TmLam v (s >>>= f)
+  ...
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \onslide<+->
+  \begin{minted}{haskell}
+data Scope b f a = ...
+
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+abstract1    :: (Monad f, Eq a) => a -> f a -> Scope () f a
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+instantiate1 :: Monad f => f a -> Scope n f a -> f a
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \onslide<+->
+  \begin{minted}{haskell}
+> let fn = TmAdd (TmVar "x") (TmInt 1)
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> fn
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+TmAdd (TmVar "x") (TmInt 1)
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> toList fn
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+["x"]
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> let s = abstract1 "x" fn
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> s
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+Scope (TmAdd (TmVar (B ())) (TmInt 1))
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> toList s
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+[]
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> instantiate1 (TmInt 3) s
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+TmAdd (TmInt 3) (TmInt 1)
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \onslide<+->
+  \begin{minted}{haskell}
+> let s' = abstract1 "y" fn
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> s'
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+Scope (TmAdd (TmVar (F (TmVar "x"))) (TmInt 1))
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> toList s'
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+["x"]
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> instantiate1 (TmInt 3) s'
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+TmAdd (TmVar "x") (TmInt 1)
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \onslide<+->
+  \begin{minted}{haskell}
+lam :: String -> Term String -> Term String
+lam v tm = TmLam v (abstract1 v tm)
+
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> let fn = lam "x" $ TmAdd (TmVar "x") (TmInt 1)
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> fn
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+TmLam "x"
+  (Scope (TmAdd (TmVar (B ())) (TmInt 1)))
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> let tm = TmApp fn (TmAdd (TmVar "x") (TmInt 1)
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> tm
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+TmApp
+  (TmLam "x" (Scope (TmAdd (TmVar (B ())) (TmInt 1))))
+  (TmAdd (TmVar "x") (TmInt 1))
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+> tm >>= \v -> if v == "x" then TmInt 3 else TmVar v
+  \end{minted}
+  \onslide<+->
+  \begin{minted}{haskell}
+TmApp
+  (TmLam "x" (Scope (TmAdd (TmVar (B ())) (TmInt 1))))
+  (TmAdd (TmInt 3) (TmInt 1))
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{columns}
+    \begin{column}{0.4\textwidth}
+      \begin{minted}{haskell}
+eAppLam :: Rule (Term a) (Term a)
+eAppLam _ (TmApp (TmLam _ s) tm) =
+  pure $ instantiate1 tm s
+eAppLam _ _ =
+  Nothing
+      \end{minted}
+    \end{column}
+    \begin{column}{0.6\textwidth}
+  \infrule[E-AppLam]
+          {}
+          {\left(\lambda~x . t_{12}\right)~t_2 \longrightarrow \left[x \mapsto t_2 \right]~t_{12}}
+    \end{column}
+  \end{columns}
+\end{frame}
+
 \begin{frame}
   What can we do with lambda calculus?
 \end{frame}

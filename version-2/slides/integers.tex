@@ -791,6 +791,21 @@ genTerm =
 
 \begin{frame}[fragile]
   \begin{minted}{haskell}
+> Gen.printTree . Gen.small $ genTerm
+TmAdd (TmInt 1) (TmInt 1)
+ |-TmInt 0
+ |-TmInt 1
+ |  |-TmInt 0
+ |-TmInt 1
+ |  |-TmInt 0
+ |-TmAdd (TmInt 0) (TmInt 1)
+ |  |-TmAdd (TmInt 0) (TmInt 0)
+ |-TmAdd (TmInt 1) (TmInt 0)
+  \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+  \begin{minted}{haskell}
 exactlyOne :: (Show a)
            => Gen a
            -> RuleSet a b
