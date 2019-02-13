@@ -17,6 +17,10 @@ import qualified Data.Map as Map
 import Bound
 import Data.Deriving (deriveEq1, deriveOrd1, deriveShow1)
 
+import Hedgehog
+import qualified Hedgehog.Gen as Gen
+import qualified Hedgehog.Range as Range
+
 import Util.Rules
 
 data Term a =
@@ -331,49 +335,95 @@ eAddIntInt _ (TmAdd (TmInt i1) (TmInt i2)) =
 eAddIntInt _ _ =
   Nothing
 
+evalRulesEager :: [Rule (Term a) (Term a)]
+evalRulesEager =
+  [ eOr1
+  , eOr2 valueEagerR
+  , eOrFalseFalse
+  , eOrFalseTrue
+  , eOrTrueFalse
+  , eOrTrueTrue
+  , eSucc
+  , ePred
+  , ePredZero
+  , ePredSuccEager valueEagerR
+  , eIsZero
+  , eIsZeroZero
+  , eIsZeroSuccEager valueEagerR
+  , eIf
+  , eIfTrue
+  , eIfFalse
+  , eApp1
+  , eApp2Eager valueEagerR
+  , eAppLam
+  , eAdd1
+  , eAdd2
+  , eAddIntInt
+  ]
+
 stepEagerR :: RuleSet (Term a) (Term a)
 stepEagerR =
-  mkRuleSet [ eOr1
-            , eOr2 valueEagerR
-            , eOrFalseFalse
-            , eOrFalseTrue
-            , eOrTrueFalse
-            , eOrTrueTrue
-            , eSucc
-            , ePred
-            , ePredZero
-            , ePredSuccEager valueEagerR
-            , eIsZero
-            , eIsZeroZero
-            , eIsZeroSuccEager valueEagerR
-            , eIf
-            , eIfTrue
-            , eIfFalse
-            , eApp1
-            , eApp2Eager valueEagerR
-            , eAppLam
-            , eAdd1
-            , eAdd2
-            , eAddIntInt
-            ]
+  mkRuleSet evalRulesEager
+
+evalRulesLazy :: [Rule (Term a) (Term a)]
+evalRulesLazy =
+  [ eOr1
+  , eOrFalse
+  , eOrTrue
+  , ePred
+  , ePredZero
+  , ePredSuccLazy
+  , eIsZero
+  , eIsZeroZero
+  , eIsZeroSuccLazy
+  , eIf
+  , eIfTrue
+  , eIfFalse
+  , eApp1
+  , eAppLam
+  , eAdd1
+  , eAdd2
+  , eAddIntInt
+  ]
 
 stepLazyR :: RuleSet (Term a) (Term a)
 stepLazyR =
-  mkRuleSet [ eOr1
-            , eOrFalse
-            , eOrTrue
-            , ePred
-            , ePredZero
-            , ePredSuccLazy
-            , eIsZero
-            , eIsZeroZero
-            , eIsZeroSuccLazy
-            , eIf
-            , eIfTrue
-            , eIfFalse
-            , eApp1
-            , eAppLam
-            , eAdd1
-            , eAdd2
-            , eAddIntInt
-            ]
+  mkRuleSet evalRulesLazy
+
+genTerm :: Gen (Term String)
+genTerm = genTerm' []
+
+genTerm' :: [String] -> Gen (Term String)
+genTerm' vs =
+  Gen.recursive Gen.choice
+    ((if null vs then id else ((TmVar <$> Gen.element vs) :))
+    [ pure TmZero
+    , pure TmFalse
+    , pure TmTrue
+    ])
+    [ Gen.subterm (genTerm' vs) TmSucc
+    , Gen.subterm (genTerm' vs) TmPred
+    , Gen.subterm (genTerm' vs) TmIsZero
+    , Gen.subterm2 (genTerm' vs) (genTerm' vs) TmOr
+    , Gen.subterm3 (genTerm' vs) (genTerm' vs) (genTerm' vs) TmIf
+    , Gen.subterm2 (genTerm' vs) (genTerm' vs) TmApp
+    , do
+        v <- Gen.filter (not . (`elem` vs)) (pure <$> Gen.alpha)
+        Gen.subtermM (genTerm' (v : vs)) $ \tm -> pure $ lam v tm
+    ]
+
+lcRulesEagerDeterminstic :: Property
+lcRulesEagerDeterminstic =
+  deterministic genTerm evalRulesEager
+
+lcRulesLazyDeterminstic :: Property
+lcRulesLazyDeterminstic =
+  deterministic genTerm evalRulesLazy
+
+lcRulesEagerValueOrStep :: Property
+lcRulesEagerValueOrStep =
+  exactlyOne genTerm valueEagerR stepEagerR
+
+lcRulesLazyValueOrStep :: Property
+lcRulesLazyValueOrStep =
+  exactlyOne genTerm valueLazyR stepLazyR
