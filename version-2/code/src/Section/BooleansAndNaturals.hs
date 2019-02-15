@@ -399,25 +399,26 @@ boolNatRulesLazyValueOrStep =
 genType :: Gen Type
 genType = Gen.choice [ pure TyBool, pure TyNat ]
 
+genTypedTermGeneric :: Type -> [Gen Term]
+genTypedTermGeneric ty =
+  [ Gen.subtermM2 (genTypedTerm ty) (genTypedTerm ty) $ \n1 n2 -> do
+      b <- genTypedTerm TyBool
+      pure $ TmIf b n1 n2
+  ]
+
 genTypedTerm :: Type -> Gen Term
 genTypedTerm TyBool =
   Gen.recursive Gen.choice
-    [ pure TmFalse
-    , pure TmTrue
-    ]
+    [ pure TmFalse , pure TmTrue] $
     [ TmIsZero <$> genTypedTerm TyNat
     , Gen.subterm2 (genTypedTerm TyBool) (genTypedTerm TyBool) TmOr
-    , Gen.subterm3 (genTypedTerm TyBool) (genTypedTerm TyBool) (genTypedTerm TyBool) TmIf
-    ]
+    ] ++ genTypedTermGeneric TyBool
 genTypedTerm TyNat =
   Gen.recursive Gen.choice
-    [ pure TmZero ]
+    [ pure TmZero ] $
     [ Gen.subterm (genTypedTerm TyNat) TmSucc
     , Gen.subterm (genTypedTerm TyNat) TmPred
-    , Gen.subtermM2 (genTypedTerm TyNat) (genTypedTerm TyNat) $ \n1 n2 -> do
-        b <- genTypedTerm TyBool
-        pure $ TmIf b n1 n2
-    ]
+    ] ++ genTypedTermGeneric TyNat
 
 genWellTypedTerm :: Gen Term
 genWellTypedTerm =

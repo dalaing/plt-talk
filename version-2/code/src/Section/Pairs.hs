@@ -6,7 +6,7 @@ Stability   : experimental
 Portability : non-portable
 -}
 {-# LANGUAGE TemplateHaskell #-}
-module Section.STLC where
+module Section.Pairs where
 
 import Control.Monad (ap)
 import Data.Functor.Classes
@@ -30,6 +30,7 @@ data Type =
     TyBool
   | TyNat
   | TyArr Type Type
+  | TyPair Type Type
   deriving (Eq, Ord, Show)
 
 data Term a =
@@ -44,6 +45,9 @@ data Term a =
   | TmPred (Term a)
   | TmIsZero (Term a)
   | TmIf (Term a) (Term a) (Term a)
+  | TmPair (Term a) (Term a)
+  | TmFst (Term a)
+  | TmSnd (Term a)
 
 deriveEq1 ''Term
 deriveOrd1 ''Term
@@ -65,6 +69,9 @@ instance Functor Term where
   fmap f (TmPred tm) = TmPred (fmap f tm)
   fmap f (TmIsZero tm) = TmIsZero (fmap f tm)
   fmap f (TmIf tm1 tm2 tm3) = TmIf (fmap f tm1) (fmap f tm2) (fmap f tm3)
+  fmap f (TmPair tm1 tm2) = TmPair (fmap f tm1) (fmap f tm2)
+  fmap f (TmFst tm) = TmFst (fmap f tm)
+  fmap f (TmSnd tm) = TmSnd (fmap f tm)
 
 instance Foldable Term where
   foldMap f (TmVar x) = f x
@@ -78,6 +85,9 @@ instance Foldable Term where
   foldMap f (TmPred tm) = foldMap f tm
   foldMap f (TmIsZero tm) = foldMap f tm
   foldMap f (TmIf tm1 tm2 tm3) = foldMap f tm1 <> foldMap f tm2 <> foldMap f tm3
+  foldMap f (TmPair tm1 tm2) = foldMap f tm1 <> foldMap f tm2
+  foldMap f (TmFst tm) = foldMap f tm
+  foldMap f (TmSnd tm) = foldMap f tm
 
 instance Traversable Term where
   traverse f (TmVar x) = TmVar <$> f x
@@ -91,6 +101,9 @@ instance Traversable Term where
   traverse f (TmPred tm) = TmPred <$> traverse f tm
   traverse f (TmIsZero tm) = TmIsZero <$> traverse f tm
   traverse f (TmIf tm1 tm2 tm3) = TmIf <$> traverse f tm1 <*> traverse f tm2 <*> traverse f tm3
+  traverse f (TmPair tm1 tm2) = TmPair <$> traverse f tm1 <*> traverse f tm2
+  traverse f (TmFst tm) = TmFst <$> traverse f tm
+  traverse f (TmSnd tm) = TmSnd <$> traverse f tm
 
 instance Applicative Term where
   pure = return
@@ -109,6 +122,9 @@ instance Monad Term where
   TmPred tm >>= f = TmPred (tm >>= f)
   TmIsZero tm >>= f = TmIsZero (tm >>= f)
   TmIf tm1 tm2 tm3 >>= f = TmIf (tm1 >>= f) (tm2 >>= f) (tm3 >>= f)
+  TmPair tm1 tm2 >>= f = TmPair (tm1 >>= f) (tm2 >>= f)
+  TmFst tm >>= f = TmFst (tm >>= f)
+  TmSnd tm >>= f = TmSnd (tm >>= f)
 
 lam :: String -> Type -> Term String -> Term String
 lam s ty tm = TmLam s ty (abstract1 s tm)
@@ -140,9 +156,17 @@ vSuccEager value (TmSucc tm) = do
 vSuccEager _ _ =
   Nothing
 
+vPairEager :: Rule (Term a) ()
+vPairEager value (TmPair tm1 tm2) = do
+  _ <- value tm1
+  _ <- value tm2
+  pure ()
+vPairEager _ _ =
+  Nothing
+
 valueEagerR :: RuleSet (Term a) ()
 valueEagerR =
-  mkRuleSet [vTrue, vFalse, vZero, vLam, vSuccEager]
+  mkRuleSet [vTrue, vFalse, vZero, vLam, vSuccEager, vPairEager]
 
 vSuccLazy :: Rule (Term a) ()
 vSuccLazy _ (TmSucc tm) =
@@ -150,9 +174,15 @@ vSuccLazy _ (TmSucc tm) =
 vSuccLazy _ _ =
   Nothing
 
+vPairLazy :: Rule (Term a) ()
+vPairLazy _ (TmPair _ _) =
+  pure ()
+vPairLazy _ _ =
+  Nothing
+
 valueLazyR :: RuleSet (Term a) ()
 valueLazyR =
-  mkRuleSet [vTrue, vFalse, vZero, vLam, vSuccLazy]
+  mkRuleSet [vTrue, vFalse, vZero, vLam, vSuccLazy, vPairLazy]
 
 eOr1 :: Rule (Term a) (Term a)
 eOr1 step (TmOr tm1 tm2) = do
@@ -311,6 +341,61 @@ eAppLamLazy _ (TmApp (TmLam _ _ s) tm) =
 eAppLamLazy _ _ =
   Nothing
 
+ePair1Eager :: Rule (Term a) (Term a)
+ePair1Eager step (TmPair tm1 tm2) = do
+  tm1' <- step tm1
+  pure $ TmPair tm1' tm2
+ePair1Eager _ _ =
+  Nothing
+
+ePair2Eager :: RuleSet (Term a) () -> Rule (Term a) (Term a)
+ePair2Eager value step (TmPair tm1 tm2) = do
+  _ <- value tm1
+  tm2' <- step tm2
+  pure $ TmPair tm1 tm2'
+ePair2Eager _ _ _ =
+  Nothing
+
+eFst :: Rule (Term a) (Term a)
+eFst step (TmFst tm) = do
+  tm' <- step tm
+  pure $ TmFst tm'
+eFst _ _ =
+  Nothing
+
+eFstPairEager :: RuleSet (Term a) () -> Rule (Term a) (Term a)
+eFstPairEager value _ (TmFst (TmPair tm _)) = do
+  _ <- value tm
+  pure tm
+eFstPairEager _ _ _ =
+  Nothing
+
+eFstPairLazy :: Rule (Term a) (Term a)
+eFstPairLazy _ (TmFst (TmPair tm _)) =
+  pure tm
+eFstPairLazy _ _ =
+  Nothing
+
+eSnd :: Rule (Term a) (Term a)
+eSnd step (TmSnd tm) = do
+  tm' <- step tm
+  pure $ TmSnd tm'
+eSnd _ _ =
+  Nothing
+
+eSndPairEager :: RuleSet (Term a) () -> Rule (Term a) (Term a)
+eSndPairEager value _ (TmSnd (TmPair _ tm)) = do
+  _ <- value tm
+  pure tm
+eSndPairEager _ _ _ =
+  Nothing
+
+eSndPairLazy :: Rule (Term a) (Term a)
+eSndPairLazy _ (TmSnd (TmPair _ tm)) =
+  pure tm
+eSndPairLazy _ _ =
+  Nothing
+
 evalRulesEager :: [Rule (Term a) (Term a)]
 evalRulesEager =
   [ eOr1
@@ -332,6 +417,12 @@ evalRulesEager =
   , eApp1
   , eApp2Eager valueEagerR
   , eAppLamEager valueEagerR
+  , ePair1Eager
+  , ePair2Eager valueEagerR
+  , eFst
+  , eFstPairEager valueEagerR
+  , eSnd
+  , eSndPairEager valueEagerR
   ]
 
 stepEagerR :: RuleSet (Term a) (Term a)
@@ -354,6 +445,10 @@ evalRulesLazy =
   , eIfFalse
   , eApp1
   , eAppLamLazy
+  , eFst
+  , eFstPairLazy
+  , eSnd
+  , eSndPairLazy
   ]
 
 stepLazyR :: RuleSet (Term a) (Term a)
@@ -463,6 +558,32 @@ inferApp step (ctx, TmApp tm1 tm2) = do
 inferApp _ _ =
   Nothing
 
+inferPair :: Rule (Context a, Term a) Type
+inferPair step (ctx, TmPair tm1 tm2) = do
+  ty1 <- step (ctx, tm1)
+  ty2 <- step (ctx, tm2)
+  pure $ TyPair ty1 ty2
+inferPair _ _ =
+  Nothing
+
+inferFst :: Rule (Context a, Term a) Type
+inferFst step (ctx, TmFst tm) = do
+  ty <- step (ctx, tm)
+  case ty of
+    TyPair ty1 _ -> pure ty1
+    _ -> Nothing
+inferFst _ _ =
+  Nothing
+
+inferSnd :: Rule (Context a, Term a) Type
+inferSnd step (ctx, TmSnd tm) = do
+  ty <- step (ctx, tm)
+  case ty of
+    TyPair _ ty2 -> pure ty2
+    _ -> Nothing
+inferSnd _ _ =
+  Nothing
+
 infer' :: RuleSet (Context String, Term String) Type
 infer' =
   mkRuleSet [ inferFalse
@@ -476,6 +597,9 @@ infer' =
             , inferVar
             , inferLam
             , inferApp
+            , inferPair
+            , inferFst
+            , inferSnd
             ]
 
 infer :: Term String -> Maybe Type
@@ -561,6 +685,33 @@ checkApp step (ctx, TmApp tm1 tm2, ty) = do
 checkApp _ _ =
   Nothing
 
+checkPair :: Rule (Context a, Term a, Type) ()
+checkPair step (ctx, TmPair tm1 tm2, TyPair ty1 ty2) = do
+  step (ctx, tm1, ty1)
+  step (ctx, tm2, ty2)
+checkPair _ _ =
+  Nothing
+
+checkFst :: Rule (Context String, Term String, Type) ()
+checkFst step (ctx, TmFst tm, ty) = do
+  tyP <- infer' (ctx, tm)
+  case tyP of
+    TyPair ty1 ty2 ->
+      if ty1 == ty then pure () else Nothing
+    _ -> Nothing
+checkFst _ _ =
+  Nothing
+
+checkSnd :: Rule (Context String, Term String, Type) ()
+checkSnd step (ctx, TmSnd tm, ty) = do
+  tyP <- infer' (ctx, tm)
+  case tyP of
+    TyPair ty1 ty2 ->
+      if ty2 == ty then pure () else Nothing
+    _ -> Nothing
+checkSnd _ _ =
+  Nothing
+
 check' :: RuleSet (Context String, Term String, Type) ()
 check' =
   mkRuleSet [ checkFalse
@@ -574,6 +725,9 @@ check' =
             , checkVar
             , checkLam
             , checkApp
+            , checkPair
+            , checkFst
+            , checkSnd
             ]
 
 checkType :: Term String -> Type -> Maybe ()
@@ -600,29 +754,34 @@ genTerm' vs =
         v <- Gen.filter (not . (`elem` vs)) (pure <$> Gen.alpha)
         ty <- genType
         Gen.subtermM (genTerm' (v : vs)) $ \tm -> pure $ lam v ty tm
+    , Gen.subterm2 (genTerm' vs) (genTerm' vs) TmPair
+    , Gen.subterm (genTerm' vs) TmFst
+    , Gen.subterm (genTerm' vs) TmSnd
     ]
 
-stlcRulesEagerDeterminstic :: Property
-stlcRulesEagerDeterminstic =
+pairRulesEagerDeterminstic :: Property
+pairRulesEagerDeterminstic =
   deterministic genTerm evalRulesEager
 
-stlcRulesLazyDeterminstic :: Property
-stlcRulesLazyDeterminstic =
+pairRulesLazyDeterminstic :: Property
+pairRulesLazyDeterminstic =
   deterministic genTerm evalRulesLazy
 
-stlcRulesEagerValueOrStep :: Property
-stlcRulesEagerValueOrStep =
+pairRulesEagerValueOrStep :: Property
+pairRulesEagerValueOrStep =
   exactlyOne genTerm valueEagerR stepEagerR
 
-stlcRulesLazyValueOrStep :: Property
-stlcRulesLazyValueOrStep =
+pairRulesLazyValueOrStep :: Property
+pairRulesLazyValueOrStep =
   exactlyOne genTerm valueLazyR stepLazyR
 
 genType :: Gen Type
 genType =
   Gen.recursive Gen.choice
   [ pure TyBool, pure TyNat]
-  [ Gen.subterm2 genType genType TyArr ]
+  [ Gen.subterm2 genType genType TyArr
+  , Gen.subterm2 genType genType TyPair
+  ]
 
 genTypedTermGeneric :: Context String -> Type -> [Gen (Term String)]
 genTypedTermGeneric ctx ty =
@@ -630,6 +789,8 @@ genTypedTermGeneric ctx ty =
       b <- genTypedTerm' ctx TyBool
       pure $ TmIf b n1 n2
   , genType >>= \tyF -> Gen.subterm2 (genTypedTerm' ctx (TyArr tyF ty)) (genTypedTerm' ctx tyF) TmApp
+  , genType >>= \tyO -> Gen.subterm (genTypedTerm' ctx (TyPair ty tyO)) TmFst
+  , genType >>= \tyO -> Gen.subterm (genTypedTerm' ctx (TyPair tyO ty)) TmSnd
   ]
 
 genTypedTerm' :: Context String -> Type -> Gen (Term String)
@@ -649,6 +810,10 @@ genTypedTerm' ctx ty@(TyArr ty1 ty2) =
   Gen.recursive Gen.choice
     [ Gen.filter (`Map.notMember` ctx) (pure <$> Gen.alpha) >>= \v ->
         Gen.subterm (genTypedTerm' (addToContext v ty1 ctx) ty2) (lam v ty1) ]
+    (genTypedTermGeneric ctx ty)
+genTypedTerm' ctx ty@(TyPair ty1 ty2) =
+  Gen.recursive Gen.choice
+    [Gen.subterm2 (genTypedTerm' ctx ty1) (genTypedTerm' ctx ty2) TmPair]
     (genTypedTermGeneric ctx ty)
 
 genTypedTerm :: Type -> Gen (Term String)

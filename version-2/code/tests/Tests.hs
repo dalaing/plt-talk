@@ -15,6 +15,7 @@ import Tests.Section.Naturals
 import Tests.Section.BooleansAndNaturals
 import Tests.Section.LC
 import Tests.Section.STLC
+import Tests.Section.Pairs
 
 main :: IO ()
 main =
@@ -26,4 +27,5 @@ main =
         , booleanAndNaturalTests
         , lcTests
         , stlcTests
+        , pairTests
         ]
